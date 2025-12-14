@@ -1,0 +1,93 @@
+<%# 이미지 슬라이더 컴포넌트 %>
+<%# 사용법: render "posts/image_slider", images: @post.images %>
+
+<% if images.attached? && images.any? %>
+  <div class="relative bg-black" 
+       data-controller="image-slider lightbox"
+       data-image-slider-autoplay-value="true"
+       data-image-slider-interval-value="3000"
+       data-action="touchstart->image-slider#touchStart touchend->image-slider#touchEnd">
+    
+    <%# 이미지 영역 - 모든 절대 위치 요소의 부모 %>
+    <div class="relative h-80 md:h-96 overflow-hidden">
+      
+      <%# 이미지들 %>
+      <% images.each_with_index do |image, index| %>
+        <div class="absolute inset-0 flex items-center justify-center <%= 'hidden' unless index == 0 %>"
+             data-image-slider-target="slide">
+          <%= image_tag image, 
+              class: "w-full h-full object-cover cursor-zoom-in",
+              alt: "Image #{index + 1}",
+              loading: index == 0 ? "eager" : "lazy",
+              "data-action": "click->lightbox#open",
+              "data-src": url_for(image) %>
+        </div>
+      <% end %>
+
+      <%# 이전 버튼 - 이미지 위에 오버레이 %>
+      <button type="button"
+              class="absolute left-4 top-1/2 -translate-y-1/2 z-20
+                     w-12 h-12 flex items-center justify-center
+                     bg-white/90 hover:bg-white shadow-lg rounded-full
+                     transition-all duration-200"
+              data-action="click->image-slider#prev"
+              aria-label="Previous image">
+        <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+
+      <%# 다음 버튼 - 이미지 위에 오버레이 %>
+      <button type="button"
+              class="absolute right-4 top-1/2 -translate-y-1/2 z-20
+                     w-12 h-12 flex items-center justify-center
+                     bg-white/90 hover:bg-white shadow-lg rounded-full
+                     transition-all duration-200"
+              data-action="click->image-slider#next"
+              aria-label="Next image">
+        <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+
+      <%# 인디케이터 (하단 점) - 이미지 위에 오버레이 %>
+      <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-3 z-10">
+        <% images.count.times do |index| %>
+          <button type="button"
+                  class="w-3 h-3 rounded-full transition-all duration-200
+                         <%= index == 0 ? 'bg-white scale-125' : 'bg-white/50' %>
+                         hover:bg-white/75 focus:outline-none"
+                  data-action="click->image-slider#goTo"
+                  data-index="<%= index %>"
+                  data-image-slider-target="indicator"
+                  aria-label="Go to image <%= index + 1 %>">
+          </button>
+        <% end %>
+      </div>
+
+      <%# 카운터 (오른쪽 상단) - 이미지 위에 오버레이 %>
+      <div class="absolute top-4 right-4 
+                  px-3 py-1.5 rounded-full
+                  bg-white/90 backdrop-blur-sm
+                  text-gray-800 text-sm font-bold 
+                  shadow-lg
+                  z-10"
+           data-image-slider-target="counter">
+        1 / <%= images.count %>
+      </div>
+
+      <%# 갤러리 보기 버튼 (오른쪽 하단) %>
+      <button type="button"
+              class="absolute bottom-4 right-4 w-10 h-10 bg-white/80 rounded-full shadow-lg flex items-center justify-center z-50"
+              data-controller="gallery"
+              data-gallery-images-value='<%= images.map { |img| url_for(img) }.to_json %>'
+              data-action="click->gallery#open"
+              aria-label="View all images in gallery">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+        </svg>
+      </button>
+      
+    </div>
+  </div>
+<% end %>

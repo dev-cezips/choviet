@@ -1,0 +1,225 @@
+<%= form_with(model: post, class: "contents", html: { multipart: true }, 
+              data: { 
+                controller: "post-form auto-save unsaved-changes", 
+                action: "submit->post-form#prepareForSubmit submit->auto-save#formSubmitted submit->unsaved-changes#formSubmitted",
+                "auto-save-post-id-value": post.id
+              }) do |form| %>
+  <% if post.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6" role="alert">
+      <div class="flex items-start">
+        <svg class="w-5 h-5 text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div>
+          <h3 class="font-semibold mb-2">Có <%= post.errors.count %> lỗi xảy ra:</h3>
+          <ul class="list-disc ml-6 space-y-1 text-sm">
+            <% post.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="space-y-6">
+    <!-- Post Type Selection -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Loại bài viết</label>
+      <div class="grid grid-cols-3 gap-2 md:gap-3">
+        <% Post.post_types.keys.first(3).each do |type| %>
+          <label class="relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors <%= 'border-blue-500 bg-blue-50' if post.post_type == type %>">
+            <%= form.radio_button :post_type, type, class: "sr-only", data: { "post-form-target": "postType", "auto-save-target": "input", "unsaved-changes-target": "input", action: "change->post-form#postTypeChanged change->auto-save#inputChanged change->unsaved-changes#inputChanged" } %>
+            <div class="text-center">
+              <% if type == 'question' %>
+                <div class="text-2xl mb-1">❓</div>
+                <span class="text-sm font-medium">Hỏi đáp</span>
+              <% elsif type == 'marketplace' %>
+                <div class="text-2xl mb-1">🛍️</div>
+                <span class="text-sm font-medium">Mua bán</span>
+              <% elsif type == 'free_talk' %>
+                <div class="text-2xl mb-1">💬</div>
+                <span class="text-sm font-medium">Tự do</span>
+              <% end %>
+            </div>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div>
+      <%= form.label :title, "Tiêu đề", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.text_field :title, 
+          placeholder: "Ví dụ: Bán iPhone 13 Pro Max 128GB",
+          class: "w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent #{post.errors[:title].any? ? 'border-red-500 bg-red-50' : 'border-gray-300'}",
+          data: { "auto-save-target": "input", "unsaved-changes-target": "input", action: "input->auto-save#inputChanged input->unsaved-changes#inputChanged" } %>
+      <% if post.errors[:title].any? %>
+        <p class="mt-1 text-sm text-red-600"><%= post.errors[:title].first %></p>
+      <% end %>
+      <p class="mt-1 text-sm text-gray-500">Tối thiểu 5 ký tự, tối đa 100 ký tự</p>
+    </div>
+
+    <!-- Content -->
+    <div>
+      <%= form.label :content, "Nội dung", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.text_area :content, 
+          rows: 8,
+          placeholder: "Mô tả chi tiết sản phẩm, tình trạng, lý do bán, thời gian sử dụng...",
+          class: "w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent #{post.errors[:content].any? ? 'border-red-500 bg-red-50' : 'border-gray-300'}",
+          data: { "auto-save-target": "input", "unsaved-changes-target": "input", action: "input->auto-save#inputChanged input->unsaved-changes#inputChanged" } %>
+      <% if post.errors[:content].any? %>
+        <p class="mt-1 text-sm text-red-600"><%= post.errors[:content].first %></p>
+      <% end %>
+      <p class="mt-1 text-sm text-gray-500">Càng chi tiết càng tốt</p>
+    </div>
+
+    <!-- Marketplace Fields (shown only when marketplace is selected) -->
+    <div data-post-form-target="marketplaceFields">
+      <%= form.fields_for :product do |product_form| %>
+        <!-- Price -->
+        <div class="mb-6">
+          <%= product_form.label :price, "Giá", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="relative">
+            <%= product_form.text_field :price, 
+                placeholder: "100,000",
+                data: { 
+                  "post-form-target": "priceInput",
+                  action: "input->post-form#formatPrice"
+                },
+                class: "w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-16 #{post.marketplace? && product_form.object.errors[:price].any? ? 'border-red-500 bg-red-50' : 'border-gray-300'}" %>
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <span class="text-gray-500">₩</span>
+            </div>
+          </div>
+          <p class="mt-1 text-sm text-gray-500">Nhập giá bằng Won Hàn Quốc</p>
+        </div>
+
+        <!-- Condition -->
+        <div class="mb-6">
+          <%= product_form.label :condition, "Tình trạng", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= product_form.select :condition, 
+              options_for_select([
+                ["Mới", "new_item"],
+                ["Như mới", "like_new"],
+                ["Tốt", "good"],
+                ["Khá", "fair"],
+                ["Cũ", "poor"]
+              ], product_form.object.condition),
+              { prompt: "Chọn tình trạng..." },
+              class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+        <!-- Currency (hidden, default to KRW) -->
+        <%= product_form.hidden_field :currency, value: "KRW" %>
+      <% end %>
+    </div>
+
+    <!-- Images Upload -->
+    <div data-controller="image-upload">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Hình ảnh</label>
+      
+      <!-- Current Images (for edit) -->
+      <% if post.persisted? && post.images.attached? && post.images.any? %>
+        <div class="mb-4">
+          <p class="text-sm text-gray-600 mb-2">Ảnh hiện tại:</p>
+          <div class="grid grid-cols-3 gap-2">
+            <% post.images.each do |image| %>
+              <div class="relative group">
+                <%= image_tag url_for(image), class: "w-full h-24 object-cover rounded" %>
+                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
+                  <span class="text-white text-xs">Xóa để thay đổi</span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Upload Area -->
+      <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg" data-image-upload-target="dropZone">
+        <div class="space-y-1 text-center">
+          <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <div class="flex text-sm text-gray-600">
+            <%= form.file_field :images, 
+                multiple: true,
+                accept: "image/*",
+                class: "sr-only",
+                id: "file-upload",
+                data: { 
+                  "image-upload-target": "fileInput",
+                  action: "change->image-upload#handleFiles" 
+                } %>
+            <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+              <span>Tải ảnh lên</span>
+            </label>
+            <p class="pl-1">hoặc kéo thả</p>
+          </div>
+          <p class="text-xs text-gray-500">PNG, JPG, GIF tối đa 5MB mỗi ảnh</p>
+          <p class="text-xs text-gray-500 mt-1">
+            <% if form.object.marketplace? %>
+              Bài đăng mua bán: cần tối thiểu 5 ảnh, tối đa 10 ảnh
+            <% else %>
+              Tối đa 10 ảnh
+            <% end %>
+          </p>
+        </div>
+      </div>
+      
+      <!-- Image Preview -->
+      <div class="mt-4 grid grid-cols-3 md:grid-cols-4 gap-2 hidden" data-image-upload-target="preview">
+      </div>
+    </div>
+
+    <!-- Location (hidden, auto-filled from user) -->
+    <%= form.hidden_field :location_id %>
+    <%= form.hidden_field :latitude %>
+    <%= form.hidden_field :longitude %>
+
+    <!-- Target Korean Toggle -->
+    <div class="bg-blue-50 rounded-lg p-4">
+      <div class="flex items-start">
+        <div class="flex items-center h-5">
+          <%= form.check_box :target_korean, 
+              class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded",
+              data: { "auto-save-target": "input", "unsaved-changes-target": "input", action: "change->auto-save#inputChanged change->unsaved-changes#inputChanged" } %>
+        </div>
+        <div class="ml-3">
+          <label for="post_target_korean" class="font-medium text-gray-700">
+            🇰🇷 Hiển thị cho người Hàn
+          </label>
+          <p class="text-sm text-gray-600">
+            Bài viết sẽ được tự động dịch sang tiếng Hàn và hiển thị cho người dùng Hàn Quốc
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-col md:flex-row gap-3 pt-6 sticky bottom-0 bg-white pb-4 -mx-6 px-6 border-t md:static md:bg-transparent md:border-0 md:pb-0">
+      <%= form.submit post.new_record? ? "Đăng bài" : "Cập nhật", 
+          name: "commit",
+          value: post.new_record? ? "Đăng bài" : "Cập nhật",
+          class: "flex-1 bg-blue-600 text-white px-6 py-4 md:py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer text-base md:text-sm",
+          data: { "post-form-target": "publishButton" } %>
+      
+      <% if post.new_record? || post.draft? %>
+        <%= form.submit "Lưu nháp", 
+            name: "commit",
+            value: "save_draft",
+            class: "px-6 py-4 md:py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors cursor-pointer text-base md:text-sm",
+            data: { "post-form-target": "draftButton" } %>
+      <% end %>
+      
+      <%= link_to "Hủy", posts_path, 
+          class: "px-6 py-4 md:py-3 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-colors text-center text-base md:text-sm" %>
+    </div>
+  </div>
+  
+  <!-- Auto-save status -->
+  <div class="fixed bottom-20 right-6 bg-gray-900 text-white px-3 py-1 rounded-full text-sm hidden" data-auto-save-target="status">
+    Đã lưu tự động
+  </div>
+<% end %>

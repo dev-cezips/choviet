@@ -1,0 +1,249 @@
+<div class="bg-gray-50 min-h-screen pb-20">
+  <!-- Profile Header -->
+  <div class="bg-zalo-blue pt-10 pb-16 px-5 rounded-b-3xl shadow-sm text-center text-white">
+    <!-- Avatar -->
+    <div class="w-24 h-24 mx-auto bg-white p-1 rounded-full shadow-lg mb-4 overflow-hidden">
+      <%= user_avatar(@user, size: "w-full h-full", text_size: "text-3xl") %>
+    </div>
+
+    <!-- User Info -->
+    <h1 class="text-xl font-bold"><%= @user.name || @user.email %></h1>
+    <p class="text-blue-100 text-sm mb-4"><%= @user.email %></p>
+
+    <!-- Location Badge -->
+    <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/20 border border-white/30 text-sm">
+      📍 <%= @user.location ? location_display(@user.location) : "Chưa cài đặt vị trí" %>
+    </span>
+  </div>
+
+  <!-- Stats Card -->
+  <div class="-mt-10 px-5">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex justify-around text-center">
+      <div>
+        <span class="block text-lg font-bold text-gray-900"><%= @my_posts.count %></span>
+        <span class="text-xs text-gray-400">Bài viết</span>
+      </div>
+      <div class="w-px bg-gray-200"></div>
+      <div>
+        <span class="block text-lg font-bold text-gray-900"><%= @liked_posts.count %></span>
+        <span class="text-xs text-gray-400">Yêu thích</span>
+      </div>
+      <div class="w-px bg-gray-200"></div>
+      <div>
+        <span class="block text-lg font-bold text-gray-900"><%= @user.reputation_score || 0 %></span>
+        <span class="text-xs text-gray-400">Điểm uy tín</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu List -->
+  <div class="px-5 mt-6 space-y-3">
+    <!-- My Posts -->
+    <div class="bg-white rounded-xl shadow-sm">
+      <div class="px-4 py-3 font-semibold text-gray-900 border-b flex justify-between items-center">
+        <h2>Bài viết của tôi</h2>
+        <% unread_count = @user.total_unread_messages %>
+        <% if unread_count > 0 %>
+          <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+            <%= unread_count %> tin nhắn mới
+          </span>
+        <% end %>
+      </div>
+      <% if @my_posts.any? %>
+        <div class="divide-y">
+          <% @my_posts.limit(3).each do |post| %>
+            <div class="px-4 py-3 hover:bg-gray-50 transition-colors">
+              <div class="flex items-start gap-3">
+                <!-- Thumbnail -->
+                <%= link_to post_path(post), class: "flex-shrink-0" do %>
+                  <% if post.images.attached? && post.images.any? %>
+                    <%= image_tag post.images.first, class: "w-16 h-16 rounded-lg object-cover" %>
+                  <% else %>
+                    <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center">
+                      <span class="text-2xl">📦</span>
+                    </div>
+                  <% end %>
+                <% end %>
+                
+                <!-- Post Info -->
+                <div class="flex-1">
+                  <%= link_to post_path(post), class: "block" do %>
+                    <div class="flex justify-between items-start">
+                      <div>
+                        <h3 class="font-medium text-gray-900 line-clamp-1"><%= post.title %></h3>
+                        <div class="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                          <%= post_type_icon(post) %>
+                          <span><%= time_ago_in_words(post.created_at) %> trước</span>
+                          <% if post.status == 'sold' %>
+                            <span class="text-red-500 font-medium">• Đã bán</span>
+                          <% end %>
+                        </div>
+                      </div>
+                      <% if post.marketplace? && post.product %>
+                        <span class="text-soft-coral font-semibold ml-3">
+                          <%= price_display(post.product.price) %>
+                        </span>
+                      <% end %>
+                    </div>
+                  <% end %>
+                  
+                  <!-- Chat notification badge for this post -->
+                  <% post_chats = ChatRoom.where(post: post) %>
+                  <% if post_chats.any? %>
+                    <% unread_messages = [] %>
+                    <% post_chats.each do |chat| %>
+                      <% unread_count = @user.unread_messages_for_chat_room(chat) %>
+                      <% if unread_count > 0 %>
+                        <% unread_messages << {chat: chat, count: unread_count} %>
+                      <% end %>
+                    <% end %>
+                    
+                    <% if unread_messages.any? %>
+                      <div class="mt-2 flex gap-2">
+                        <% unread_messages.each do |item| %>
+                          <%= link_to post_chat_room_path(post, item[:chat]), class: "inline-flex items-center gap-1 bg-red-100 text-red-600 hover:bg-red-200 text-xs font-medium px-2 py-1 rounded-full transition-colors" do %>
+                            <span>💬</span>
+                            <span><%= item[:count] %> tin nhắn mới</span>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <% if @my_posts.count > 3 %>
+          <%= link_to "Xem tất cả →", posts_path(user_id: @user.id), class: "block px-4 py-3 text-center text-zalo-blue hover:bg-gray-50 font-medium border-t" %>
+        <% end %>
+      <% else %>
+        <div class="px-4 py-8 text-center text-gray-500">
+          <p>Bạn chưa có bài viết nào</p>
+          <%= link_to "Đăng bài mới", new_post_path, class: "mt-3 inline-block bg-zalo-blue text-white px-4 py-2 rounded-lg" %>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Draft Posts -->
+    <% if @draft_posts.any? %>
+      <div class="bg-white rounded-xl shadow-sm">
+        <div class="px-4 py-3 font-semibold text-gray-900 border-b flex justify-between items-center">
+          <h2 class="flex items-center gap-2">
+            <span class="text-yellow-500">📝</span>
+            Bài viết nháp
+          </h2>
+          <span class="text-xs text-gray-500 font-normal">
+            <%= @draft_posts.count %> bài nháp
+          </span>
+        </div>
+        <div class="divide-y">
+          <% @draft_posts.each do |post| %>
+            <div class="px-4 py-3 hover:bg-gray-50 transition-colors">
+              <div class="flex items-start gap-3">
+                <!-- Draft icon -->
+                <div class="flex-shrink-0 mt-1">
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                    Nháp
+                  </span>
+                </div>
+                
+                <!-- Post Info -->
+                <div class="flex-1">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="font-medium text-gray-900 line-clamp-1">
+                        <%= post.title.presence || "Chưa có tiêu đề" %>
+                      </h3>
+                      <div class="text-xs text-gray-500 mt-1">
+                        Lưu lần cuối: <%= time_ago_in_words(post.updated_at) %> trước
+                      </div>
+                    </div>
+                    <div class="flex gap-2">
+                      <%= link_to "Sửa", edit_post_path(post), class: "text-blue-600 hover:text-blue-700 text-sm font-medium" %>
+                      <%= button_to "Xóa", post, method: :delete, 
+                          data: { turbo_confirm: "Bạn chắc chắn muốn xóa bản nháp này?" },
+                          class: "text-red-600 hover:text-red-700 text-sm font-medium cursor-pointer" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Liked Posts -->
+    <div class="bg-white rounded-xl shadow-sm">
+      <h2 class="px-4 py-3 font-semibold text-gray-900 border-b">Bài viết yêu thích</h2>
+      <% if @liked_posts.any? %>
+        <div class="divide-y">
+          <% @liked_posts.first(3).each do |post| %>
+            <%= link_to post_path(post), class: "block px-4 py-3 hover:bg-gray-50 transition-colors" do %>
+              <div class="flex items-start gap-3">
+                <!-- Thumbnail -->
+                <div class="flex-shrink-0">
+                  <% if post.images.attached? && post.images.any? %>
+                    <%= image_tag post.images.first, class: "w-16 h-16 rounded-lg object-cover" %>
+                  <% else %>
+                    <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center">
+                      <span class="text-2xl">📦</span>
+                    </div>
+                  <% end %>
+                </div>
+                
+                <!-- Post Info -->
+                <div class="flex-1">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="font-medium text-gray-900 line-clamp-1"><%= post.title %></h3>
+                      <div class="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                        <%= post_type_icon(post) %>
+                        <span>bởi <%= post.user.display_name %></span>
+                      </div>
+                    </div>
+                    <% if post.marketplace? && post.product %>
+                      <span class="text-soft-coral font-semibold ml-3">
+                        <%= price_display(post.product.price) %>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+        <% if @liked_posts.count > 3 %>
+          <div class="px-4 py-3 text-center text-zalo-blue hover:bg-gray-50 font-medium border-t">
+            Xem tất cả →
+          </div>
+        <% end %>
+      <% else %>
+        <div class="px-4 py-8 text-center text-gray-500">
+          <p>Bạn chưa thích bài viết nào</p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Account Settings -->
+    <div class="bg-white rounded-xl shadow-sm divide-y">
+      <%= link_to edit_user_registration_path, class: "flex items-center justify-between px-4 py-4 hover:bg-gray-50 transition-colors" do %>
+        <div class="flex items-center gap-3">
+          <span class="text-xl">⚙️</span>
+          <span class="font-medium">Cài đặt tài khoản</span>
+        </div>
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      <% end %>
+
+      <%= button_to destroy_user_session_path, method: :delete, class: "w-full text-left flex items-center justify-between px-4 py-4 hover:bg-gray-50 transition-colors" do %>
+        <div class="flex items-center gap-3">
+          <span class="text-xl">🚪</span>
+          <span class="font-medium text-red-600">Đăng xuất</span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

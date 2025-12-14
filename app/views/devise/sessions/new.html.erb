@@ -1,0 +1,137 @@
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <!-- Logo -->
+    <div class="text-center">
+      <span class="text-6xl">🏪</span>
+      <h2 class="mt-4 text-3xl font-bold text-gray-900">
+        Chào mừng đến Chợ Việt
+      </h2>
+      <p class="mt-2 text-sm text-gray-600">
+        Cộng đồng người Việt tại Hàn Quốc
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow-lg sm:rounded-xl sm:px-10">
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name), 
+                   html: { 
+                     class: "space-y-6", 
+                     id: "login-form",
+                     data: { turbo: false }
+                   }) do |f| %>
+        
+        <% if flash[:alert] %>
+          <div class="rounded-md bg-red-50 p-4 mb-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm font-medium text-red-800">
+                  <%= flash[:alert] %>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        
+          <!-- Email -->
+          <div>
+            <%= f.label :email, class: "block text-sm font-medium text-gray-700" do %>
+              Email
+            <% end %>
+            <div class="mt-1">
+              <%= f.email_field :email, 
+                  autofocus: true,
+                  autocomplete: "email",
+                  required: true,
+                  placeholder: "nguyen@example.com",
+                  class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white" %>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <%= f.label :password, class: "block text-sm font-medium text-gray-700" do %>
+              Mật khẩu
+            <% end %>
+            <div class="mt-1">
+              <%= f.password_field :password,
+                  autocomplete: "current-password",
+                  required: true,
+                  placeholder: "••••••••",
+                  class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white" %>
+            </div>
+          </div>
+
+          <!-- Remember me & Forgot password -->
+          <div class="flex items-center justify-between">
+            <% if devise_mapping.rememberable? %>
+              <div class="flex items-center">
+                <%= f.check_box :remember_me, 
+                    class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+                <%= f.label :remember_me, class: "ml-2 block text-sm text-gray-900" do %>
+                  Ghi nhớ đăng nhập
+                <% end %>
+              </div>
+            <% end %>
+            
+            <%= link_to "Quên mật khẩu?", new_password_path(resource_name), 
+                class: "text-sm text-blue-600 hover:text-blue-700" %>
+          </div>
+
+          <!-- Submit -->
+          <div>
+            <%= f.submit "Đăng nhập", 
+                class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all cursor-pointer",
+                style: "background-color: #0068FF;",
+                id: "login-submit-button" %>
+          </div>
+      <% end %>
+
+      <!-- Divider -->
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">Hoặc</span>
+          </div>
+        </div>
+
+        <!-- Sign up link -->
+        <div class="mt-6 text-center">
+          <span class="text-sm text-gray-600">
+            Chưa có tài khoản?
+          </span>
+          <%= link_to "Đăng ký ngay", new_registration_path(resource_name), 
+              class: "ml-1 font-medium text-blue-600 hover:text-blue-700" %>
+        </div>
+      </div>
+
+      <!-- Benefits -->
+      <div class="mt-8 bg-gray-50 -mx-10 -mb-8 px-10 py-6 sm:rounded-b-xl">
+        <h3 class="text-sm font-medium text-gray-900 mb-3">Tham gia Chợ Việt để:</h3>
+        <ul class="space-y-2 text-sm text-gray-600">
+          <li class="flex items-start">
+            <span class="text-green-500 mr-2">✓</span>
+            <span>Mua bán với cộng đồng Việt Nam</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-green-500 mr-2">✓</span>
+            <span>Hỏi đáp mọi thắc mắc về cuộc sống</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-green-500 mr-2">✓</span>
+            <span>Kết nối với người Việt gần bạn</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+

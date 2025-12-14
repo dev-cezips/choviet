@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Cho Viet" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <!-- Google Font: Be Vietnam Pro -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag "application", "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+    
+    <style>
+      /* Force white background */
+      html, body {
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+      }
+      
+      /* Remove any overlay */
+      .bg-black.bg-opacity-50 {
+        display: none !important;
+      }
+      
+      /* Ensure main content is white */
+      main, .bg-off-white, .bg-gray-50 {
+        background-color: #ffffff !important;
+      }
+      
+      /* Remove modal overlay if present */
+      #report_modal:has(.bg-opacity-50) {
+        display: none !important;
+      }
+    </style>
+  </head>
+
+  <body class="font-vietnam" style="padding-top: 120px !important; background-color: #ffffff !important;">
+    <%= render "layouts/header" %>
+
+    <!-- Main content wrapper -->
+    <div>
+      <!-- Flash messages -->
+      <div id="flash_messages">
+        <% if notice.present? %>
+          <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4">
+            <p><%= notice %></p>
+          </div>
+        <% end %>
+        <% if alert.present? %>
+          <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+            <p><%= alert %></p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Main content -->
+      <main>
+        <%= yield %>
+      </main>
+    </div>
+    
+    <!-- Modal frame for reports and other modals -->
+    <%= turbo_frame_tag "report_modal" do %>
+    <% end %>
+    
+    <!-- Floating Write Button -->
+    <% if user_signed_in? %>
+      <div class="fixed bottom-6 right-6 z-40 md:hidden">
+        <%= link_to new_post_path, class: "group flex items-center justify-center w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-200 hover:scale-110" do %>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          <span class="absolute right-full mr-3 py-1 px-2 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            Đăng bài mới
+          </span>
+        <% end %>
+      </div>
+    <% elsif !user_signed_in? && !devise_controller? %>
+      <div class="fixed bottom-6 right-6 z-40 md:hidden">
+        <%= link_to new_user_session_path, class: "group flex items-center justify-center w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-200 hover:scale-110" do %>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          <span class="absolute right-full mr-3 py-1 px-2 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            Đăng nhập để viết bài
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+    
+    <!-- Modal close handler -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Handle modal close
+        document.addEventListener('click', (e) => {
+          if (e.target.matches('[data-action="click->modal#close"]')) {
+            const modalFrame = document.getElementById('report_modal');
+            if (modalFrame) {
+              modalFrame.innerHTML = '';
+            }
+          }
+        });
+        
+        // Clear any existing modal content on page load
+        const modalFrame = document.getElementById('report_modal');
+        if (modalFrame && modalFrame.innerHTML.trim() !== '') {
+          modalFrame.innerHTML = '';
+        }
+      });
+    </script>
+  </body>
+</html>

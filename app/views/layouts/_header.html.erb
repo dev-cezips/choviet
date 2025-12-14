@@ -1,0 +1,159 @@
+<!-- Enhanced Header with Expandable Search -->
+<nav class="fixed top-0 left-0 right-0 w-full bg-white shadow-lg" style="z-index: 999999 !important;" data-controller="search-expand">
+  <div class="bg-white">
+    <!-- First Row: Logo + Search + Auth -->
+    <div class="max-w-screen-lg mx-auto px-4">
+      <div class="relative">
+        <!-- Default State -->
+        <div class="flex justify-between items-center h-14" data-search-expand-target="defaultHeader">
+          <!-- Logo -->
+          <div class="flex items-center">
+            <%= link_to root_path, class: "text-xl font-bold flex items-center", style: "color: #0068FF;" do %>
+              <span class="text-2xl mr-2">🏪</span>
+              Chợ Việt
+            <% end %>
+          </div>
+
+          <!-- Center Search Icon -->
+          <div class="flex-1 flex justify-center">
+            <button type="button" 
+                    class="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    data-action="click->search-expand#expand">
+              <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Right side nav -->
+          <div class="flex items-center gap-3">
+            <% if user_signed_in? %>
+              <!-- Messages Icon -->
+              <%= link_to chat_rooms_path, class: "relative p-2 text-gray-600 hover:text-blue-600 transition-colors", title: "Tin nhắn" do %>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                <% unread_count = current_user.chat_rooms.unread_for(current_user.id).count %>
+                <% if unread_count > 0 %>
+                  <span class="absolute top-0 right-0 -mt-1 -mr-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                    <%= unread_count %>
+                  </span>
+                <% end %>
+              <% end %>
+              
+              <!-- New Post Button -->
+              <%= link_to new_post_path, class: "text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1 transition-colors shadow-sm", style: "background-color: #0068FF;" do %>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Đăng bài
+              <% end %>
+              
+              <!-- User Avatar (Link to Dashboard) -->
+              <%= link_to dashboard_path, class: "flex items-center", title: "Của tôi" do %>
+                <div style="width: 32px; height: 32px; background-color: #0068FF; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;">
+                  <% if current_user.name.present? %>
+                    <%= current_user.name.first.upcase %>
+                  <% else %>
+                    <%= current_user.email.first.upcase %>
+                  <% end %>
+                </div>
+              <% end %>
+            <% else %>
+              <%= link_to "Đăng nhập", new_user_session_path, class: "text-gray-700 hover:text-blue-600 text-sm font-medium" %>
+              <%= link_to "Đăng ký", new_user_registration_path, class: "text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm", style: "background-color: #0068FF;" %>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Expanded Search State (hidden by default) -->
+        <div class="hidden absolute top-0 left-0 right-0 flex items-center h-14 bg-white z-10 gap-2 px-4" data-search-expand-target="expandedHeader">
+          <!-- Back Button -->
+          <button type="button" 
+                  class="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  data-action="click->search-expand#collapse">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+
+          <!-- Search Form -->
+          <%= form_with url: posts_path, method: :get, local: true, class: "flex-1" do |f| %>
+            <div class="relative">
+              <input
+                type="text"
+                name="q"
+                value="<%= params[:q] %>"
+                placeholder="Tìm kiếm trong Chợ Việt..."
+                class="w-full border border-gray-300 rounded-full px-4 py-2 pl-10 pr-10 text-charcoal focus:outline-none focus:ring-2 focus:ring-zalo-blue focus:border-transparent bg-gray-50"
+                autocomplete="off"
+                data-search-expand-target="searchInput"
+              />
+              <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <% if params[:q].present? %>
+                <%= link_to posts_path, class: "absolute right-3 top-2.5 text-gray-400 hover:text-gray-600" do %>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                <% end %>
+              <% end %>
+            </div>
+            <% if params[:type].present? %>
+              <input type="hidden" name="type" value="<%= params[:type] %>">
+            <% end %>
+          <% end %>
+
+          <!-- User Avatar (Also in expanded state) -->
+          <% if user_signed_in? %>
+            <%= link_to dashboard_path, class: "flex items-center", title: "Của tôi" do %>
+              <div style="width: 32px; height: 32px; background-color: #0068FF; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;">
+                <% if current_user.name.present? %>
+                  <%= current_user.name.first.upcase %>
+                <% else %>
+                  <%= current_user.email.first.upcase %>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Row: Category Filter (Always Visible) -->
+    <div class="border-t border-gray-200 bg-white">
+      <div class="max-w-screen-lg mx-auto px-4 py-2">
+        <div class="flex gap-1 overflow-x-auto scrollbar-hide">
+          <%= link_to posts_path(q: params[:q]), 
+              class: active_link_class(posts_path, "px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200") do %>
+            Tất cả
+          <% end %>
+          
+          <%= link_to posts_path(type: 'question', q: params[:q]), 
+              class: active_link_class(posts_path(type: 'question'), "px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200") do %>
+            ❓ <%= I18n.t("posts.types.question") %>
+          <% end %>
+          
+          <%= link_to posts_path(type: 'marketplace', q: params[:q]), 
+              class: active_link_class(posts_path(type: 'marketplace'), "px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200") do %>
+            🛍️ <%= I18n.t("posts.types.marketplace") %>
+          <% end %>
+          
+          <%= link_to posts_path(type: 'free_talk', q: params[:q]), 
+              class: active_link_class(posts_path(type: 'free_talk'), "px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200") do %>
+            💬 <%= I18n.t("posts.types.free_talk") %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Light Overlay (optional, very transparent) -->
+  <!-- 오버레이를 제거하거나 매우 투명하게 (bg-opacity-5) -->
+  <div class="hidden fixed inset-0 bg-black bg-opacity-5 transition-opacity" 
+       data-search-expand-target="overlay"
+       data-action="click->search-expand#overlayClick"
+       style="z-index: -1; display: none;">
+  </div>
+</nav>

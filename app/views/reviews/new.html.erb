@@ -1,0 +1,213 @@
+<div class="container mx-auto px-4 py-6">
+  <div class="max-w-md mx-auto bg-white rounded-lg shadow-sm p-6">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Đánh giá giao dịch</h2>
+      <p class="text-gray-600">Hãy chia sẻ trải nghiệm của bạn với <%= @reviewee.display_name %></p>
+    </div>
+    
+    <!-- Reviewee Info -->
+    <div class="flex items-center gap-3 mb-6 p-3 bg-gray-50 rounded-lg">
+      <%= user_avatar(@reviewee, size: "w-12 h-12", text_size: "text-lg") %>
+      <div>
+        <p class="font-semibold text-gray-900"><%= @reviewee.display_name %></p>
+        <p class="text-sm text-gray-600">Người <%= current_user == @chat_room.buyer ? 'bán' : 'mua' %></p>
+      </div>
+    </div>
+    
+    <%= form_with(model: [@post, @chat_room, @review], local: true) do |form| %>
+      <% if @review.errors.any? %>
+        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+          <p class="text-sm font-medium text-red-800">Vui lòng kiểm tra lại:</p>
+          <ul class="mt-2 list-disc list-inside text-sm text-red-700">
+            <% @review.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      
+      <!-- Star Rating -->
+      <div class="mb-6">
+        <label class="block text-lg font-medium text-gray-900 mb-4 text-center">
+          Giao dịch này thế nào? <span class="text-red-500">*</span>
+        </label>
+        <div class="flex justify-center space-x-2" data-controller="star-rating">
+          <% (1..5).each do |i| %>
+            <label class="cursor-pointer">
+              <%= form.radio_button :rating, i, 
+                  class: "sr-only peer",
+                  data: { 
+                    "star-rating-target": "radio",
+                    action: "change->star-rating#updateStars" 
+                  } %>
+              <svg class="w-10 h-10 text-gray-300 peer-checked:text-yellow-400 hover:text-yellow-400 transition-colors"
+                   data-star-rating-target="star"
+                   data-value="<%= i %>"
+                   fill="currentColor" 
+                   viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+            </label>
+          <% end %>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2" data-star-rating-target="label">
+          Chọn số sao để đánh giá
+        </p>
+      </div>
+      
+      <!-- Optional Text Section -->
+      <div class="mb-6 bg-gray-50 rounded-lg p-4" id="comment-section" style="display: none;">
+        <div class="flex items-center justify-between mb-3">
+          <label for="review_comment" class="text-sm font-medium text-gray-700">
+            Thêm nhận xét (không bắt buộc)
+          </label>
+          <span class="text-xs text-gray-500">💡 30 giây là đủ!</span>
+        </div>
+        
+        <!-- Quick Templates -->
+        <div class="mb-3">
+          <p class="text-xs text-gray-600 mb-2">Chọn nhanh:</p>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" class="review-template px-3 py-1 bg-white border border-gray-300 rounded-full text-xs hover:bg-blue-50 hover:border-blue-300 transition-colors">
+              👍 <%= current_user == @chat_room.buyer ? 'Sản phẩm đúng mô tả' : 'Thanh toán nhanh chóng' %>
+            </button>
+            <button type="button" class="review-template px-3 py-1 bg-white border border-gray-300 rounded-full text-xs hover:bg-blue-50 hover:border-blue-300 transition-colors">
+              ⏱️ Đúng hẹn
+            </button>
+            <button type="button" class="review-template px-3 py-1 bg-white border border-gray-300 rounded-full text-xs hover:bg-blue-50 hover:border-blue-300 transition-colors">
+              💬 Phản hồi nhanh
+            </button>
+            <button type="button" class="review-template px-3 py-1 bg-white border border-gray-300 rounded-full text-xs hover:bg-blue-50 hover:border-blue-300 transition-colors">
+              🤝 Muốn giao dịch lại
+            </button>
+          </div>
+        </div>
+        
+        <%= form.text_area :comment, 
+            rows: 3,
+            placeholder: "Ví dụ: Người bán thân thiện, hàng đúng mô tả...",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm",
+            id: "review-comment-textarea" %>
+      </div>
+      
+      <!-- Visibility Option -->
+      <div class="mb-6">
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <%= form.check_box :visibility, class: "w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" %>
+          <span class="text-sm text-gray-700">
+            Cho phép hiển thị đánh giá này công khai
+          </span>
+        </label>
+        <p class="text-xs text-gray-500 ml-7 mt-1">
+          Đánh giá công khai giúp người dùng khác tham khảo khi giao dịch
+        </p>
+      </div>
+      
+      <!-- Submit Buttons -->
+      <div class="flex gap-3">
+        <%= form.submit "Gửi đánh giá", 
+            class: "flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors" %>
+        <%= link_to "Hủy", post_chat_room_path(@post, @chat_room), 
+            class: "flex-1 text-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  // Star rating interaction
+  document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('[data-star-rating-target="star"]');
+    const radios = document.querySelectorAll('[data-star-rating-target="radio"]');
+    const label = document.querySelector('[data-star-rating-target="label"]');
+    
+    const labels = [
+      'Rất tệ',
+      'Tệ', 
+      'Bình thường',
+      'Tốt',
+      'Rất tốt'
+    ];
+    
+    function updateStars(rating) {
+      stars.forEach((star, index) => {
+        if (index < rating) {
+          star.classList.add('text-yellow-400');
+          star.classList.remove('text-gray-300');
+        } else {
+          star.classList.remove('text-yellow-400');
+          star.classList.add('text-gray-300');
+        }
+      });
+      
+      if (rating > 0) {
+        label.textContent = labels[rating - 1];
+        // Show comment section after rating selection
+        document.getElementById('comment-section').style.display = 'block';
+      }
+    }
+    
+    // Handle star clicks
+    stars.forEach((star, index) => {
+      star.addEventListener('click', function() {
+        radios[index].checked = true;
+        updateStars(index + 1);
+      });
+      
+      // Hover effect
+      star.addEventListener('mouseenter', function() {
+        stars.forEach((s, i) => {
+          if (i <= index) {
+            s.classList.add('text-yellow-400');
+            s.classList.remove('text-gray-300');
+          } else {
+            s.classList.remove('text-yellow-400');
+            s.classList.add('text-gray-300');
+          }
+        });
+      });
+    });
+    
+    // Reset on mouse leave
+    const container = document.querySelector('[data-controller="star-rating"]');
+    container.addEventListener('mouseleave', function() {
+      const checkedRadio = document.querySelector('[data-star-rating-target="radio"]:checked');
+      if (checkedRadio) {
+        updateStars(parseInt(checkedRadio.value));
+      } else {
+        updateStars(0);
+      }
+    });
+    
+    // Handle radio changes
+    radios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        updateStars(parseInt(this.value));
+      });
+    });
+    
+    // Review template buttons functionality
+    document.querySelectorAll('.review-template').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const textarea = document.getElementById('review-comment-textarea');
+        const buttonText = this.textContent.trim();
+        
+        // If textarea is empty, just add the text
+        if (textarea.value.trim() === '') {
+          textarea.value = buttonText;
+        } else {
+          // If there's already text, add a space and append
+          textarea.value += ' ' + buttonText;
+        }
+        
+        // Focus the textarea so user can continue typing if needed
+        textarea.focus();
+        
+        // Trigger input event to adjust height if needed
+        const event = new Event('input', { bubbles: true });
+        textarea.dispatchEvent(event);
+      });
+    });
+  });
+</script>

@@ -1,0 +1,361 @@
+<div class="bg-bg-light min-h-screen pb-20">
+  <!-- Profile Header with Primary Color -->
+  <div class="bg-gradient-to-b from-primary to-primary-hover pt-10 pb-20 px-5 text-white">
+    <!-- Back Button -->
+    <%= link_to :back, class: "inline-flex items-center mb-4 text-white/80 hover:text-white transition-colors" do %>
+      <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Quay lại
+    <% end %>
+    
+    <!-- Avatar -->
+    <div class="relative inline-block">
+      <div class="w-24 h-24 mx-auto bg-white p-1 rounded-full shadow-lg mb-4 overflow-hidden">
+        <% if @user.avatar.attached? %>
+          <%= image_tag @user.avatar, class: "w-full h-full rounded-full object-cover" %>
+        <% elsif @user.avatar_url.present? %>
+          <%= image_tag @user.avatar_url, class: "w-full h-full rounded-full object-cover" %>
+        <% else %>
+          <div class="w-full h-full rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center text-3xl font-bold text-white shadow-inner">
+            <%= (@user.name || @user.email).first.upcase %>
+          </div>
+        <% end %>
+      </div>
+      <!-- Level Badge on Avatar -->
+      <% level_color_class = case @user.level
+         when 1 then "bg-level-1"
+         when 2 then "bg-level-2"
+         when 3 then "bg-level-3"
+         when 4 then "bg-level-4"
+         when 5..Float::INFINITY then "bg-level-5"
+         end %>
+      <div class="absolute -bottom-1 -right-1 <%= level_color_class %> rounded-full px-2.5 py-0.5 text-xs font-bold text-white shadow-badge animate-badge-bounce">
+        Lv.<%= @user.level %>
+      </div>
+    </div>
+
+    <!-- User Info -->
+    <h1 class="text-xl font-bold text-center"><%= @user.name || @user.email %></h1>
+    <p class="text-blue-100 text-sm text-center mb-3">Tham gia <%= @member_since_days %> ngày trước</p>
+    
+    <!-- Level Badge -->
+    <div class="text-center mb-3">
+      <span class="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold text-sm shadow-lg">
+        ⭐ Level <%= @user.level %>
+      </span>
+    </div>
+    
+    <!-- Primary Title -->
+    <% if @user.primary_title %>
+      <div class="text-center mb-3">
+        <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/30 backdrop-blur border border-white/40 text-white font-medium text-sm">
+          <%= @user.primary_title.display_icon %> <%= @user.primary_title.name_vi %>
+        </span>
+      </div>
+    <% end %>
+    
+    <!-- Location Badge -->
+    <div class="text-center">
+      <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/20 border border-white/30 text-sm">
+        📍 <%= @user.location ? location_display(@user.location) : "Chưa xác thực vị trí" %>
+      </span>
+    </div>
+    
+    <!-- Temperature Bar -->
+    <div class="mt-6 max-w-xs mx-auto">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm">Nhiệt độ uy tín</span>
+        <span class="text-2xl font-bold"><%= @manner_temp %>°</span>
+      </div>
+      <div class="bg-white/20 rounded-full h-3 overflow-hidden">
+        <div class="bg-gradient-to-r from-yellow-400 to-orange-500 h-full rounded-full transition-all duration-500" 
+             style="width: <%= [(@manner_temp - 30) * 5, 100].min %>%"></div>
+      </div>
+    </div>
+    
+    <!-- Reputation Score -->
+    <div class="mt-4 text-center">
+      <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/20 border border-white/30 text-base font-medium">
+        <%= @user.reputation_display %>
+      </span>
+    </div>
+    
+    <!-- Trust Summary -->
+    <div class="mt-3 text-center px-4">
+      <p class="text-sm text-white/90"><%= @user.trust_summary(context: :profile) %></p>
+      <% if @user.trust_hint(context: :profile).present? %>
+        <p class="text-xs text-white/70 mt-1"><%= @user.trust_hint(context: :profile) %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="-mt-10 px-5">
+    <div class="bg-card rounded-card shadow-card border border-border overflow-hidden">
+      <div class="grid grid-cols-3 divide-x divide-border">
+        <div class="p-4 text-center">
+          <div class="text-3xl font-bold text-text-strong mb-1"><%= @total_posts %></div>
+          <div class="text-xs text-text-light font-medium">BÀI ĐĂNG</div>
+        </div>
+        <div class="p-4 text-center bg-success/5">
+          <div class="text-3xl font-bold text-success mb-1"><%= @total_sold %></div>
+          <div class="text-xs text-text-light font-medium">ĐÃ BÁN</div>
+        </div>
+        <div class="p-4 text-center bg-like/5">
+          <div class="text-3xl font-bold text-like mb-1"><%= @received_likes %></div>
+          <div class="text-xs text-text-light font-medium">LƯỢT THÍCH</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- EXP Progress Bar -->
+    <div class="mt-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-4 border border-purple-100">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">✨</span>
+          <span class="font-semibold text-gray-800">Kinh nghiệm</span>
+        </div>
+        <span class="text-sm font-bold text-purple-600"><%= @user.exp %> / <%= @user.exp_for_next_level %> EXP</span>
+      </div>
+      <div class="relative">
+        <div class="bg-white/50 rounded-full h-3 overflow-hidden shadow-inner">
+          <div class="bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 h-full rounded-full transition-all duration-1000 relative overflow-hidden" 
+               style="width: <%= @user.exp_progress_percentage %>%">
+            <div class="absolute inset-0 bg-white/30 animate-pulse"></div>
+          </div>
+        </div>
+        <% if @user.exp_progress_percentage >= 80 %>
+          <div class="absolute -top-1 right-0 text-xs text-purple-600 font-bold animate-bounce">
+            Sắp lên cấp! 🎯
+          </div>
+        <% end %>
+      </div>
+      <div class="mt-2 text-xs text-gray-600 text-center">
+        Còn <%= @user.exp_for_next_level - @user.exp %> EXP nữa để lên Level <%= @user.level + 1 %>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Titles Collection -->
+  <div class="px-5 mt-6">
+    <div class="bg-gradient-to-br from-warning/10 to-level-5/10 rounded-card p-5 border border-warning/20">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-text-strong text-lg flex items-center gap-2">
+          <span class="text-2xl">🏅</span>
+          Bộ sưu tập danh hiệu
+        </h3>
+        <span class="text-xs text-warning font-medium bg-warning/10 px-2 py-1 rounded-full">
+          <%= @user.titles.count %> danh hiệu
+        </span>
+      </div>
+      
+      <% if @user.titles.any? %>
+        <div class="grid grid-cols-2 gap-3">
+          <% @user.titles.order(created_at: :desc).each do |title| %>
+            <div class="group relative">
+              <div class="<%= @user.primary_title == title ? 'ring-2 ring-primary ring-offset-2' : '' %> 
+                          bg-card rounded-card p-3 shadow-sm hover:shadow-card-hover transition-all cursor-pointer">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl"><%= title.display_icon %></span>
+                  <div class="flex-1">
+                    <div class="font-medium text-text-strong text-sm"><%= title.name_vi %></div>
+                    <div class="text-xs text-text-light mt-0.5 line-clamp-1"><%= title.description %></div>
+                  </div>
+                </div>
+                <% if @user.primary_title == title %>
+                  <div class="absolute -top-2 -right-2 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full font-bold shadow-badge">
+                    CHÍNH
+                  </div>
+                <% end %>
+              </div>
+              
+              <!-- Hover Tooltip -->
+              <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-20">
+                <div class="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 max-w-[200px] text-center">
+                  <%= title.description %>
+                  <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-1">
+                    <div class="border-4 border-transparent border-t-gray-900"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8">
+          <span class="text-4xl mb-2 block opacity-50">🏅</span>
+          <p class="text-sm text-gray-500">Chưa có danh hiệu nào</p>
+          <p class="text-xs text-gray-400 mt-1">Hãy hoạt động nhiều hơn để nhận danh hiệu!</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Trust Indicators -->
+  <div class="px-5 mt-6">
+    <div class="bg-white rounded-xl shadow-sm p-4">
+      <h3 class="font-semibold text-gray-900 mb-3">Chỉ số tin cậy</h3>
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-600">⏱️ Phản hồi nhanh</span>
+          <div class="flex gap-1">
+            <% 5.times do |i| %>
+              <div class="w-2 h-2 rounded-full <%= i < 4 ? 'bg-green-500' : 'bg-gray-300' %>"></div>
+            <% end %>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-600">🤝 Thái độ thân thiện</span>
+          <div class="flex gap-1">
+            <% 5.times do |i| %>
+              <div class="w-2 h-2 rounded-full <%= i < 5 ? 'bg-green-500' : 'bg-gray-300' %>"></div>
+            <% end %>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-600">📦 Mô tả đúng thực tế</span>
+          <div class="flex gap-1">
+            <% 5.times do |i| %>
+              <div class="w-2 h-2 rounded-full <%= i < 4 ? 'bg-green-500' : 'bg-gray-300' %>"></div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selling Items -->
+  <div class="px-5 mt-6">
+    <h2 class="font-semibold text-gray-900 mb-3">🛒 Đang bán</h2>
+    <% if @selling_posts.any? %>
+      <div class="grid grid-cols-2 gap-3">
+        <% @selling_posts.limit(6).each do |post| %>
+          <%= link_to post_path(post), class: "block bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow" do %>
+            <div class="aspect-square relative">
+              <% if post.images.attached? && post.images.any? %>
+                <%= image_tag post.images.first, class: "w-full h-full object-cover" %>
+              <% else %>
+                <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                  <span class="text-3xl">📦</span>
+                </div>
+              <% end %>
+              <% if post.marketplace? && post.product %>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                  <span class="text-white font-semibold text-sm">
+                    <%= price_display(post.product.price) %>
+                  </span>
+                </div>
+              <% end %>
+            </div>
+            <div class="p-3">
+              <h4 class="text-sm font-medium text-gray-900 line-clamp-2"><%= post.title %></h4>
+              <p class="text-xs text-gray-500 mt-1"><%= time_ago_in_words(post.created_at) %> trước</p>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      
+      <% if @selling_posts.count > 6 %>
+        <%= link_to user_listings_path(@user), class: "mt-3 block text-center text-zalo-blue font-medium" do %>
+          Xem tất cả (<%= @selling_posts.count %>) →
+        <% end %>
+      <% end %>
+    <% else %>
+      <div class="bg-white rounded-lg p-8 text-center text-gray-500">
+        <span class="text-4xl mb-2 block">🏪</span>
+        Chưa có sản phẩm nào đang bán
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Sold Items -->
+  <% if @sold_posts.any? %>
+    <div class="px-5 mt-6">
+      <h2 class="font-semibold text-gray-900 mb-3">✅ Đã bán</h2>
+      <div class="space-y-2">
+        <% @sold_posts.each do |post| %>
+          <div class="bg-white rounded-lg p-3 flex items-center gap-3 opacity-75">
+            <% if post.images.attached? && post.images.any? %>
+              <%= image_tag post.images.first, class: "w-12 h-12 rounded-lg object-cover" %>
+            <% else %>
+              <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
+                <span class="text-xl">📦</span>
+              </div>
+            <% end %>
+            <div class="flex-1">
+              <h4 class="text-sm font-medium text-gray-900 line-clamp-1"><%= post.title %></h4>
+              <p class="text-xs text-gray-500">Đã bán <%= time_ago_in_words(post.updated_at) %> trước</p>
+            </div>
+            <span class="text-green-600 text-sm font-medium">Đã bán</span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Reputation Timeline (Enhanced) -->
+  <% if @user.reputation_timeline.any? %>
+    <div class="px-5 mt-6">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-semibold text-gray-900 flex items-center gap-2">
+          <span class="text-xl">⭐</span>
+          Đánh giá gần đây
+        </h2>
+        <span class="text-sm text-gray-500"><%= @user.reputation_timeline.count %> đánh giá</span>
+      </div>
+      <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg shadow-sm divide-y divide-blue-100 border border-blue-200">
+        <% @user.reputation_timeline.limit(10).each do |review| %>
+          <div class="p-4">
+            <div class="flex items-start justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <%= user_avatar(review.reviewer, size: "w-8 h-8", text_size: "text-sm") %>
+                <div>
+                  <p class="font-medium text-gray-900 text-sm"><%= review.reviewer.display_name %></p>
+                  <p class="text-xs text-gray-500"><%= time_ago_in_words(review.created_at) %> trước</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1">
+                <% review.rating.times do %>
+                  <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                <% end %>
+              </div>
+            </div>
+            <% if review.comment.present? %>
+              <p class="text-sm text-gray-600 mt-2"><%= review.comment %></p>
+            <% end %>
+            <div class="mt-3">
+              <%= render 'reviews/reaction_buttons', review: review %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Action Buttons -->
+  <% if user_signed_in? %>
+    <% if current_user == @user %>
+      <div class="px-5 mt-6 space-y-3">
+        <%= link_to edit_profile_path, class: "w-full bg-primary text-white py-3 px-4 rounded-button font-medium hover:bg-primary-hover transition-colors flex items-center justify-center gap-2 shadow-sm" do %>
+          <span class="text-xl">✏️</span>
+          Chỉnh sửa hồ sơ
+        <% end %>
+      </div>
+    <% else %>
+      <div class="px-5 mt-6 space-y-3">
+        <button class="w-full bg-primary text-white py-3 px-4 rounded-button font-medium hover:bg-primary-hover transition-colors flex items-center justify-center gap-2 shadow-sm">
+          <span class="text-xl">💬</span>
+          Nhắn tin
+        </button>
+        
+        <%= link_to new_user_report_path(@user), class: "w-full bg-card border border-border text-text-medium py-3 px-4 rounded-button font-medium hover:bg-bg-light transition-colors flex items-center justify-center gap-2" do %>
+          <span class="text-xl">🚨</span>
+          Báo cáo người dùng
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

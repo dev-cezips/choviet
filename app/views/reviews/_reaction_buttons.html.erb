@@ -1,0 +1,38 @@
+<div id="review_<%= review.id %>_reactions" class="flex items-center gap-6 text-sm text-gray-600 mt-3">
+  <% user_reaction = review.user_reaction(current_user) if user_signed_in? %>
+  
+  <% if user_signed_in? && current_user != review.reviewer %>
+    <%= form_with model: ReviewReaction.new, 
+                  url: user_reaction ? review_reaction_path(review, user_reaction) : review_reaction_path(review),
+                  method: user_reaction ? :patch : :post,
+                  class: "inline-flex",
+                  data: { turbo_frame: "_top" } do |form| %>
+      <%= form.hidden_field :helpful, value: true %>
+      <button type="submit" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-all <%= user_reaction&.helpful? ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100' %>">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+        </svg>
+        <span>Hữu ích (<%= review.helpful_count %>)</span>
+      </button>
+    <% end %>
+    
+    <% if user_reaction %>
+      <%= button_to review_reaction_path(review, user_reaction), 
+                    method: :delete,
+                    class: "flex items-center gap-2 text-sm text-gray-500 hover:text-red-600 px-2 py-1",
+                    data: { turbo_frame: "_top" } do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        <span>Hủy</span>
+      <% end %>
+    <% end %>
+  <% else %>
+    <span class="flex items-center gap-2 text-gray-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+      </svg>
+      <span><%= review.helpful_count %> người thấy hữu ích</span>
+    </span>
+  <% end %>
+</div>

@@ -1,0 +1,91 @@
+vi:
+  devise:
+    confirmations:
+      confirmed: "Email của bạn đã được xác nhận thành công."
+      send_instructions: "Bạn sẽ nhận được email hướng dẫn xác nhận trong vài phút."
+      send_paranoid_instructions: "Nếu email của bạn tồn tại, bạn sẽ nhận được hướng dẫn xác nhận."
+    failure:
+      already_authenticated: "Bạn đã đăng nhập."
+      inactive: "Tài khoản chưa được kích hoạt."
+      invalid: "Email hoặc mật khẩu không đúng."
+      locked: "Tài khoản đã bị khóa."
+      last_attempt: "Bạn còn một lần thử trước khi tài khoản bị khóa."
+      not_found_in_database: "Email hoặc mật khẩu không đúng."
+      timeout: "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại."
+      unauthenticated: "Bạn cần đăng nhập để tiếp tục."
+      unconfirmed: "Bạn cần xác nhận email để tiếp tục."
+    mailer:
+      confirmation_instructions:
+        subject: "Hướng dẫn xác nhận email"
+      reset_password_instructions:
+        subject: "Hướng dẫn đặt lại mật khẩu"
+      unlock_instructions:
+        subject: "Hướng dẫn mở khóa tài khoản"
+      email_changed:
+        subject: "Email đã được thay đổi"
+      password_change:
+        subject: "Mật khẩu đã được thay đổi"
+    omniauth_callbacks:
+      failure: "Không thể xác thực từ %{kind}: \"%{reason}\"."
+      success: "Đăng nhập thành công từ %{kind}."
+    passwords:
+      no_token: "Bạn không thể truy cập trang này nếu không thông qua email đặt lại mật khẩu."
+      send_instructions: "Bạn sẽ nhận được email hướng dẫn đặt lại mật khẩu trong vài phút."
+      send_paranoid_instructions: "Nếu email tồn tại, bạn sẽ nhận được link đặt lại mật khẩu."
+      updated: "Mật khẩu đã được thay đổi thành công."
+      updated_not_active: "Mật khẩu đã được thay đổi."
+    registrations:
+      destroyed: "Tài khoản đã được xóa. Hẹn gặp lại!"
+      signed_up: "Chào mừng! Bạn đã đăng ký thành công."
+      signed_up_but_inactive: "Đã đăng ký nhưng tài khoản chưa kích hoạt."
+      signed_up_but_locked: "Đã đăng ký nhưng tài khoản bị khóa."
+      signed_up_but_unconfirmed: "Email xác nhận đã được gửi. Vui lòng kiểm tra email."
+      update_needs_confirmation: "Cập nhật thành công, vui lòng xác nhận email mới."
+      updated: "Cập nhật tài khoản thành công."
+      updated_but_not_signed_in: "Cập nhật thành công nhưng cần đăng nhập lại."
+    sessions:
+      signed_in: "Đăng nhập thành công."
+      signed_out: "Đăng xuất thành công."
+      already_signed_out: "Đã đăng xuất."
+    unlocks:
+      send_instructions: "Bạn sẽ nhận được email hướng dẫn mở khóa tài khoản."
+      send_paranoid_instructions: "Nếu tài khoản tồn tại, bạn sẽ nhận được hướng dẫn mở khóa."
+      unlocked: "Tài khoản đã được mở khóa. Vui lòng đăng nhập."
+  errors:
+    messages:
+      already_confirmed: "đã được xác nhận"
+      confirmation_period_expired: "cần xác nhận trong %{period}"
+      expired: "đã hết hạn"
+      not_found: "không tìm thấy"
+      not_locked: "chưa bị khóa"
+      not_saved:
+        one: "1 lỗi không cho phép lưu:"
+        other: "%{count} lỗi không cho phép lưu:"
+  
+  # Additional Devise view labels
+  activerecord:
+    attributes:
+      user:
+        confirmation_sent_at: "Thời gian gửi xác nhận"
+        confirmation_token: "Mã xác nhận"
+        confirmed_at: "Thời gian xác nhận"
+        created_at: "Ngày tạo"
+        current_password: "Mật khẩu hiện tại"
+        current_sign_in_at: "Đăng nhập lần này"
+        current_sign_in_ip: "IP đăng nhập"
+        email: "Email"
+        encrypted_password: "Mật khẩu mã hóa"
+        failed_attempts: "Số lần thử thất bại"
+        last_sign_in_at: "Đăng nhập lần trước"
+        last_sign_in_ip: "IP lần trước"
+        locked_at: "Thời gian khóa"
+        password: "Mật khẩu"
+        password_confirmation: "Xác nhận mật khẩu"
+        remember_created_at: "Thời gian ghi nhớ"
+        remember_me: "Ghi nhớ đăng nhập"
+        reset_password_sent_at: "Gửi đặt lại mật khẩu"
+        reset_password_token: "Mã đặt lại mật khẩu"
+        sign_in_count: "Số lần đăng nhập"
+        unconfirmed_email: "Email chưa xác nhận"
+        unlock_token: "Mã mở khóa"
+        updated_at: "Cập nhật lần cuối"

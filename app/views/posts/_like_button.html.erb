@@ -1,0 +1,21 @@
+<% if user_signed_in? %>
+  <% if post.liked_by?(current_user) %>
+    <%= button_to post_like_path(post),
+      method: :delete,
+      form: { data: { turbo_stream: true } },
+      class: "flex items-center gap-1 text-red-500 hover:text-red-600 transition-colors bg-transparent border-0 p-0" do %>
+      ❤️ <%= post.likes.count %>
+    <% end %>
+  <% else %>
+    <%= button_to post_like_path(post),
+      method: :post,
+      form: { data: { turbo_stream: true } },
+      class: "flex items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors bg-transparent border-0 p-0" do %>
+      🤍 <%= post.likes.count %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= link_to new_user_session_path, class: "flex items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors" do %>
+    🤍 <%= post.likes.count %>
+  <% end %>
+<% end %>

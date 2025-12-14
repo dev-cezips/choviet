@@ -1,0 +1,22 @@
+<%# 라이트박스 모달 컴포넌트 %>
+<%# 슬라이더와 분리하여 독립적으로 작동 %>
+<div data-controller="lightbox">
+  <div data-lightbox-target="modal"
+       data-action="click->lightbox#close"
+       class="hidden fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
+    
+    <%# 닫기 버튼 %>
+    <button class="absolute top-5 right-5 text-white p-2 hover:bg-white/20 rounded-full transition-all"
+            data-action="click->lightbox#close">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    
+    <%# 전체 화면 이미지 %>
+    <img data-lightbox-target="fullImage"
+         class="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+         src=""
+         alt="Full size image" />
+  </div>
+</div>

@@ -1,0 +1,4 @@
+web: bin/rails server -p 3004
+css: bin/rails tailwindcss:watch
+js: yarn build --watch
+

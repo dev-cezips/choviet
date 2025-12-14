@@ -1,0 +1,30 @@
+<div id="<%= dom_id post %>" class="w-full sm:w-auto my-5 space-y-5">
+  <div>
+    <strong class="block font-medium mb-1">User:</strong>
+    <%= post.user_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Category:</strong>
+    <%= post.category %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Title:</strong>
+    <%= post.title %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Content:</strong>
+    <%= post.content %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Location code:</strong>
+    <%= post.location_code %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Target korean:</strong>
+    <%= post.target_korean? ? "Yes" : "No" %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Status:</strong>
+    <%= post.status %>
+  </div>
+</div>

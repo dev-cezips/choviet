@@ -1,0 +1,194 @@
+vi:
+  # Application name
+  app_name: "Chợ Việt"
+  tagline: "Cộng đồng người Việt tại Hàn Quốc"
+  all: "Tất cả"
+  
+  # Navigation
+  nav:
+    home: "Trang chủ"
+    marketplace: "Chợ"
+    community: "Cộng đồng"
+    messages: "Tin nhắn"
+    profile: "Tài khoản"
+    sign_in: "Đăng nhập"
+    sign_out: "Đăng xuất"
+    sign_up: "Đăng ký"
+  
+  # Common buttons and actions
+  actions:
+    new: "Tạo mới"
+    edit: "Sửa"
+    delete: "Xóa"
+    save: "Lưu"
+    cancel: "Hủy"
+    back: "Quay lại"
+    search: "Tìm kiếm"
+    filter: "Lọc"
+    post: "Đăng bài"
+    send: "Gửi"
+    upload: "Tải lên"
+    contact: "Liên hệ"
+    share: "Chia sẻ"
+    report: "Báo cáo"
+  
+  # Posts
+  posts:
+    title: "Bài viết"
+    new: "Đăng bài mới"
+    edit: "Chỉnh sửa bài viết"
+    created: "Đã đăng bài thành công!"
+    updated: "Đã cập nhật bài viết!"
+    deleted: "Đã xóa bài viết!"
+    post_types:
+      question: "Hỏi đáp"
+      marketplace: "Mua bán"
+      free_talk: "Tự do"
+      job: "Việc làm"
+      housing: "Nhà ở"
+      service: "Dịch vụ"
+    types:
+      question: "Hỏi đáp"
+      marketplace: "Mua bán"
+      free_talk: "Tự do"
+      job: "Việc làm"
+      housing: "Nhà ở"
+      service: "Dịch vụ"
+    statuses:
+      draft: "Bản nháp"
+      active: "Đang hiển thị"
+      sold: "Đã bán"
+      expired: "Hết hạn"
+      deleted: "Đã xóa"
+    placeholders:
+      title: "Tiêu đề bài viết..."
+      content: "Nội dung chi tiết..."
+      location: "Chọn khu vực"
+      price: "Giá tiền"
+  
+  # Products
+  products:
+    conditions:
+      new_item: "Mới 100%"
+      like_new: "Như mới"
+      good: "Tốt"
+      fair: "Bình thường"
+      poor: "Cũ"
+    sold: "Đã bán"
+    available: "Còn hàng"
+    price: "Giá: %{price} %{currency}"
+  
+  # Messages
+  messages:
+    title: "Tin nhắn"
+    new_conversation: "Cuộc trò chuyện mới"
+    type_message: "Nhập tin nhắn..."
+    send: "Gửi"
+    quick_replies: "Trả lời nhanh"
+    mark_as_read: "Đánh dấu đã đọc"
+    translate: "Dịch"
+    original: "Tin gốc"
+  
+  # User
+  users:
+    profile: "Hồ sơ"
+    edit_profile: "Chỉnh sửa hồ sơ"
+    my_posts: "Bài của tôi"
+    saved_posts: "Bài đã lưu"
+    settings: "Cài đặt"
+    verification_badge: "Đã xác minh"
+    reputation: "Uy tín: %{score}"
+    member_since: "Thành viên từ %{date}"
+    updated: "Hồ sơ đã được cập nhật thành công!"
+  
+  # Communities
+  communities:
+    title: "Cộng đồng"
+    join: "Tham gia"
+    leave: "Rời khỏi"
+    members: "%{count} thành viên"
+    create_new: "Tạo cộng đồng mới"
+    popular: "Phổ biến"
+    my_communities: "Cộng đồng của tôi"
+    rules: "Nội quy"
+  
+  # Location
+  locations:
+    seoul: "Seoul"
+    busan: "Busan"
+    incheon: "Incheon"
+    daegu: "Daegu"
+    daejeon: "Daejeon"
+    gwangju: "Gwangju"
+    ulsan: "Ulsan"
+    gyeonggi: "Gyeonggi"
+    other: "Khác"
+  
+  # Time
+  time:
+    just_now: "Vừa xong"
+    minutes_ago: "%{count} phút trước"
+    hours_ago: "%{count} giờ trước"
+    days_ago: "%{count} ngày trước"
+    months_ago: "%{count} tháng trước"
+    years_ago: "%{count} năm trước"
+  
+  # Forms
+  forms:
+    errors:
+      blank: "không được để trống"
+      taken: "đã được sử dụng"
+      invalid: "không hợp lệ"
+      too_short: "quá ngắn (tối thiểu %{count} ký tự)"
+      too_long: "quá dài (tối đa %{count} ký tự)"
+    labels:
+      email: "Email"
+      password: "Mật khẩu"
+      password_confirmation: "Xác nhận mật khẩu"
+      remember_me: "Ghi nhớ đăng nhập"
+      name: "Tên"
+      phone: "Số điện thoại"
+      location: "Khu vực"
+      language: "Ngôn ngữ"
+  
+  # Devise
+  devise:
+    sessions:
+      signed_in: "Đăng nhập thành công"
+      signed_out: "Đăng xuất thành công"
+    registrations:
+      signed_up: "Đăng ký thành công! Chào mừng bạn đến với Chợ Việt"
+      updated: "Cập nhật tài khoản thành công"
+    passwords:
+      send_instructions: "Bạn sẽ nhận được email hướng dẫn đặt lại mật khẩu"
+      updated: "Mật khẩu đã được thay đổi thành công"
+  
+  # Quick replies for chat
+  quick_replies:
+    greeting: "Xin chào!"
+    available: "Còn hàng không?"
+    price_negotiable: "Giá có thương lượng được không?"
+    location: "Ở khu vực nào?"
+    condition: "Tình trạng thế nào?"
+    thank_you: "Cảm ơn bạn!"
+    interested: "Mình quan tâm"
+    when_available: "Khi nào có thể xem hàng?"
+  
+  # Reports
+  reports:
+    title: "🚨 Báo cáo vi phạm"
+    reporting_post: "Bạn đang báo cáo bài viết này"
+    reporting_user: "Bạn đang báo cáo người dùng này"
+    by_user: "bởi"
+    reason: "Lý do báo cáo"
+    description: "Chi tiết thêm (tùy chọn)"
+    description_placeholder: "Mô tả thêm về vi phạm..."
+    submit: "Gửi báo cáo"
+    submitting: "Đang gửi..."
+    cancel: "Hủy"
+    created: "Đã gửi báo cáo thành công. Chúng tôi sẽ xem xét trong 24h."
+    notice:
+      title: "📢 Lưu ý:"
+      false_report: "Báo cáo sai có thể ảnh hưởng đến uy tín của bạn"
+      review: "Chúng tôi sẽ xem xét trong 24h"
+      auto_hide: "Nội dung có 3 báo cáo sẽ tự động ẩn"

@@ -1,0 +1,130 @@
+<div class="min-h-screen bg-off-white">
+  <div class="container mx-auto px-4 py-6 max-w-lg">
+    <!-- Header -->
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-charcoal">Cập nhật tài khoản</h2>
+      <p class="text-gray-600 text-sm mt-1">Quản lý thông tin cá nhân của bạn</p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <!-- Email -->
+      <div class="bg-pure-white rounded-xl p-6 shadow-sm">
+        <div class="space-y-4">
+          <div>
+            <%= f.label :email, "Email", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.email_field :email, 
+                autofocus: true, 
+                autocomplete: "email",
+                class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zalo-blue focus:border-transparent",
+                placeholder: "your@email.com" %>
+          </div>
+
+          <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+            <div class="bg-yellow-50 rounded-lg p-3">
+              <p class="text-sm text-yellow-800">
+                Đang chờ xác nhận cho: <%= resource.unconfirmed_email %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Password Change -->
+      <div class="bg-pure-white rounded-xl p-6 shadow-sm">
+        <h3 class="text-lg font-semibold text-charcoal mb-4">Đổi mật khẩu</h3>
+        <p class="text-sm text-gray-600 mb-4">Để trống nếu bạn không muốn thay đổi mật khẩu</p>
+        
+        <div class="space-y-4">
+          <!-- New Password -->
+          <div>
+            <%= f.label :password, "Mật khẩu mới", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.password_field :password, 
+                autocomplete: "new-password",
+                class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zalo-blue focus:border-transparent",
+                placeholder: "••••••••" %>
+            <% if @minimum_password_length %>
+              <p class="mt-1 text-xs text-gray-500">Tối thiểu <%= @minimum_password_length %> ký tự</p>
+            <% end %>
+          </div>
+
+          <!-- Confirm Password -->
+          <div>
+            <%= f.label :password_confirmation, "Xác nhận mật khẩu mới", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.password_field :password_confirmation, 
+                autocomplete: "new-password",
+                class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zalo-blue focus:border-transparent",
+                placeholder: "••••••••" %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Password -->
+      <div class="bg-pure-white rounded-xl p-6 shadow-sm">
+        <div>
+          <%= f.label :current_password, "Mật khẩu hiện tại", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <p class="text-sm text-gray-600 mb-2">Nhập mật khẩu hiện tại để xác nhận thay đổi</p>
+          <%= f.password_field :current_password, 
+              autocomplete: "current-password",
+              class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zalo-blue focus:border-transparent",
+              placeholder: "••••••••",
+              required: true %>
+        </div>
+      </div>
+
+      <!-- Additional User Info (Name, Vietnamese status) -->
+      <div class="bg-pure-white rounded-xl p-6 shadow-sm">
+        <h3 class="text-lg font-semibold text-charcoal mb-4">Thông tin cá nhân</h3>
+        
+        <div class="space-y-4">
+          <!-- Name -->
+          <div>
+            <%= f.label :name, "Tên hiển thị", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.text_field :name, 
+                class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zalo-blue focus:border-transparent",
+                placeholder: "Nguyễn Văn A" %>
+          </div>
+
+          <!-- Language Selection -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Ngôn ngữ</label>
+            <div class="space-y-2">
+              <div class="flex items-center">
+                <%= f.radio_button :locale, 'vi', class: "h-4 w-4 text-zalo-blue focus:ring-zalo-blue" %>
+                <%= f.label :locale_vi, "🇻🇳 Tiếng Việt", class: "ml-2 text-sm text-gray-700" %>
+              </div>
+              <div class="flex items-center">
+                <%= f.radio_button :locale, 'ko', class: "h-4 w-4 text-zalo-blue focus:ring-zalo-blue" %>
+                <%= f.label :locale_ko, "🇰🇷 한국어 (Tiếng Hàn)", class: "ml-2 text-sm text-gray-700" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-4">
+        <%= f.submit "Cập nhật", 
+            class: "flex-1 bg-zalo-blue text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer" %>
+        <%= link_to "Hủy", :back, 
+            class: "px-6 py-3 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-colors text-center" %>
+      </div>
+    <% end %>
+
+    <!-- Danger Zone -->
+    <div class="mt-8 bg-red-50 rounded-xl p-6">
+      <h3 class="text-lg font-semibold text-red-800 mb-2">Vùng nguy hiểm</h3>
+      <p class="text-sm text-red-600 mb-4">Sau khi xóa tài khoản, bạn không thể khôi phục lại</p>
+      
+      <%= button_to "Xóa tài khoản", 
+          registration_path(resource_name), 
+          data: { 
+            confirm: "Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác!", 
+            turbo_confirm: "Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác!" 
+          }, 
+          method: :delete,
+          class: "text-red-600 hover:text-red-800 text-sm font-medium underline" %>
+    </div>
+  </div>
+</div>

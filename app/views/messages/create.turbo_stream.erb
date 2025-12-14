@@ -1,0 +1,8 @@
+<%= turbo_stream.append "messages-container", partial: "messages/message", 
+    locals: { message: @message, current_user: current_user } %>
+
+<%= turbo_stream.replace "new_message" do %>
+  <%= render "messages/form", post: @post, chat_room: @chat_room, message: Message.new %>
+<% end %>
+
+<%= turbo_stream_action_tag "scroll", target: "messages", position: "end" %>

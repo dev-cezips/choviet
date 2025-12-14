@@ -1,0 +1,47 @@
+<div class="bg-gray-50 min-h-screen pb-20">
+  <!-- User Header -->
+  <div class="bg-white border-b">
+    <div class="container mx-auto px-4 py-4">
+      <%= link_to user_path(@user), class: "flex items-center gap-3" do %>
+        <%= user_avatar(@user, size: "w-12 h-12", text_size: "text-lg") %>
+        <div>
+          <h1 class="text-lg font-semibold text-gray-900"><%= @user.display_name %></h1>
+          <p class="text-sm text-gray-500">
+            <%= @posts.total_count %> bài đăng
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Posts Grid -->
+  <div class="container mx-auto px-4 py-6">
+    <% if @posts.any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @posts.each do |post| %>
+          <%= render 'posts/post_item', post: post %>
+        <% end %>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="mt-8 flex justify-center">
+        <%= paginate @posts %>
+      </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-12">
+        <svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+        </svg>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Chưa có bài đăng nào</h3>
+        <p class="text-gray-500 mb-6">Người dùng này chưa đăng bài nào.</p>
+        
+        <% if @user == current_user %>
+          <%= link_to "Đăng bài mới", new_post_path, class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" %>
+        <% else %>
+          <%= link_to "Quay lại trang hồ sơ", user_path(@user), class: "inline-flex items-center text-blue-600 hover:text-blue-700" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

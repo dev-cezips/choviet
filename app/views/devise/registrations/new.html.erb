@@ -1,0 +1,174 @@
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <!-- Logo -->
+    <div class="text-center">
+      <span class="text-6xl">🏪</span>
+      <h2 class="mt-4 text-3xl font-bold text-gray-900">
+        Tạo tài khoản Chợ Việt
+      </h2>
+      <p class="mt-2 text-sm text-gray-600">
+        Tham gia cộng đồng người Việt tại Hàn Quốc
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow-lg sm:rounded-xl sm:px-10" data-controller="login-form">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { data: { turbo: false } }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+        
+        <div class="space-y-6">
+          <!-- Name -->
+          <div>
+            <%= f.label :name, class: "block text-sm font-medium text-gray-700" do %>
+              Tên hiển thị
+            <% end %>
+            <div class="mt-1">
+              <%= f.text_field :name,
+                  autofocus: true,
+                  required: true,
+                  placeholder: "Nguyễn Văn A",
+                  class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-900 bg-white" %>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <%= f.label :email, class: "block text-sm font-medium text-gray-700" do %>
+              Email
+            <% end %>
+            <div class="mt-1">
+              <%= f.email_field :email, 
+                  autocomplete: "email",
+                  required: true,
+                  placeholder: "nguyen@example.com",
+                  class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-900 bg-white" %>
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <%= f.label :phone, class: "block text-sm font-medium text-gray-700" do %>
+              Số điện thoại <span class="text-gray-500 text-xs">(tùy chọn)</span>
+            <% end %>
+            <div class="mt-1">
+              <%= f.text_field :phone,
+                  autocomplete: "tel",
+                  placeholder: "010-1234-5678",
+                  class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-900 bg-white" %>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <%= f.label :password, class: "block text-sm font-medium text-gray-700" do %>
+              Mật khẩu
+              <% if @minimum_password_length %>
+                <span class="text-gray-500 text-xs">(tối thiểu <%= @minimum_password_length %> ký tự)</span>
+              <% end %>
+            <% end %>
+            <div class="mt-1">
+              <%= f.password_field :password,
+                  autocomplete: "new-password",
+                  required: true,
+                  placeholder: "••••••••",
+                  class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-900 bg-white" %>
+            </div>
+          </div>
+
+          <!-- Password Confirmation -->
+          <div>
+            <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700" do %>
+              Xác nhận mật khẩu
+            <% end %>
+            <div class="mt-1">
+              <%= f.password_field :password_confirmation,
+                  autocomplete: "new-password",
+                  required: true,
+                  placeholder: "••••••••",
+                  class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-900 bg-white" %>
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div>
+            <%= f.label :location_code, class: "block text-sm font-medium text-gray-700" do %>
+              Khu vực sống <span class="text-gray-500 text-xs">(có thể thay đổi sau)</span>
+            <% end %>
+            <div class="mt-1">
+              <%= f.select :location_code,
+                  options_for_select([
+                    ['Chọn khu vực...', ''],
+                    ['Seoul (서울)', 'seoul'],
+                    ['Busan (부산)', 'busan'],
+                    ['Incheon (인천)', 'incheon'],
+                    ['Daegu (대구)', 'daegu'],
+                    ['Daejeon (대전)', 'daejeon'],
+                    ['Gwangju (광주)', 'gwangju'],
+                    ['Ulsan (울산)', 'ulsan'],
+                    ['Gyeonggi (경기도)', 'gyeonggi']
+                  ]),
+                  {},
+                  { class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500" } %>
+            </div>
+          </div>
+
+          <!-- Terms -->
+          <div class="flex items-start">
+            <input type="checkbox" required class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded mt-0.5">
+            <label class="ml-2 block text-sm text-gray-600">
+              Tôi đồng ý với <a href="#" class="text-red-600 hover:text-red-500">điều khoản sử dụng</a> và <a href="#" class="text-red-600 hover:text-red-500">chính sách bảo mật</a>
+            </label>
+          </div>
+
+          <!-- Submit -->
+          <div>
+            <%= f.submit "Đăng ký", 
+                class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all cursor-pointer",
+                style: "background-color: #FF6B6B;",
+                id: "register-submit-button" %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Already have account -->
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">Đã có tài khoản?</span>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <%= link_to "Đăng nhập", new_session_path(resource_name), 
+              class: "w-full flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Simple form enhancement for registration
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const button = document.getElementById('register-submit-button');
+    
+    if (form && button) {
+      // Make sure button is enabled
+      button.disabled = false;
+      button.style.cursor = 'pointer';
+      
+      // Handle Enter key
+      form.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && e.target.type !== 'submit') {
+          e.preventDefault();
+          form.submit();
+        }
+      });
+    }
+  });
+</script>

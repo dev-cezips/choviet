@@ -1,0 +1,96 @@
+<article class="bg-pure-white rounded-card shadow-card hover:shadow-card-hover transition-shadow p-4">
+  <!-- Header -->
+  <div class="flex items-start justify-between mb-3">
+    <div class="flex items-center gap-3">
+      <%= link_to user_path(post.user), class: "flex items-center gap-3", data: { turbo: false } do %>
+        <%= user_avatar(post.user, size: "w-10 h-10") %>
+        <div>
+          <div class="font-medium text-charcoal hover:underline flex items-center gap-2">
+            <%= post.user.display_name %>
+            <% if post.user.reviews_received.any? %>
+              <span class="text-xs text-gray-600 font-normal">
+                ⭐ <%= post.user.calculate_reputation_score %>
+              </span>
+            <% end %>
+          </div>
+          <div class="text-xs text-gray-500 flex items-center gap-1">
+            <% if post.location %>
+              <span><%= location_display(post.location) %></span>
+              <span>•</span>
+            <% end %>
+            <span><%= viet_time_ago(post.created_at) %></span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <%= link_to posts_path(type: post.post_type), class: "inline-block", data: { turbo: false } do %>
+      <%= category_badge(post) %>
+    <% end %>
+  </div>
+
+  <!-- Content (clickable to go to post) -->
+  <%= link_to post, class: "block" do %>
+    <h3 class="font-semibold text-charcoal mb-2 line-clamp-2 hover:text-zalo-blue">
+      <%= post.title %>
+    </h3>
+    
+    <p class="text-gray-600 text-sm line-clamp-2 mb-3">
+      <%= truncate(post.content, length: 120) %>
+    </p>
+
+    <!-- Images Preview -->
+    <% if post.images.attached? && post.images.any? %>
+      <div class="mb-3">
+        <div class="grid grid-cols-3 gap-2">
+          <% post.images.first(3).each_with_index do |image, index| %>
+            <div class="relative">
+              <%= image_tag url_for(image), class: "w-full h-20 object-cover rounded-lg" %>
+              <% if index == 2 && post.images.count > 3 %>
+                <div class="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
+                  <span class="text-white font-semibold text-sm">+<%= post.images.count - 3 %></span>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Price (for marketplace posts) -->
+    <% if post.marketplace? && post.product %>
+      <div class="mb-3">
+        <span class="text-lg font-bold text-soft-coral">
+          <%= price_display(post.product.price) %>
+        </span>
+        <% if post.product.sold? %>
+          <span class="ml-2 text-sm text-gray-500 line-through">Đã bán</span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Footer Stats -->
+    <div class="flex items-center gap-4 text-sm text-gray-500">
+      <span class="flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+        </svg>
+        <%= post.views_count %>
+      </span>
+      <span class="flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+        <%= post.comments_count %>
+      </span>
+      <% if post.target_korean %>
+        <span class="flex items-center gap-1 text-blue-600">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+          </svg>
+          Dịch KR
+        </span>
+      <% end %>
+    </div>
+  <% end %>
+</article>

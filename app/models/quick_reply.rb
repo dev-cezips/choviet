@@ -1,0 +1,2 @@
+class QuickReply < ApplicationRecord
+end

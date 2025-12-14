@@ -1,0 +1,11 @@
+<%= turbo_stream.replace "post_likes_#{@post.id}" do %>
+  <% if request.referrer&.include?('/posts/') && !request.referrer&.include?('type=') %>
+    <%= render partial: "posts/like_button_detail", locals: { post: @post } %>
+  <% else %>
+    <%= render partial: "posts/like_button", locals: { post: @post } %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.replace "post_likes_desktop_#{@post.id}" do %>
+  <%= render partial: "posts/like_button_detail", locals: { post: @post } %>
+<% end %>

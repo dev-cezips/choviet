@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Login Test Helper</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .box { background: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 8px; }
+    .credential { background: #e8f4e8; padding: 10px; margin: 10px 0; }
+    .step { margin: 10px 0; padding-left: 20px; }
+    button { padding: 10px 20px; background: #0068FF; color: white; border: none; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Chợ Việt - Login Test Helper</h1>
+  
+  <div class="box">
+    <h2>🔑 Test Credentials</h2>
+    <div class="credential">
+      <strong>Email:</strong> test@example.com<br>
+      <strong>Password:</strong> password123
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>📝 Login Steps</h2>
+    <ol>
+      <li class="step">Click the button below to go to the login page</li>
+      <li class="step">Enter the email: test@example.com</li>
+      <li class="step">Enter the password: password123</li>
+      <li class="step">Click the blue "Đăng nhập" button</li>
+      <li class="step">You should be redirected to the marketplace page</li>
+    </ol>
+  </div>
+
+  <div class="box">
+    <h2>🚀 Quick Actions</h2>
+    <button onclick="window.location.href='http://localhost:3004/users/sign_in'">Go to Login Page</button>
+    <button onclick="window.location.href='http://localhost:3004'">Go to Home Page</button>
+  </div>
+
+  <div class="box">
+    <h2>🛠️ Troubleshooting</h2>
+    <p>If login is not working:</p>
+    <ul>
+      <li>Make sure you see the blue "Đăng nhập" button</li>
+      <li>Check that the email and password fields are visible</li>
+      <li>Try refreshing the page (Cmd+R or F5)</li>
+      <li>Check if there's a red error message after clicking login</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h2>📊 Server Status</h2>
+    <p>Server should be running on: <strong>http://localhost:3004</strong></p>
+    <p>Current time: <span id="time"></span></p>
+  </div>
+
+  <script>
+    document.getElementById('time').textContent = new Date().toLocaleString();
+  </script>
+</body>
+</html>
