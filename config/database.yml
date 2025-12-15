@@ -13,38 +13,68 @@ default: &default
 #  password: <%= ENV.fetch("DATABASE_PASSWORD", "") %>
 
 development:
-  <<: *default
-  host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
-  username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
-  password: <%= ENV.fetch("DATABASE_PASSWORD", "") %>
-  database: cho_viet_development
+  primary: &dev_primary
+    <<: *default
+    host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
+    username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
+    password: <%= ENV.fetch("DATABASE_PASSWORD", "") %>
+    database: cho_viet_development
+  cache:
+    <<: *dev_primary
+    database: cho_viet_development_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *dev_primary
+    database: cho_viet_development_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *dev_primary
+    database: cho_viet_development_cable
+    migrations_paths: db/cable_migrate  
+
+#  <<: *default
+#  host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
+#  username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
+#  password: <%= ENV.fetch("DATABASE_PASSWORD", "") %>
+#  database: cho_viet_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
-  username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
-  password: <%= ENV.fetch("DATABASE_PASSWORD", "") %>
-  database: cho_viet_test
+  primary: &test_primary
+    <<: *default
+    host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
+    username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
+    password: <%= ENV.fetch("DATABASE_PASSWORD", "") %>
+    database: cho_viet_test
+  cache:
+    <<: *test_primary
+    database: cho_viet_test_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *test_primary
+    database: cho_viet_test_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *test_primary
+    database: cho_viet_test_cable
+    migrations_paths: db/cable_migrate
 
 
 # Store production database in the storage/ directory, which by default
 # is mounted as a persistent Docker volume in config/deploy.yml.
 production:
-  primary:
-#    <<: *default
+  primary: &prod_primary
+    <<: *default
     url: <%= ENV["DATABASE_URL"] %>
   cache:
-    <<: *primary
-#    database: cho_viet_production_cache
+    <<: *prod_primary
     migrations_paths: db/cache_migrate
   queue:
-    <<: *primary
-#    database: cho_viet_production_queue
+    <<: *prod_primary
     migrations_paths: db/queue_migrate
   cable:
-    <<: *primary
-#    database: cho_viet_production_cable
+    <<: *prod_primary
     migrations_paths: db/cable_migrate
+
