@@ -38,3 +38,8 @@
 
 /node_modules
 .DS_Store
+*.pem
+*.key
+
+# Kamal secrets
+.kamal/secrets

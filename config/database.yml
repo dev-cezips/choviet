@@ -29,10 +29,7 @@ test:
 production:
   primary:
     <<: *default
-    database: cho_viet_production
-    username: <%= ENV["DATABASE_USERNAME"] %>
-    password: <%= ENV["DATABASE_PASSWORD"] %>
-    host: <%= ENV["DATABASE_HOST"] %>
+    url: <%= ENV["DATABASE_URL"] %>
   cache:
     <<: *default
     database: cho_viet_production_cache
