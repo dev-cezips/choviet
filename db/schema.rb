@@ -12,7 +12,6 @@
 
 ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_catalog.plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -45,14 +44,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   create_table "analytics_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.bigint "user_id"
     t.string "event_type", null: false
-    t.jsonb "properties", default: {}
-    t.jsonb "request_details", default: {}
+    t.json "properties", default: {}
+    t.json "request_details", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_analytics_events_on_created_at"
     t.index ["event_type", "created_at"], name: "index_analytics_events_on_event_type_and_created_at"
     t.index ["event_type"], name: "index_analytics_events_on_event_type"
-    t.index ["properties"], name: "index_analytics_events_on_properties", using: :gin
     t.index ["user_id"], name: "index_analytics_events_on_user_id"
   end
 
