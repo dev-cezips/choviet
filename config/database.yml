@@ -5,31 +5,25 @@
 #   gem "sqlite3"
 #
 default: &default
-  adapter: postgresql
-  encoding: unicode
+  adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-#  host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
-#  username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
-#  password: <%= ENV.fetch("DATABASE_PASSWORD", "") %>
+  timeout: 5000
 
 development:
-  primary: &dev_primary
+  primary:
     <<: *default
-    host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
-    username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
-    password: <%= ENV.fetch("DATABASE_PASSWORD", "") %>
-    database: cho_viet_development
+    database: storage/development.sqlite3
   cache:
-    <<: *dev_primary
-    database: cho_viet_development_cache
+    <<: *default
+    database: storage/development_cache.sqlite3
     migrations_paths: db/cache_migrate
   queue:
-    <<: *dev_primary
-    database: cho_viet_development_queue
+    <<: *default
+    database: storage/development_queue.sqlite3
     migrations_paths: db/queue_migrate
   cable:
-    <<: *dev_primary
-    database: cho_viet_development_cable
+    <<: *default
+    database: storage/development_cable.sqlite3
     migrations_paths: db/cable_migrate  
 
 #  <<: *default
@@ -42,39 +36,39 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  primary: &test_primary
+  primary:
     <<: *default
-    host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
-    username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
-    password: <%= ENV.fetch("DATABASE_PASSWORD", "") %>
-    database: cho_viet_test
+    database: storage/test.sqlite3
   cache:
-    <<: *test_primary
-    database: cho_viet_test_cache
+    <<: *default
+    database: storage/test_cache.sqlite3
     migrations_paths: db/cache_migrate
   queue:
-    <<: *test_primary
-    database: cho_viet_test_queue
+    <<: *default
+    database: storage/test_queue.sqlite3
     migrations_paths: db/queue_migrate
   cable:
-    <<: *test_primary
-    database: cho_viet_test_cable
+    <<: *default
+    database: storage/test_cable.sqlite3
     migrations_paths: db/cable_migrate
 
 
 # Store production database in the storage/ directory, which by default
 # is mounted as a persistent Docker volume in config/deploy.yml.
 production:
-  primary: &prod_primary
+  primary:
     <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
+    database: storage/production.sqlite3
   cache:
-    <<: *prod_primary
+    <<: *default
+    database: storage/production_cache.sqlite3
     migrations_paths: db/cache_migrate
   queue:
-    <<: *prod_primary
+    <<: *default
+    database: storage/production_queue.sqlite3
     migrations_paths: db/queue_migrate
   cable:
-    <<: *prod_primary
+    <<: *default
+    database: storage/production_cable.sqlite3
     migrations_paths: db/cable_migrate
 
