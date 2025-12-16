@@ -41,7 +41,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "analytics_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "analytics_events", force: :cascade do |t|
     t.bigint "user_id"
     t.string "event_type", null: false
     t.json "properties", default: {}
