@@ -92,3 +92,7 @@ end
 gem "devise", "~> 4.9"
 
 gem "jsbundling-rails", "~> 1.3"
+
+# Error tracking
+gem "sentry-ruby"
+gem "sentry-rails"
