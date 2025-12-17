@@ -46,5 +46,11 @@ module ChoViet
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    
+    # Redirect www to apex domain in production
+    if Rails.env.production?
+      require_relative '../app/middleware/canonical_host'
+      config.middleware.use CanonicalHost, "choviet.chat"
+    end
   end
 end
