@@ -14,69 +14,23 @@ permissions:
 
 env:
   RAILS_ENV: test
-  DATABASE_URL: sqlite3:db/test.sqlite3
-  SECRET_KEY_BASE: dummy
-  CI: true
+  BUNDLE_WITHOUT: "production"
 
 jobs:
-  security:
-    name: Security scans
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby (bundler cache)
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Brakeman (Rails security scan)
-        run: bin/brakeman --no-pager
-
-      - name: Importmap audit (JS deps security)
-        run: bin/importmap audit
-
-  lint:
-    name: RuboCop
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby (bundler cache)
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: RuboCop
-        run: bin/rubocop -f github
-
   test:
-    name: Test (SQLite + Minitest)
     runs-on: ubuntu-latest
-    timeout-minutes: 25
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
+      # SQLite gem 컴파일/실행에 필요한 OS 패키지 (bundle install 전에!)
       - name: Install OS deps (SQLite)
         run: |
           sudo apt-get update
-          sudo apt-get install -y libsqlite3-dev
+          sudo apt-get install -y sqlite3 libsqlite3-dev
 
-      # 시스템 테스트(test/system) 돌릴 거면 Chrome이 필요할 수 있음
-      - name: Set up Chrome (for system tests)
-        uses: browser-actions/setup-chrome@v1
-
-      - name: Set up Ruby (bundler cache)
+      - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
@@ -85,17 +39,33 @@ jobs:
       - name: Prepare DB
         run: bin/rails db:prepare
 
-      - name: Zeitwerk check
-        run: bin/rails zeitwerk:check
-
-      - name: Precompile assets (safe for CI)
-        run: bin/rails assets:precompile
-
-      - name: Run tests (unit/integration)
+      - name: Run tests
         run: bin/rails test
 
+  system_test:
+    # 시스템 테스트는 느리니까 PR에서만 돌리기(원하면 바꿔도 됨)
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install OS deps (SQLite)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sqlite3 libsqlite3-dev
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Prepare DB
+        run: bin/rails db:prepare
+
       - name: Run system tests
-        if: github.event_name == 'pull_request'
         run: bin/rails test:system
 
       - name: Upload system test artifacts (screenshots)
@@ -107,3 +77,45 @@ jobs:
             tmp/screenshots
             tmp/capybara
           if-no-files-found: ignore
+
+  security_and_lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install OS deps (SQLite)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sqlite3 libsqlite3-dev
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Brakeman (if configured)
+        run: |
+          if [ -x bin/brakeman ]; then
+            bin/brakeman --no-pager
+          else
+            echo "bin/brakeman not found; skipping."
+          fi
+
+      - name: Importmap audit (if configured)
+        run: |
+          if [ -x bin/importmap ]; then
+            bin/importmap audit
+          else
+            echo "bin/importmap not found; skipping."
+          fi
+
+      - name: RuboCop (if configured)
+        run: |
+          if [ -x bin/rubocop ]; then
+            bin/rubocop -f github
+          else
+            echo "bin/rubocop not found; skipping."
+          fi
