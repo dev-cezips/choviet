@@ -97,3 +97,13 @@ jobs:
       - name: Run system tests
         if: github.event_name == 'pull_request'
         run: bin/rails test:system
+
+      - name: Upload system test artifacts (screenshots)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: system-test-artifacts
+          path: |
+            tmp/screenshots
+            tmp/capybara
+          if-no-files-found: ignore
