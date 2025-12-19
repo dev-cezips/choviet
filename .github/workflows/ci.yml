@@ -24,6 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # SQLite gem 컴파일/실행에 필요한 OS 패키지 (bundle install 전에!)
       - name: Install OS deps (SQLite)
         run: |
           sudo apt-get update
@@ -36,12 +37,13 @@ jobs:
           bundler-cache: true
 
       - name: Prepare DB (test, no seeds)
-        run: bin/rails db:drop db:create db:schema:load
+        run: bin/rails db:create db:schema:load
 
       - name: Run tests
         run: bin/rails test
 
   system_test:
+    # 시스템 테스트는 느리니까 PR에서만 돌리기
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
 
@@ -61,7 +63,7 @@ jobs:
           bundler-cache: true
 
       - name: Prepare DB (test, no seeds)
-        run: bin/rails db:drop db:create db:schema:load
+        run: bin/rails db:create db:schema:load
 
       - name: Run system tests
         run: bin/rails test:system
