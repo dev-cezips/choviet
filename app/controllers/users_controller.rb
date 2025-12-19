@@ -26,7 +26,22 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update(user_params)
+    attrs = user_params.to_h
+    
+    # Auto-detect location from GPS coordinates if provided
+    if attrs["latitude"].present? && attrs["longitude"].present?
+      detected_location = detect_location_from_coordinates(
+        attrs["latitude"].to_f,
+        attrs["longitude"].to_f
+      )
+      
+      # Inject detected location_code if not already provided
+      if detected_location && attrs["location_code"].blank?
+        attrs["location_code"] = detected_location.code
+      end
+    end
+    
+    if @user.update(attrs)
       redirect_to user_path(@user), notice: I18n.t("users.updated")
     else
       render :edit, status: :unprocessable_entity
@@ -52,6 +67,29 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :bio, :phone, :location_code, :avatar, :locale, :latitude, :longitude)
+  end
+  
+  def detect_location_from_coordinates(lat, lng)
+    # Simple distance-based detection
+    # In a real app, you'd use geocoder gem with Location.near([lat, lng], radius).first
+    
+    locations = Location.all
+    closest_location = nil
+    min_distance = Float::INFINITY
+    
+    locations.each do |location|
+      next unless location.lat && location.lng
+      
+      # Simple distance calculation (not accurate for large distances, but OK for Korea)
+      distance = Math.sqrt((location.lat - lat)**2 + (location.lng - lng)**2)
+      
+      if distance < min_distance && distance < 0.5 # ~50km radius
+        min_distance = distance
+        closest_location = location
+      end
+    end
+    
+    closest_location
   end
 end
 

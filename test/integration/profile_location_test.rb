@@ -4,6 +4,34 @@ require "test_helper"
 
 class ProfileLocationTest < ActionDispatch::IntegrationTest
   setup do
+    # Create locations for testing
+    @seoul = Location.create!(
+      code: "seoul",
+      name_vi: "Seoul",
+      name_ko: "서울",
+      lat: 37.5665,
+      lng: 126.9780,
+      level: 1
+    )
+    
+    @gyeonggi = Location.create!(
+      code: "gyeonggi", 
+      name_vi: "Gyeonggi",
+      name_ko: "경기도",
+      lat: 37.4138,
+      lng: 127.5183,
+      level: 1
+    )
+    
+    @ansan = Location.create!(
+      code: "ansan",
+      name_vi: "Ansan",
+      name_ko: "안산시",
+      lat: 37.3236,
+      lng: 126.8219,
+      level: 2
+    )
+    
     @user = User.create!(
       email: "test_#{SecureRandom.hex(4)}@example.com",
       password: "password123",
@@ -71,6 +99,24 @@ class ProfileLocationTest < ActionDispatch::IntegrationTest
     assert_in_delta 126.9780, @user.longitude, 0.0001
   end
 
+  test "server auto-detects location from GPS coordinates" do
+    sign_in @user
+
+    # Send GPS coords near Seoul without location_code
+    patch profile_path, params: {
+      user: {
+        latitude: 37.5665,
+        longitude: 126.9780
+      }
+    }
+
+    assert_redirected_to user_path(@user)
+    @user.reload
+    assert_equal "seoul", @user.location_code, "Should auto-detect Seoul from coordinates"
+    assert_in_delta 37.5665, @user.latitude, 0.0001
+    assert_in_delta 126.9780, @user.longitude, 0.0001
+  end
+
   test "profile edit page shows location warning when location_code is blank" do
     sign_in @user
     get edit_profile_path
@@ -85,15 +131,14 @@ class ProfileLocationTest < ActionDispatch::IntegrationTest
     assert_select "#detect-location-btn", "Dùng vị trí hiện tại"
   end
 
-  test "profile edit page includes all location options" do
+  test "profile edit page includes location options from database" do
     sign_in @user
     get edit_profile_path
     assert_response :success
 
     assert_select "select#user_location_code option[value='seoul']", "Seoul"
-    assert_select "select#user_location_code option[value='gyeonggi']", "Gyeonggi (경기도)"
-    assert_select "select#user_location_code option[value='ansan']", "Ansan (안산시)"
-    assert_select "select#user_location_code option[value='suwon']", "Suwon (수원시)"
+    assert_select "select#user_location_code option[value='gyeonggi']", "Gyeonggi"
+    assert_select "select#user_location_code option[value='ansan']", "Ansan"
   end
 
   test "profile edit page includes language selection" do
@@ -133,6 +178,17 @@ class ProfileLocationTest < ActionDispatch::IntegrationTest
     @user.reload
     assert_equal "New Name", @user.name
     assert_equal "seoul", @user.location_code
+  end
+
+  test "profile edit page shows warning when no locations in database" do
+    # Delete all locations
+    Location.destroy_all
+    
+    sign_in @user
+    get edit_profile_path
+    assert_response :success
+    
+    assert_select ".text-red-600", /Không có khu vực nào trong hệ thống/
   end
 
   private

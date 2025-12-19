@@ -93,22 +93,19 @@
         
         <div id="location-status" class="hidden text-sm"></div>
         
-        <%= f.select :location_code, 
-            options_for_select([
-              ["Chọn khu vực", ""],
-              ["Seoul", "seoul"],
-              ["Gyeonggi (경기도)", "gyeonggi"],
-              ["Ansan (안산시)", "ansan"],
-              ["Suwon (수원시)", "suwon"],
-              ["Busan", "busan"],
-              ["Incheon", "incheon"],
-              ["Daegu", "daegu"],
-              ["Daejeon", "daejeon"],
-              ["Gwangju", "gwangju"],
-              ["Ulsan", "ulsan"]
-            ], @user.location_code),
-            {},
-            class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        <% if !Location.exists? %>
+          <div class="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+            <p>⚠️ Không có khu vực nào trong hệ thống. Vui lòng chạy <code>bin/rails db:seed</code> để tạo dữ liệu.</p>
+          </div>
+        <% else %>
+          <%= f.select :location_code, 
+              options_for_select(
+                [["Chọn khu vực", ""]] + Location.order(:name_ko).map { |loc| [loc.name_vi || loc.name_ko, loc.code] },
+                @user.location_code
+              ),
+              {},
+              class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        <% end %>
         
         <!-- Hidden fields for GPS coordinates -->
         <%= f.hidden_field :latitude %>
@@ -172,36 +169,10 @@
         latitudeField.value = lat;
         longitudeField.value = lng;
         
-        // Determine location based on coordinates
-        let detectedLocation = '';
-        
-        // Seoul coordinates range
-        if (lat >= 37.4 && lat <= 37.7 && lng >= 126.8 && lng <= 127.2) {
-          detectedLocation = 'seoul';
-        }
-        // Gyeonggi coordinates range (includes Ansan, Suwon)
-        else if (lat >= 37.0 && lat <= 37.8 && lng >= 126.6 && lng <= 127.6) {
-          detectedLocation = 'gyeonggi';
-        }
-        // Busan
-        else if (lat >= 35.0 && lat <= 35.3 && lng >= 128.9 && lng <= 129.3) {
-          detectedLocation = 'busan';
-        }
-        // Incheon
-        else if (lat >= 37.3 && lat <= 37.6 && lng >= 126.3 && lng <= 126.8) {
-          detectedLocation = 'incheon';
-        }
-        
-        if (detectedLocation) {
-          locationSelect.value = detectedLocation;
-          statusDiv.classList.remove('text-blue-600');
-          statusDiv.classList.add('text-green-600');
-          statusDiv.innerHTML = '✅ Đã xác định vị trí thành công';
-        } else {
-          statusDiv.classList.remove('text-blue-600');
-          statusDiv.classList.add('text-amber-600');
-          statusDiv.innerHTML = '⚠️ Không thể xác định khu vực chính xác, vui lòng chọn thủ công';
-        }
+        // Show success message - server will detect location on submit
+        statusDiv.classList.remove('text-blue-600');
+        statusDiv.classList.add('text-green-600');
+        statusDiv.innerHTML = '✅ Đã lấy được tọa độ GPS. Hệ thống sẽ tự động xác định khu vực khi bạn lưu.';
         
         setTimeout(() => {
           statusDiv.classList.add('hidden');

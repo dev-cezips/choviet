@@ -11,8 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
-  # These are extensions that must be enabled in order to support this database
-
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -42,7 +40,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   end
 
   create_table "analytics_events", force: :cascade do |t|
-    t.bigint "user_id"
+    t.integer "user_id"
     t.string "event_type", null: false
     t.json "properties", default: {}
     t.json "request_details", default: {}
@@ -67,7 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   end
 
   create_table "chat_rooms", force: :cascade do |t|
-    t.bigint "post_id", null: false
+    t.integer "post_id", null: false
     t.integer "buyer_id"
     t.integer "seller_id"
     t.integer "status"
@@ -91,8 +89,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   end
 
   create_table "community_memberships", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "community_id", null: false
+    t.integer "user_id", null: false
+    t.integer "community_id", null: false
     t.integer "role"
     t.datetime "joined_at"
     t.datetime "created_at", null: false
@@ -102,8 +100,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   end
 
   create_table "likes", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "post_id", null: false
+    t.integer "user_id", null: false
+    t.integer "post_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["post_id"], name: "index_likes_on_post_id"
@@ -125,7 +123,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   end
 
   create_table "messages", force: :cascade do |t|
-    t.bigint "chat_room_id", null: false
+    t.integer "chat_room_id", null: false
     t.integer "sender_id"
     t.text "content_raw"
     t.text "content_translated"
@@ -140,7 +138,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   end
 
   create_table "posts", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.integer "post_type"
     t.string "title"
     t.text "content"
@@ -149,11 +147,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "category_id"
-    t.bigint "community_id"
+    t.integer "category_id"
+    t.integer "community_id"
     t.float "latitude"
     t.float "longitude"
-    t.bigint "location_id"
+    t.integer "location_id"
     t.integer "views_count", default: 0, null: false
     t.index ["category_id"], name: "index_posts_on_category_id"
     t.index ["community_id"], name: "index_posts_on_community_id"
@@ -168,7 +166,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   end
 
   create_table "products", force: :cascade do |t|
-    t.bigint "post_id", null: false
+    t.integer "post_id", null: false
     t.string "name"
     t.text "description"
     t.decimal "price"
@@ -190,9 +188,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   end
 
   create_table "reports", force: :cascade do |t|
-    t.bigint "reporter_id", null: false
+    t.integer "reporter_id", null: false
     t.string "reported_type", null: false
-    t.bigint "reported_id", null: false
+    t.integer "reported_id", null: false
     t.string "reason_code", null: false
     t.text "description"
     t.string "status", default: "pending", null: false
@@ -207,8 +205,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   end
 
   create_table "review_reactions", force: :cascade do |t|
-    t.bigint "review_id", null: false
-    t.bigint "user_id", null: false
+    t.integer "review_id", null: false
+    t.integer "user_id", null: false
     t.boolean "helpful", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -218,9 +216,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   end
 
   create_table "reviews", force: :cascade do |t|
-    t.bigint "chat_room_id", null: false
-    t.bigint "reviewer_id", null: false
-    t.bigint "reviewee_id", null: false
+    t.integer "chat_room_id", null: false
+    t.integer "reviewer_id", null: false
+    t.integer "reviewee_id", null: false
     t.integer "rating", null: false
     t.text "comment"
     t.datetime "created_at", null: false
@@ -247,8 +245,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
   end
 
   create_table "user_titles", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "title_id", null: false
+    t.integer "user_id", null: false
+    t.integer "title_id", null: false
     t.datetime "granted_at"
     t.boolean "primary"
     t.datetime "created_at", null: false
@@ -276,7 +274,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.float "latitude"
     t.float "longitude"
     t.integer "location_radius", default: 3
-    t.bigint "location_id"
+    t.integer "location_id"
     t.boolean "admin", default: false, null: false
     t.integer "exp", default: 0, null: false
     t.integer "level", default: 1, null: false
