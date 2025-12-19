@@ -5,9 +5,18 @@ on:
   push:
     branches: [ main ]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  RAILS_ENV: test
+
 jobs:
   scan_ruby:
+    name: Security scan (Brakeman)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout code
@@ -19,11 +28,13 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Scan for common Rails security vulnerabilities using static analysis
+      - name: Scan for common Rails security vulnerabilities (Brakeman)
         run: bin/brakeman --no-pager
 
   scan_js:
+    name: Security scan (Importmap audit)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout code
@@ -35,11 +46,14 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Scan for security vulnerabilities in JavaScript dependencies
+      - name: Scan for security vulnerabilities in JS dependencies (importmap)
         run: bin/importmap audit
 
   lint:
+    name: Lint (Rubocop)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -50,6 +64,40 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Lint code for consistent style
+      - name: Lint code (Rubocop)
         run: bin/rubocop -f github
 
+  test:
+    name: Test + Boot check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      # Node가 필요 없는 importmap 프로젝트라도,
+      # 일부 환경에서 asset precompile이 node를 요구할 수 있어 설치해둠 (안 쓰면 그냥 지나감)
+      - name: Set up Node (for assets, if needed)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+        continue-on-error: true
+
+      - name: Prepare database
+        run: bin/rails db:prepare
+
+      - name: Check Zeitwerk (autoload)
+        run: bin/rails zeitwerk:check
+
+      - name: Precompile assets (sanity check)
+        run: bin/rails assets:precompile
+
+      - name: Run tests (Minitest default)
+        run: bin/rails test
