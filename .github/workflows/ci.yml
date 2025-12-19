@@ -9,95 +9,90 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 env:
   RAILS_ENV: test
+  DATABASE_URL: sqlite3:db/test.sqlite3
+  SECRET_KEY_BASE: dummy
+  CI: true
 
 jobs:
-  scan_ruby:
-    name: Security scan (Brakeman)
+  security:
+    name: Security scans
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Ruby
+      - name: Set up Ruby (bundler cache)
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Scan for common Rails security vulnerabilities (Brakeman)
+      - name: Brakeman (Rails security scan)
         run: bin/brakeman --no-pager
 
-  scan_js:
-    name: Security scan (Importmap audit)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for security vulnerabilities in JS dependencies (importmap)
+      - name: Importmap audit (JS deps security)
         run: bin/importmap audit
 
   lint:
-    name: Lint (Rubocop)
+    name: RuboCop
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Ruby
+      - name: Set up Ruby (bundler cache)
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Lint code (Rubocop)
+      - name: RuboCop
         run: bin/rubocop -f github
 
   test:
-    name: Test + Boot check
+    name: Test (SQLite + Minitest)
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Ruby
+      - name: Install OS deps (SQLite)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsqlite3-dev
+
+      # 시스템 테스트(test/system) 돌릴 거면 Chrome이 필요할 수 있음
+      - name: Set up Chrome (for system tests)
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Set up Ruby (bundler cache)
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      # Node가 필요 없는 importmap 프로젝트라도,
-      # 일부 환경에서 asset precompile이 node를 요구할 수 있어 설치해둠 (안 쓰면 그냥 지나감)
-      - name: Set up Node (for assets, if needed)
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-        continue-on-error: true
-
-      - name: Prepare database
+      - name: Prepare DB
         run: bin/rails db:prepare
 
-      - name: Check Zeitwerk (autoload)
+      - name: Zeitwerk check
         run: bin/rails zeitwerk:check
 
-      - name: Precompile assets (sanity check)
+      - name: Precompile assets (safe for CI)
         run: bin/rails assets:precompile
 
-      - name: Run tests (Minitest default)
+      - name: Run tests (unit/integration)
         run: bin/rails test
+
+      - name: Run system tests
+        run: bin/rails test:system
