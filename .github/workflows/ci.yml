@@ -95,4 +95,5 @@ jobs:
         run: bin/rails test
 
       - name: Run system tests
+        if: github.event_name == 'pull_request'
         run: bin/rails test:system
