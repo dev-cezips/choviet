@@ -36,6 +36,18 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install JS dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build CSS assets
+        run: bin/rails tailwindcss:build
+
       - name: Prepare DB (test, no seeds)
         run: bin/rails db:create db:schema:load
 
@@ -61,6 +73,18 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install JS dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build CSS assets
+        run: bin/rails tailwindcss:build
 
       - name: Prepare DB (test, no seeds)
         run: bin/rails db:create db:schema:load
