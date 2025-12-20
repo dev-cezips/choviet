@@ -12,13 +12,13 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
       password: "password123",
       name: "Active User"
     )
-    
+
     @other_user = User.create!(
       email: "other_#{SecureRandom.hex(4)}@test.com",
       password: "password123",
       name: "Other User"
     )
-    
+
     # 활동 유저를 위한 거래 및 리뷰 생성
     @post = @other_user.posts.build(
       title: "Product for Active User",
@@ -27,7 +27,7 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
     )
     @post.save(validate: false)
     @post.create_product!(name: @post.title, price: 200000, condition: "good")
-    
+
     # 완료된 거래들 생성 (활동 유저로 만들기)
     3.times do |i|
       seller = User.create!(
@@ -35,7 +35,7 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
         password: "password123",
         name: "Seller #{i}"
       )
-      
+
       post = seller.posts.build(
         title: "Past Product #{i}",
         content: "Description",
@@ -43,14 +43,14 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
       )
       post.save(validate: false)
       post.create_product!(name: post.title, price: 50000, condition: "good")
-      
+
       chat_room = ChatRoom.create!(
         post: post,
         buyer: @active_user,
         seller: seller,
         trade_status: "completed"
       )
-      
+
       # 리뷰 생성
       Review.create!(
         chat_room: chat_room,
@@ -60,7 +60,7 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
         comment: "Great buyer!"
       )
     end
-    
+
     # 최근 메시지 생성 (활동 표시)
     recent_chat = ChatRoom.where(buyer: @active_user).first
     Message.create!(
@@ -83,7 +83,7 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
     # 활동 유저는 첫 거래가 아니고 최근 활동이 있음
     assert_not @active_user.first_trade?, "Active user should not be on first trade"
     assert @active_user.recently_active?(within: 30.days), "Active user should be recently active"
-    
+
     hint = @active_user.trust_hint(context: :post)
     assert_nil hint, "Active user should not see trust hint"
   end
@@ -91,10 +91,10 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
   # ✅ 요약 문구가 한 줄 유지
   test "trust_summary is single line" do
     summary = @active_user.trust_summary(context: :post)
-    
+
     # 줄바꿈이 없어야 함
     refute_match(/\n/, summary, "Summary should be single line")
-    
+
     # 적당한 길이여야 함 (모바일 친화적)
     assert summary.length < 60, "Summary should be concise for mobile"
   end
@@ -102,10 +102,10 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
   # ✅ ⚡ / 💬 등 활동 기반 메시지 정확
   test "trust_summary uses appropriate activity emoji" do
     summary = @active_user.trust_summary(context: :post)
-    
+
     # 활동 기반 이모지 사용
     assert_match(/⚡|💡|⭐|💬/, summary, "Should use activity-based emoji")
-    
+
     # 신규 유저 이모지가 아님
     refute_match(/🌱/, summary, "Should not use new user emoji")
   end
@@ -114,10 +114,10 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
   test "chat room is clean for active user" do
     chat_room = ChatRoom.where(buyer: @active_user).first
     sign_in @active_user
-    
+
     get post_chat_room_path(chat_room.post, chat_room)
     assert_response :success
-    
+
     # 불필요한 경고가 없어야 함
     refute_match(/cảnh báo|warning/i, response.body, "No warnings for active user")
   end
@@ -126,10 +126,16 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
   test "no information overload for active user" do
     sign_in @active_user
     get post_path(@post)
-    
+
+    # 페이지가 정상 렌더링됨
+    assert_response :success
+
+    # 정보 과부하가 없음을 확인 (너무 많은 안내 메시지가 없어야 함)
+    assert_select ".bg-amber-50", maximum: 1, text: /Lưu ý|Gợi ý/
+
     # trust_hint가 없으므로 정보가 간결해야 함
     hint = @other_user.trust_hint(context: :post)
-    
+
     # 상대방이 활동 유저면 힌트 없음
     if @other_user.recently_active?(within: 30.days) && !@other_user.first_trade?
       assert_nil hint, "No hint for active users"
@@ -149,11 +155,11 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
   test "displayed info is concise" do
     summary = @active_user.trust_summary(context: :profile)
     hint = @active_user.trust_hint(context: :profile)
-    
+
     # 힌트가 없으면 summary만 표시
     assert_nil hint, "Active user should not have hint"
     assert summary.present?, "Summary should exist"
-    
+
     # 전체 정보가 한 줄
     total_lines = hint.nil? ? 1 : 2
     assert_equal 1, total_lines, "Should only show one line of info"
@@ -174,8 +180,8 @@ class Scenario3ActiveUserTest < ActionDispatch::IntegrationTest
   private
 
   def sign_in(user)
-    post user_session_path, params: { 
-      user: { email: user.email, password: "password123" } 
+    post user_session_path, params: {
+      user: { email: user.email, password: "password123" }
     }
   end
 end

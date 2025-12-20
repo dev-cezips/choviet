@@ -70,7 +70,7 @@
       </script>
     <% end %>
     
-    <!-- Low Reputation Warning -->
+    <!-- Low Reputation Notice -->
     <% other_user = @chat_room.other_user(current_user) %>
     <% if other_user.low_reputation? %>
       <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-lg mb-3 text-sm flex items-start gap-3">
@@ -183,7 +183,7 @@
                     <li>• Chỉ thanh toán khi đã nhận được hàng</li>
                     <li>• Hẹn gặp ở nơi công cộng, đông người</li>
                     <li>• Kiểm tra kỹ sản phẩm trước khi thanh toán</li>
-                    <li>• Cảnh giác với yêu cầu chuyển tiền trước</li>
+                    <li>• Cảnh giác khi được đề nghị chuyển tiền trước</li>
                   </ul>
                 </div>
               </div>

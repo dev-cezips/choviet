@@ -13,16 +13,16 @@ class ProfileLocationTest < ActionDispatch::IntegrationTest
       lng: 126.9780,
       level: 1
     )
-    
+
     @gyeonggi = Location.create!(
-      code: "gyeonggi", 
+      code: "gyeonggi",
       name_vi: "Gyeonggi",
       name_ko: "경기도",
       lat: 37.4138,
       lng: 127.5183,
       level: 1
     )
-    
+
     @ansan = Location.create!(
       code: "ansan",
       name_vi: "Ansan",
@@ -31,7 +31,7 @@ class ProfileLocationTest < ActionDispatch::IntegrationTest
       lng: 126.8219,
       level: 2
     )
-    
+
     @user = User.create!(
       email: "test_#{SecureRandom.hex(4)}@example.com",
       password: "password123",
@@ -183,11 +183,11 @@ class ProfileLocationTest < ActionDispatch::IntegrationTest
   test "profile edit page shows warning when no locations in database" do
     # Delete all locations
     Location.destroy_all
-    
+
     sign_in @user
     get edit_profile_path
     assert_response :success
-    
+
     assert_select ".text-red-600", /Không có khu vực nào trong hệ thống/
   end
 
@@ -199,4 +199,3 @@ class ProfileLocationTest < ActionDispatch::IntegrationTest
     }
   end
 end
-

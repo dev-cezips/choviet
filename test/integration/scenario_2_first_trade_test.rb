@@ -12,13 +12,13 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
       password: "password123",
       name: "Buyer User"
     )
-    
+
     @seller = User.create!(
       email: "seller_#{SecureRandom.hex(4)}@test.com",
       password: "password123",
       name: "Seller User"
     )
-    
+
     @post = @seller.posts.build(
       title: "Test Product for Trade",
       content: "Test description",
@@ -26,7 +26,7 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
     )
     @post.save(validate: false)
     @post.create_product!(name: @post.title, price: 150000, condition: "good")
-    
+
     @chat_room = ChatRoom.create!(
       post: @post,
       buyer: @buyer,
@@ -45,11 +45,11 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
   # ✅ 거래 완료 버튼 동작 (판매자만)
   test "seller can complete trade" do
     sign_in @seller
-    
+
     patch update_status_post_chat_room_path(@post, @chat_room), params: {
-      trade_status: "completed"
+      status: "completed"
     }
-    
+
     @chat_room.reload
     assert_equal "completed", @chat_room.trade_status
   end
@@ -57,14 +57,14 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
   # ✅ 거래 완료 후 시스템 메시지 표시됨
   test "system message appears after trade completion" do
     sign_in @seller
-    
+
     patch update_status_post_chat_room_path(@post, @chat_room), params: {
-      trade_status: "completed"
+      status: "completed"
     }
-    
+
     @chat_room.reload
     system_messages = @chat_room.messages.where(system_message: true)
-    
+
     assert system_messages.any?, "System message should be created after completion"
     assert_match(/✅|🎉/, system_messages.last.content_raw, "Completion message should have success emoji")
   end
@@ -73,10 +73,10 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
   test "review CTA is visible after trade completion" do
     @chat_room.update!(trade_status: "completed")
     sign_in @buyer
-    
+
     get post_chat_room_path(@post, @chat_room)
     assert_response :success
-    
+
     # 리뷰 버튼이 있어야 함
     assert_match(/đánh giá|review/i, response.body, "Review CTA should be visible")
   end
@@ -85,7 +85,7 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
   test "review can be submitted with rating only" do
     @chat_room.update!(trade_status: "completed")
     sign_in @buyer
-    
+
     assert_difference "Review.count", 1 do
       post post_chat_room_reviews_path(@post, @chat_room), params: {
         review: { rating: 5, comment: "", visibility: true }
@@ -97,7 +97,7 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
   test "review comment is optional" do
     @chat_room.update!(trade_status: "completed")
     sign_in @buyer
-    
+
     # 코멘트 없이 리뷰 생성
     review = Review.new(
       chat_room: @chat_room,
@@ -106,7 +106,7 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
       rating: 4,
       comment: nil
     )
-    
+
     assert review.valid?, "Review should be valid without comment"
   end
 
@@ -114,11 +114,11 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
   test "reward message is set after review submission" do
     @chat_room.update!(trade_status: "completed")
     sign_in @buyer
-    
+
     post post_chat_room_reviews_path(@post, @chat_room), params: {
       review: { rating: 5, comment: "Great seller!", visibility: true }
     }
-    
+
     # flash[:reward]가 설정되어야 함
     assert flash[:reward].present?, "Reward flash should be set"
     assert_match(/🎉|Chúc mừng|Cảm ơn/, flash[:reward][:title], "Reward should be celebratory")
@@ -135,10 +135,10 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
       rating: 5,
       comment: "Great!"
     )
-    
+
     # 최근 활동이 있고 첫 거래가 완료됨
     @buyer.reload
-    
+
     # first_trade?가 false가 되면 hint가 사라져야 함
     if @buyer.first_trade? == false && @buyer.recently_active?(within: 30.days)
       hint = @buyer.trust_hint(context: :post)
@@ -149,7 +149,7 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
   # ✅ trust_summary는 유지됨
   test "trust_summary remains after first trade" do
     @chat_room.update!(trade_status: "completed")
-    
+
     summary = @buyer.trust_summary(context: :post)
     assert summary.present?, "Trust summary should always be present"
   end
@@ -158,9 +158,9 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
   test "review CTA is not forceful" do
     @chat_room.update!(trade_status: "completed")
     sign_in @buyer
-    
+
     get post_chat_room_path(@post, @chat_room)
-    
+
     # 강제적인 단어가 없어야 함
     refute_match(/bắt buộc|phải|yêu cầu/i, response.body, "Review should not feel mandatory")
   end
@@ -168,8 +168,8 @@ class Scenario2FirstTradeTest < ActionDispatch::IntegrationTest
   private
 
   def sign_in(user)
-    post user_session_path, params: { 
-      user: { email: user.email, password: "password123" } 
+    post user_session_path, params: {
+      user: { email: user.email, password: "password123" }
     }
   end
 end
