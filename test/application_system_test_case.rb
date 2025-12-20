@@ -3,7 +3,8 @@ require "test_helper"
 require "warden/test/helpers"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
-  driven_by :selenium, using: :chrome, screen_size: [ 1400, 1400 ]
+  # Use rack_test for fast, stable system tests without JavaScript
+  driven_by :rack_test
 
   include Warden::Test::Helpers
 
@@ -11,12 +12,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   teardown { Warden.test_reset! }
 
   def set_radio_and_trigger_change(id)
-    page.execute_script(<<~JS, id)
-      const id = arguments[0];
-      const el = document.getElementById(id);
-      if (!el) throw new Error("Radio not found: " + id);
-      el.checked = true;
-      el.dispatchEvent(new Event("change", { bubbles: true }));
-    JS
+    # With rack_test, we can't use JavaScript, so we use native methods
+    choose(id)
   end
 end
