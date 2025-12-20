@@ -2,16 +2,21 @@ require "application_system_test_case"
 
 class MarketplacePostsTest < ApplicationSystemTestCase
   setup do
-    @user = users(:one)
-    sign_in @user
+    @user = User.create!(
+      email: "one@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    )
+
+    login_as(@user, scope: :user)
   end
 
   test "creating a marketplace post with price" do
     visit new_post_path
     
     # Select marketplace type
-    find('input[value="marketplace"]').click
-    
+    set_radio_and_trigger_change("post_post_type_marketplace")
+
     # Fill in post details
     fill_in "Tiêu đề", with: "iPhone 12 Pro Max"
     fill_in "Nội dung", with: "Điện thoại iPhone 12 Pro Max còn mới, sử dụng cẩn thận"
@@ -23,10 +28,12 @@ class MarketplacePostsTest < ApplicationSystemTestCase
     fill_in "Giá", with: "15000000"
     select "Như mới", from: "Tình trạng"
     
-    click_on "Đăng bài"
+    within("form") do
+      click_button "Đăng bài"
+    end
     
     assert_text "Đã đăng bài thành công!"
-    assert_text "15,000,000원"
+    assert_text "15.000.000₩"
     assert_text "Như mới"
   end
   
@@ -34,8 +41,8 @@ class MarketplacePostsTest < ApplicationSystemTestCase
     visit new_post_path
     
     # Select question type
-    find('input[value="question"]').click
-    
+    set_radio_and_trigger_change("post_post_type_question")
+
     # Marketplace fields should be hidden
     assert_no_selector "[data-post-form-target='marketplaceFields']:not(.hidden)"
   end
