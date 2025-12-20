@@ -28,9 +28,7 @@ class MarketplacePostsTest < ApplicationSystemTestCase
     fill_in "Giá", with: "15000000"
     select "Như mới", from: "Tình trạng"
 
-    within("form") do
-      click_button "Đăng bài"
-    end
+    click_button "Đăng bài"
 
     assert_text "Đã đăng bài thành công!"
     assert_text "15.000.000₩"
