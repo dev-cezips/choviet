@@ -1,78 +1,81 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
-    registrations: 'users/registrations',
-    sessions: 'users/sessions'
+    registrations: "users/registrations",
+    sessions: "users/sessions"
   }
-  
+
   # Root route - posts index as the main feed
   root "posts#index"
-  
+
   # Marketplace shortcut
-  get 'marketplace', to: 'posts#index', defaults: { type: 'marketplace' }
-  
+  get "marketplace", to: "posts#index", defaults: { type: "marketplace" }
+
   resources :posts do
-    resource :like, only: [:create, :destroy]
-    resources :chat_rooms, only: [:create, :show] do
+    resource :like, only: [ :create, :destroy ]
+    resources :chat_rooms, only: [ :create, :show ] do
       member do
         patch :update_status
         post :dismiss_review_reminder
       end
-      resources :messages, only: [:new, :create]
-      resources :reviews, only: [:new, :create]
+      resources :messages, only: [ :new, :create ]
+      resources :reviews, only: [ :new, :create ]
     end
-    resources :reports, only: [:new, :create]
+    resources :reports, only: [ :new, :create ]
   end
-  
+
   # Review reactions
   resources :reviews, only: [] do
-    resource :reaction, only: [:create, :update, :destroy]
+    resource :reaction, only: [ :create, :update, :destroy ]
   end
-  
+
   # Standalone chat rooms index
-  resources :chat_rooms, only: [:index]
-  
+  resources :chat_rooms, only: [ :index ]
+
   # Message reports
   resources :messages, only: [] do
-    resources :reports, only: [:new, :create]
+    resources :reports, only: [ :new, :create ]
   end
-  
-  resources :users, only: [:show] do
-    resources :reports, only: [:new, :create]
+
+  resources :users, only: [ :show ] do
+    resources :reports, only: [ :new, :create ]
     member do
       get :listings
     end
   end
-  
+
   # Profile management (for current user)
-  resource :profile, controller: 'users', only: [:edit, :update] do
+  resource :profile, controller: "users", only: [ :edit, :update ] do
     get :edit, action: :edit
     patch :update, action: :update
   end
-  
+
   resources :communities do
     member do
       post :join
       delete :leave
     end
   end
-  
-  resources :categories, only: [:index, :show]
-  
+
+  resources :categories, only: [ :index, :show ]
+
+  # Products (standalone for Week 3)
+  resources :products
+
   # User dashboard
-  resource :dashboard, only: [:show], controller: 'dashboard'
-  
+  resource :dashboard, only: [ :show ], controller: "dashboard"
+
   # Admin routes
   namespace :admin do
-    get 'dashboard', to: 'dashboard#index'
+    get "dashboard", to: "dashboard#index"
   end
-  
+
   # Locale switching
-  get '/locale/:locale', to: 'application#change_locale', as: :set_locale
-  
+  get "/locale/:locale", to: "application#change_locale", as: :set_locale
+
   # Static pages
-  get 'privacy', to: 'pages#privacy'
-  get 'terms', to: 'pages#terms'
-  
+  get "privacy", to: "pages#privacy"
+  get "terms", to: "pages#terms"
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

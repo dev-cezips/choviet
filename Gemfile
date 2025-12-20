@@ -87,6 +87,7 @@ end
 group :test do
   gem "capybara"
   gem "selenium-webdriver"
+  gem "warden"
 end
 
 group :development do

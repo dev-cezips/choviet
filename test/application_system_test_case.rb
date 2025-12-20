@@ -1,5 +1,22 @@
+# test/application_system_test_case.rb
 require "test_helper"
+require "warden/test/helpers"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
-  driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
+  driven_by :selenium, using: :chrome, screen_size: [ 1400, 1400 ]
+
+  include Warden::Test::Helpers
+
+  setup { Warden.test_mode! }
+  teardown { Warden.test_reset! }
+
+  def set_radio_and_trigger_change(id)
+    page.execute_script(<<~JS, id)
+      const id = arguments[0];
+      const el = document.getElementById(id);
+      if (!el) throw new Error("Radio not found: " + id);
+      el.checked = true;
+      el.dispatchEvent(new Event("change", { bubbles: true }));
+    JS
+  end
 end

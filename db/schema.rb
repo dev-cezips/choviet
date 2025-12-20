@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_21_120000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index [ "blob_id" ], name: "index_active_storage_attachments_on_blob_id"
+    t.index [ "record_type", "record_id", "name", "blob_id" ], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
@@ -30,13 +30,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.bigint "byte_size", null: false
     t.string "checksum"
     t.datetime "created_at", null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.index [ "key" ], name: "index_active_storage_blobs_on_key", unique: true
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.index [ "blob_id", "variation_digest" ], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "analytics_events", force: :cascade do |t|
@@ -46,10 +46,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.json "request_details", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["created_at"], name: "index_analytics_events_on_created_at"
-    t.index ["event_type", "created_at"], name: "index_analytics_events_on_event_type_and_created_at"
-    t.index ["event_type"], name: "index_analytics_events_on_event_type"
-    t.index ["user_id"], name: "index_analytics_events_on_user_id"
+    t.index [ "created_at" ], name: "index_analytics_events_on_created_at"
+    t.index [ "event_type", "created_at" ], name: "index_analytics_events_on_event_type_and_created_at"
+    t.index [ "event_type" ], name: "index_analytics_events_on_event_type"
+    t.index [ "user_id" ], name: "index_analytics_events_on_user_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -61,7 +61,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.boolean "active", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["parent_id"], name: "index_categories_on_parent_id"
+    t.index [ "parent_id" ], name: "index_categories_on_parent_id"
   end
 
   create_table "chat_rooms", force: :cascade do |t|
@@ -72,8 +72,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "trade_status", default: 0, null: false
-    t.index ["post_id"], name: "index_chat_rooms_on_post_id"
-    t.index ["trade_status"], name: "index_chat_rooms_on_trade_status"
+    t.index [ "post_id" ], name: "index_chat_rooms_on_post_id"
+    t.index [ "trade_status" ], name: "index_chat_rooms_on_trade_status"
   end
 
   create_table "communities", force: :cascade do |t|
@@ -95,8 +95,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.datetime "joined_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["community_id"], name: "index_community_memberships_on_community_id"
-    t.index ["user_id"], name: "index_community_memberships_on_user_id"
+    t.index [ "community_id" ], name: "index_community_memberships_on_community_id"
+    t.index [ "user_id" ], name: "index_community_memberships_on_user_id"
   end
 
   create_table "likes", force: :cascade do |t|
@@ -104,8 +104,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.integer "post_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["post_id"], name: "index_likes_on_post_id"
-    t.index ["user_id"], name: "index_likes_on_user_id"
+    t.index [ "post_id" ], name: "index_likes_on_post_id"
+    t.index [ "user_id" ], name: "index_likes_on_user_id"
   end
 
   create_table "locations", force: :cascade do |t|
@@ -118,8 +118,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.integer "level", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["code"], name: "index_locations_on_code", unique: true
-    t.index ["parent_id"], name: "index_locations_on_parent_id"
+    t.index [ "code" ], name: "index_locations_on_code", unique: true
+    t.index [ "parent_id" ], name: "index_locations_on_parent_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -133,8 +133,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "system_message", default: false, null: false
-    t.index ["chat_room_id"], name: "index_messages_on_chat_room_id"
-    t.index ["system_message"], name: "index_messages_on_system_message"
+    t.index [ "chat_room_id" ], name: "index_messages_on_chat_room_id"
+    t.index [ "system_message" ], name: "index_messages_on_system_message"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -153,20 +153,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.float "longitude"
     t.integer "location_id"
     t.integer "views_count", default: 0, null: false
-    t.index ["category_id"], name: "index_posts_on_category_id"
-    t.index ["community_id"], name: "index_posts_on_community_id"
-    t.index ["content"], name: "index_posts_on_content"
-    t.index ["latitude", "longitude"], name: "index_posts_on_latitude_and_longitude"
-    t.index ["location_code"], name: "index_posts_on_location_code"
-    t.index ["location_id"], name: "index_posts_on_location_id"
-    t.index ["post_type"], name: "index_posts_on_post_type"
-    t.index ["status"], name: "index_posts_on_status"
-    t.index ["title"], name: "index_posts_on_title"
-    t.index ["user_id"], name: "index_posts_on_user_id"
+    t.index [ "category_id" ], name: "index_posts_on_category_id"
+    t.index [ "community_id" ], name: "index_posts_on_community_id"
+    t.index [ "content" ], name: "index_posts_on_content"
+    t.index [ "latitude", "longitude" ], name: "index_posts_on_latitude_and_longitude"
+    t.index [ "location_code" ], name: "index_posts_on_location_code"
+    t.index [ "location_id" ], name: "index_posts_on_location_id"
+    t.index [ "post_type" ], name: "index_posts_on_post_type"
+    t.index [ "status" ], name: "index_posts_on_status"
+    t.index [ "title" ], name: "index_posts_on_title"
+    t.index [ "user_id" ], name: "index_posts_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
-    t.integer "post_id", null: false
+    t.integer "post_id"
     t.string "name"
     t.text "description"
     t.decimal "price"
@@ -176,7 +176,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.string "currency"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["post_id"], name: "index_products_on_post_id"
+    t.index [ "post_id" ], name: "index_products_on_post_id"
   end
 
   create_table "quick_replies", force: :cascade do |t|
@@ -197,11 +197,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "reason"
-    t.index ["reason_code"], name: "index_reports_on_reason_code"
-    t.index ["reported_type", "reported_id"], name: "index_reports_on_reported"
-    t.index ["reporter_id", "reported_id", "reported_type"], name: "index_unique_report", unique: true
-    t.index ["reporter_id"], name: "index_reports_on_reporter_id"
-    t.index ["status"], name: "index_reports_on_status"
+    t.index [ "reason_code" ], name: "index_reports_on_reason_code"
+    t.index [ "reported_type", "reported_id" ], name: "index_reports_on_reported"
+    t.index [ "reporter_id", "reported_id", "reported_type" ], name: "index_unique_report", unique: true
+    t.index [ "reporter_id" ], name: "index_reports_on_reporter_id"
+    t.index [ "status" ], name: "index_reports_on_status"
   end
 
   create_table "review_reactions", force: :cascade do |t|
@@ -210,9 +210,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.boolean "helpful", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["review_id", "user_id"], name: "index_review_reactions_on_review_id_and_user_id", unique: true
-    t.index ["review_id"], name: "index_review_reactions_on_review_id"
-    t.index ["user_id"], name: "index_review_reactions_on_user_id"
+    t.index [ "review_id", "user_id" ], name: "index_review_reactions_on_review_id_and_user_id", unique: true
+    t.index [ "review_id" ], name: "index_review_reactions_on_review_id"
+    t.index [ "user_id" ], name: "index_review_reactions_on_user_id"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -224,10 +224,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "visibility", default: true, null: false
-    t.index ["chat_room_id", "reviewer_id"], name: "index_reviews_on_chat_room_id_and_reviewer_id", unique: true
-    t.index ["chat_room_id"], name: "index_reviews_on_chat_room_id"
-    t.index ["reviewee_id"], name: "index_reviews_on_reviewee_id"
-    t.index ["reviewer_id"], name: "index_reviews_on_reviewer_id"
+    t.index [ "chat_room_id", "reviewer_id" ], name: "index_reviews_on_chat_room_id_and_reviewer_id", unique: true
+    t.index [ "chat_room_id" ], name: "index_reviews_on_chat_room_id"
+    t.index [ "reviewee_id" ], name: "index_reviews_on_reviewee_id"
+    t.index [ "reviewer_id" ], name: "index_reviews_on_reviewer_id"
   end
 
   create_table "titles", force: :cascade do |t|
@@ -240,8 +240,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["key"], name: "index_titles_on_key", unique: true
-    t.index ["level_required"], name: "index_titles_on_level_required"
+    t.index [ "key" ], name: "index_titles_on_key", unique: true
+    t.index [ "level_required" ], name: "index_titles_on_level_required"
   end
 
   create_table "user_titles", force: :cascade do |t|
@@ -251,8 +251,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.boolean "primary"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["title_id"], name: "index_user_titles_on_title_id"
-    t.index ["user_id"], name: "index_user_titles_on_user_id"
+    t.index [ "title_id" ], name: "index_user_titles_on_title_id"
+    t.index [ "user_id" ], name: "index_user_titles_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -280,15 +280,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_101655) do
     t.integer "level", default: 1, null: false
     t.decimal "rating", precision: 3, scale: 2, default: "0.0"
     t.integer "trades_count", default: 0
-    t.index ["admin"], name: "index_users_on_admin"
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["exp"], name: "index_users_on_exp"
-    t.index ["latitude", "longitude"], name: "index_users_on_latitude_and_longitude"
-    t.index ["level"], name: "index_users_on_level"
-    t.index ["location_id"], name: "index_users_on_location_id"
-    t.index ["rating"], name: "index_users_on_rating"
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["trades_count"], name: "index_users_on_trades_count"
+    t.index [ "admin" ], name: "index_users_on_admin"
+    t.index [ "email" ], name: "index_users_on_email", unique: true
+    t.index [ "exp" ], name: "index_users_on_exp"
+    t.index [ "latitude", "longitude" ], name: "index_users_on_latitude_and_longitude"
+    t.index [ "level" ], name: "index_users_on_level"
+    t.index [ "location_id" ], name: "index_users_on_location_id"
+    t.index [ "rating" ], name: "index_users_on_rating"
+    t.index [ "reset_password_token" ], name: "index_users_on_reset_password_token", unique: true
+    t.index [ "trades_count" ], name: "index_users_on_trades_count"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

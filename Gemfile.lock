@@ -491,6 +491,7 @@ DEPENDENCIES
   tailwindcss-rails
   thruster
   turbo-rails
+  warden
   web-console
 
 BUNDLED WITH
