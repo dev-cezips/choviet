@@ -12,23 +12,13 @@ class ProductsTest < ApplicationSystemTestCase
 
     login_as(@user, scope: :user)
 
-    # Create temporary directory for test images
-    @upload_dir = Rails.root.join("tmp/test_uploads")
-    FileUtils.mkdir_p(@upload_dir)
-
-    # Create minimal test images using MiniMagick
-    # Create a simple 10x10 red square
-    @img1 = @upload_dir.join("sample1.jpg")
-    @img2 = @upload_dir.join("sample2.jpg")
-
-    # Use ImageMagick to create test images
-    system("convert -size 10x10 xc:red '#{@img1}'")
-    system("convert -size 10x10 xc:blue '#{@img2}'")
+    # Use pre-created test images from fixtures
+    @img1 = Rails.root.join("test/fixtures/files/sample1.jpg")
+    @img2 = Rails.root.join("test/fixtures/files/sample2.jpg")
   end
 
   teardown do
-    # Clean up temporary files
-    FileUtils.rm_rf(@upload_dir) if @upload_dir && File.exist?(@upload_dir)
+    # No cleanup needed for fixture files
   end
 
   test "creating a product with images" do

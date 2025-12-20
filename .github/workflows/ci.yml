@@ -30,6 +30,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y sqlite3 libsqlite3-dev imagemagick
 
+      - name: Verify ImageMagick
+        run: convert -version
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -67,6 +70,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y sqlite3 libsqlite3-dev imagemagick
+
+      - name: Verify ImageMagick
+        run: convert -version
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -113,6 +119,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y sqlite3 libsqlite3-dev imagemagick
+
+      - name: Verify ImageMagick
+        run: convert -version
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
