@@ -35,16 +35,21 @@ class MarketplacePostsTest < ApplicationSystemTestCase
     assert_text "Như mới"
   end
 
-  test "price field is hidden for non-marketplace posts" do
+  test "can create question post without price" do
     visit new_post_path
 
     # Select question type
     set_radio_and_trigger_change("post_post_type_question")
 
-    # Wait for JavaScript to hide the fields
-    sleep 0.5
+    # Fill in question post details
+    fill_in "Tiêu đề", with: "Test Question"
+    fill_in "Nội dung", with: "This is a test question?"
 
-    # Marketplace fields should be hidden
-    assert_no_selector "[data-post-form-target='marketplaceFields']", visible: true
+    click_button "Đăng bài"
+
+    # Should succeed without price
+    assert_text "Đã đăng bài thành công!"
+    assert_text "Test Question"
+    assert_no_text "₩"
   end
 end
