@@ -11,7 +11,7 @@ class Post < ApplicationRecord
   has_many :likes, dependent: :destroy
   
   # Nested attributes
-  accepts_nested_attributes_for :product, allow_destroy: true
+  accepts_nested_attributes_for :product, allow_destroy: true, reject_if: :reject_product?
   
   # Active Storage
   has_many_attached :images
@@ -135,6 +135,11 @@ class Post < ApplicationRecord
   end
   
   private
+  
+  def reject_product?(attributes)
+    # Reject product attributes if not marketplace type
+    !marketplace?
+  end
   
   def set_default_status
     self.status ||= 'active'
