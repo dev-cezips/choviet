@@ -35,7 +35,7 @@ class MarketplacePostsTest < ApplicationSystemTestCase
     assert_text "Như mới"
   end
 
-  test "can create question post without price" do
+  test "question posts do not require price" do
     visit new_post_path
 
     # Select question type
