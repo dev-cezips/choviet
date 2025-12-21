@@ -75,7 +75,7 @@
     </div>
 
     <!-- Marketplace Fields (shown only when marketplace is selected) -->
-    <div data-post-form-target="marketplaceFields">
+    <div data-post-form-target="marketplaceFields" class="<%= 'hidden' unless post.marketplace? %>">
       <%= form.fields_for :product do |product_form| %>
         <!-- Price -->
         <div class="mb-6">
