@@ -62,8 +62,7 @@ class Product < ApplicationRecord
   end
 
   def require_marketplace_fields?
-    # Standalone products (Week 3) or marketplace posts require fields
-    post.nil? || post.marketplace?
+    post&.marketplace?
   end
 
   private

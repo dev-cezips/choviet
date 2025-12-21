@@ -139,11 +139,16 @@ class Post < ApplicationRecord
   private
 
   def reject_product?(attributes)
-    # Always reject if all attributes are blank
-    return true if attributes.all? { |k, v| k == "_destroy" || v.blank? }
+    # id/currency/_destroy 같은 "의미 없는 값"은 빈값 판단에서 제외
+    cleaned = attributes.except("_destroy", "id", "currency")
 
-    # Reject product attributes if not marketplace type
-    self.post_type != "marketplace" && self.post_type != 1
+    # 의미 있는 필드가 전부 비었으면 → 어떤 post_type이든 product 만들지 마
+    return true if cleaned.values.all?(&:blank?)
+
+    # 값이 들어왔는데 marketplace가 아니면 → product 받지 마
+    return true unless marketplace?
+
+    false
   end
 
   def validate_product_if_marketplace
@@ -162,7 +167,10 @@ class Post < ApplicationRecord
   end
 
   def drop_product_unless_marketplace
-    self.product = nil unless marketplace?
+    return if marketplace?
+
+    product&.mark_for_destruction
+    self.product = nil
   end
 
   def set_default_status
