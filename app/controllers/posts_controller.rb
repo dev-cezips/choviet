@@ -148,8 +148,13 @@ class PostsController < ApplicationController
                                    product_attributes: [:id, :name, :description, :price, 
                                                        :condition, :currency, :_destroy])
       
+      # Debug logging
+      Rails.logger.info "POST_TYPE in params: #{permitted[:post_type].inspect}"
+      
       # Remove product_attributes for non-marketplace posts
-      if permitted[:post_type] != 'marketplace'
+      # Check both string and integer values since enum might convert
+      unless permitted[:post_type] == 'marketplace' || permitted[:post_type] == '1' || permitted[:post_type].to_i == 1
+        Rails.logger.info "Removing product_attributes for post_type: #{permitted[:post_type]}"
         permitted.delete(:product_attributes)
       end
       

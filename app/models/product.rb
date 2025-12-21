@@ -20,7 +20,7 @@ class Product < ApplicationRecord
   serialize :images, coder: JSON, type: Array
 
   # Validations
-  validates :name, presence: true, length: { maximum: 100 }
+  validates :name, presence: true, length: { maximum: 100 }, if: :require_marketplace_fields?
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }, if: :require_marketplace_fields?
   validates :currency, inclusion: { in: %w[KRW VND USD] }
   validates :condition, presence: true, if: :require_marketplace_fields?

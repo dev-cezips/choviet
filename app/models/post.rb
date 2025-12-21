@@ -138,8 +138,11 @@ class Post < ApplicationRecord
   private
   
   def reject_product?(attributes)
+    # Always reject if all attributes are blank
+    return true if attributes.all? { |k, v| k == '_destroy' || v.blank? }
+    
     # Reject product attributes if not marketplace type
-    !marketplace?
+    self.post_type != 'marketplace' && self.post_type != 1
   end
   
   def drop_product_unless_marketplace
