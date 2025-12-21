@@ -142,10 +142,17 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.require(:post).permit(:title, :content, :post_type, :location_id, 
+      permitted = params.require(:post).permit(:title, :content, :post_type, :location_id, 
                                    :latitude, :longitude, :target_korean, 
                                    :community_id, :status, images: [],
                                    product_attributes: [:id, :name, :description, :price, 
                                                        :condition, :currency, :_destroy])
+      
+      # Remove product_attributes for non-marketplace posts
+      if permitted[:post_type] != 'marketplace'
+        permitted.delete(:product_attributes)
+      end
+      
+      permitted
     end
 end
