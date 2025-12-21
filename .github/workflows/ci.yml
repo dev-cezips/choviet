@@ -66,13 +66,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install OS deps (SQLite, ImageMagick)
+      - name: Install OS deps (SQLite, ImageMagick, Chrome deps)
         run: |
           sudo apt-get update
           sudo apt-get install -y sqlite3 libsqlite3-dev imagemagick
+          # Chrome dependencies for headless testing
+          sudo apt-get install -y chromium-browser chromium-chromedriver
 
       - name: Verify ImageMagick
         run: convert -version
+
+      - name: Verify Chrome
+        run: |
+          chromium-browser --version
+          chromedriver --version
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
