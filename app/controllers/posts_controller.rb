@@ -55,6 +55,8 @@ class PostsController < ApplicationController
 
   # POST /posts or /posts.json
   def create
+    Rails.logger.info "[CREATE] raw post_type: #{params.dig(:post, :post_type).inspect}"
+    Rails.logger.info "[CREATE] permitted post_type: #{post_params[:post_type].inspect}"
     @post = current_user.posts.build(post_params)
     
     # Set location from current user if not provided
