@@ -41,7 +41,10 @@ class MarketplacePostsTest < ApplicationSystemTestCase
     # Select question type
     set_radio_and_trigger_change("post_post_type_question")
 
+    # Wait for JavaScript to hide the fields
+    sleep 0.5
+
     # Marketplace fields should be hidden
-    assert_no_selector "[data-post-form-target='marketplaceFields']:not(.hidden)"
+    assert_no_selector "[data-post-form-target='marketplaceFields']", visible: true
   end
 end

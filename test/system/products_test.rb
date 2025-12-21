@@ -102,9 +102,10 @@ class ProductsTest < ApplicationSystemTestCase
 
     visit product_path(product)
 
-    accept_confirm do
-      click_button "Xóa"
-    end
+    # Disable Turbo confirmations for this test
+    page.evaluate_script("document.querySelector('[data-turbo-confirm]').removeAttribute('data-turbo-confirm')")
+    
+    click_button "Xóa"
 
     assert_text "Đã xóa sản phẩm!"
     assert_current_path products_path

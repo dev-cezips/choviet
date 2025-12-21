@@ -23,7 +23,9 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   include Warden::Test::Helpers
 
-  setup { Warden.test_mode! }
+  setup { 
+    Warden.test_mode!
+  }
   teardown { Warden.test_reset! }
 
   def set_radio_and_trigger_change(id)
