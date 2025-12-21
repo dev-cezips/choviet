@@ -34,20 +34,16 @@ export default class extends Controller {
   }
 
   toggleMarketplaceFields() {
-    const selectedType = this.postTypeTargets.find(input => input.checked)?.value
+    // More reliable way to get checked value
+    const checked = this.element.querySelector("input[name='post[post_type]']:checked")
+    const isMarketplace = checked && checked.value === "marketplace"
     
-    if (selectedType === 'marketplace') {
-      this.marketplaceFieldsTarget.classList.remove('hidden')
-      // Set required attribute on price field
-      if (this.hasPriceInputTarget) {
-        this.priceInputTarget.required = true
-      }
-    } else {
-      this.marketplaceFieldsTarget.classList.add('hidden')
-      // Remove required attribute on price field
-      if (this.hasPriceInputTarget) {
-        this.priceInputTarget.required = false
-      }
+    // Use toggle for cleaner code
+    this.marketplaceFieldsTarget.classList.toggle("hidden", !isMarketplace)
+    
+    // Set required attribute on price field
+    if (this.hasPriceInputTarget) {
+      this.priceInputTarget.required = isMarketplace
     }
   }
 

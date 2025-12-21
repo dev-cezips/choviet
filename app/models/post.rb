@@ -88,6 +88,7 @@ class Post < ApplicationRecord
   end
   
   # Callbacks
+  before_validation :drop_product_unless_marketplace
   before_save :auto_translate_title, if: :target_korean_changed?
   before_create :set_location_from_user
   
@@ -139,6 +140,10 @@ class Post < ApplicationRecord
   def reject_product?(attributes)
     # Reject product attributes if not marketplace type
     !marketplace?
+  end
+  
+  def drop_product_unless_marketplace
+    self.product = nil unless marketplace?
   end
   
   def set_default_status

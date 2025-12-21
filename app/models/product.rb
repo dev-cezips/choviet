@@ -21,9 +21,9 @@ class Product < ApplicationRecord
 
   # Validations
   validates :name, presence: true, length: { maximum: 100 }
-  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }, if: :require_marketplace_fields?
   validates :currency, inclusion: { in: %w[KRW VND USD] }
-  validates :condition, presence: true
+  validates :condition, presence: true, if: :require_marketplace_fields?
   validates :images, limit: { max: 10 },
                      content_type: %i[png jpg jpeg webp],
                      size: { less_than: 10.megabytes },
@@ -59,6 +59,11 @@ class Product < ApplicationRecord
 
   def images_attached?
     images.attached?
+  end
+
+  def require_marketplace_fields?
+    # Standalone products (Week 3) or marketplace posts require fields
+    post.nil? || post.marketplace?
   end
 
   private
