@@ -23,6 +23,9 @@ class Post < ApplicationRecord
     [ latitude, longitude ]
   end
 
+  # Callbacks
+  before_validation :set_default_post_type, on: :create
+
   # Enums
   enum :post_type, {
     question: 0,      # 질문
@@ -137,6 +140,10 @@ class Post < ApplicationRecord
   end
 
   private
+
+  def set_default_post_type
+    self.post_type ||= "question"
+  end
 
   def reject_product?(attributes)
     # id/currency/_destroy 같은 "의미 없는 값"은 빈값 판단에서 제외 (심볼/문자열 둘 다)

@@ -61,8 +61,10 @@ class PostsController < ApplicationController
     Rails.logger.info "[CREATE] permitted params include product_attributes: #{permitted_params.key?(:product_attributes)}"
     @post = current_user.posts.build(permitted_params)
 
-    # Set default post_type if blank (safety net)
-    @post.post_type = "question" if @post.post_type.blank?
+    # Whitelist and normalize post_type (2nd lock)
+    type = @post.post_type.to_s
+    @post.post_type = Post.post_types.key?(type) ? type : "question"
+    Rails.logger.info "[CREATE] Final post_type after normalization: #{@post.post_type}"
 
     # Set location from current user if not provided
     if @post.latitude.blank? && current_user.has_location?
