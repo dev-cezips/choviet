@@ -150,15 +150,28 @@ class PostsController < ApplicationController
                      :latitude, :longitude, :target_korean, 
                      :community_id, :status, images: []]
       
+      raw = params.dig(:post, :post_type).to_s
+      
+      # Get marketplace value from enum map to avoid hardcoding
+      marketplace_value = Post.post_types.fetch("marketplace").to_s
+      is_marketplace = (raw == "marketplace" || raw == marketplace_value)
+      
+      Rails.logger.info "[PARAMS] raw post_type=#{raw.inspect} marketplace_value=#{marketplace_value.inspect} is_marketplace=#{is_marketplace}"
+      Rails.logger.info "[DEBUG] Post.post_types=#{Post.post_types.inspect}"
+      
       # Only add product_attributes to permit list if it's a marketplace post
-      if params.dig(:post, :post_type) == 'marketplace' || params.dig(:post, :post_type) == '1'
+      permitted = if is_marketplace
         Rails.logger.info "[PARAMS] Permitting product_attributes for marketplace post"
         params.require(:post).permit(*base_params, 
                                      product_attributes: [:id, :name, :description, :price, 
                                                          :condition, :currency, :_destroy])
       else
-        Rails.logger.info "[PARAMS] NOT permitting product_attributes for post_type: #{params.dig(:post, :post_type).inspect}"
+        Rails.logger.info "[PARAMS] NOT permitting product_attributes"
         params.require(:post).permit(*base_params)
       end
+      
+      # Last safety check - remove product_attributes unless marketplace
+      permitted.delete(:product_attributes) unless is_marketplace
+      permitted
     end
 end
