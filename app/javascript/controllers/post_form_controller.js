@@ -4,12 +4,13 @@ export default class extends Controller {
   static targets = ["postType", "marketplaceFields", "priceInput"]
 
   connect() {
-    this.toggleMarketplaceFields()
     // If editing a marketplace post, ensure styles are correct
     const selectedType = this.postTypeTargets.find(input => input.checked)
     if (selectedType) {
       this.updatePostTypeStyles(selectedType)
     }
+    // Always toggle fields based on current selection
+    this.toggleMarketplaceFields()
   }
 
   postTypeChanged(event) {

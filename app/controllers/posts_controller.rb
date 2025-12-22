@@ -42,10 +42,11 @@ class PostsController < ApplicationController
   # GET /posts/new
   def new
     @post = current_user.posts.build
+    @post.post_type ||= "question" # Default to question type
     @post.location = current_user.location
     @post.latitude = current_user.latitude
     @post.longitude = current_user.longitude
-    @post.build_product # Initialize product for marketplace posts
+    @post.build_product if @post.marketplace? # Initialize product only for marketplace posts
   end
 
   # GET /posts/1/edit
@@ -59,6 +60,9 @@ class PostsController < ApplicationController
     permitted_params = post_params
     Rails.logger.info "[CREATE] permitted params include product_attributes: #{permitted_params.key?(:product_attributes)}"
     @post = current_user.posts.build(permitted_params)
+
+    # Set default post_type if blank (safety net)
+    @post.post_type = "question" if @post.post_type.blank?
 
     # Set location from current user if not provided
     if @post.latitude.blank? && current_user.has_location?
