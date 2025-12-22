@@ -140,7 +140,7 @@ class Post < ApplicationRecord
 
   def reject_product?(attributes)
     # id/currency/_destroy 같은 "의미 없는 값"은 빈값 판단에서 제외 (심볼/문자열 둘 다)
-    ignore = ["_destroy", "id", "currency", :_destroy, :id, :currency]
+    ignore = [ "_destroy", "id", "currency", :_destroy, :id, :currency ]
     cleaned = attributes.except(*ignore)
 
     # 의미 있는 필드가 전부 비었으면 → 어떤 post_type이든 product 만들지 마

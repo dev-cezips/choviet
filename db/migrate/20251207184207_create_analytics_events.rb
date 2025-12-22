@@ -10,6 +10,6 @@ class CreateAnalyticsEvents < ActiveRecord::Migration[8.0]
 
     add_index :analytics_events, :event_type
     add_index :analytics_events, :created_at
-    add_index :analytics_events, [:event_type, :created_at]
+    add_index :analytics_events, [ :event_type, :created_at ]
   end
 end

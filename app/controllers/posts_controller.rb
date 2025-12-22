@@ -1,25 +1,25 @@
 class PostsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [ :index, :show ]
   before_action :set_post, only: %i[ show edit update destroy ]
 
   # GET /posts or /posts.json
   def index
     @keyword = params[:q]
-    
+
     # For MVP, show all posts regardless of location
     @posts = Post.active
                  .includes(:user, :location, images_attachments: :blob)
                  .order(created_at: :desc)
-    
+
     # Apply search filter if keyword present
     @posts = @posts.search_keyword(@keyword) if @keyword.present?
-    
+
     # Filter by post type if specified
     @posts = @posts.where(post_type: params[:type]) if params[:type].present?
-    
+
     # Paginate results
     @posts = @posts.page(params[:page])
-    
+
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -30,7 +30,7 @@ class PostsController < ApplicationController
   def show
     # Increment view count
     @post.increment!(:views_count)
-    
+
     track_event("post_viewed", {
       post_id: @post.id,
       post_type: @post.post_type,
@@ -59,7 +59,7 @@ class PostsController < ApplicationController
     permitted_params = post_params
     Rails.logger.info "[CREATE] permitted params include product_attributes: #{permitted_params.key?(:product_attributes)}"
     @post = current_user.posts.build(permitted_params)
-    
+
     # Set location from current user if not provided
     if @post.latitude.blank? && current_user.has_location?
       @post.location = current_user.location
@@ -71,12 +71,12 @@ class PostsController < ApplicationController
     if @post.marketplace? && !@post.product
       @post.build_product
     end
-    
+
     # Handle draft saving
     if params[:commit] == "save_draft"
-      @post.status = 'draft'
+      @post.status = "draft"
     else
-      @post.status = 'active'
+      @post.status = "active"
     end
 
     respond_to do |format|
@@ -89,11 +89,11 @@ class PostsController < ApplicationController
           target_korean: @post.target_korean,
           status: @post.status
         })
-        
+
         if @post.draft?
-          format.html { redirect_to edit_post_path(@post), notice: 'Bài viết đã được lưu nháp!' }
+          format.html { redirect_to edit_post_path(@post), notice: "Bài viết đã được lưu nháp!" }
         else
-          format.html { redirect_to @post, notice: I18n.t('posts.created') }
+          format.html { redirect_to @post, notice: I18n.t("posts.created") }
         end
         format.json { render :show, status: :created, location: @post }
       else
@@ -107,11 +107,11 @@ class PostsController < ApplicationController
   def update
     # Handle draft/publish status
     if params[:commit] == "save_draft"
-      params[:post][:status] = 'draft'
+      params[:post][:status] = "draft"
     elsif params[:commit] == "Cập nhật" && @post.draft?
-      params[:post][:status] = 'active'
+      params[:post][:status] = "active"
     end
-    
+
     respond_to do |format|
       if @post.update(post_params)
         if @post.draft?
@@ -146,30 +146,30 @@ class PostsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def post_params
       # Base parameters that are always allowed
-      base_params = [:title, :content, :post_type, :location_id, 
-                     :latitude, :longitude, :target_korean, 
-                     :community_id, :status, images: []]
-      
+      base_params = [ :title, :content, :post_type, :location_id,
+                     :latitude, :longitude, :target_korean,
+                     :community_id, :status, images: [] ]
+
       raw = params.dig(:post, :post_type).to_s
-      
+
       # Get marketplace value from enum map to avoid hardcoding
       marketplace_value = Post.post_types.fetch("marketplace").to_s
       is_marketplace = (raw == "marketplace" || raw == marketplace_value)
-      
+
       Rails.logger.info "[PARAMS] raw post_type=#{raw.inspect} marketplace_value=#{marketplace_value.inspect} is_marketplace=#{is_marketplace}"
       Rails.logger.info "[DEBUG] Post.post_types=#{Post.post_types.inspect}"
-      
+
       # Only add product_attributes to permit list if it's a marketplace post
       permitted = if is_marketplace
         Rails.logger.info "[PARAMS] Permitting product_attributes for marketplace post"
-        params.require(:post).permit(*base_params, 
-                                     product_attributes: [:id, :name, :description, :price, 
-                                                         :condition, :currency, :_destroy])
+        params.require(:post).permit(*base_params,
+                                     product_attributes: [ :id, :name, :description, :price,
+                                                         :condition, :currency, :_destroy ])
       else
         Rails.logger.info "[PARAMS] NOT permitting product_attributes"
         params.require(:post).permit(*base_params)
       end
-      
+
       # Last safety check - remove product_attributes unless marketplace
       permitted.delete(:product_attributes) unless is_marketplace
       permitted

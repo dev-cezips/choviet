@@ -5,7 +5,7 @@ require "warden/test/helpers"
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   if ENV["CI"]
     # CI: Use chromium instead of chrome
-    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 900] do |options|
+    driven_by :selenium, using: :headless_chrome, screen_size: [ 1400, 900 ] do |options|
       options.add_argument("--no-sandbox")
       options.add_argument("--disable-dev-shm-usage")
       options.add_argument("--disable-gpu")
@@ -15,7 +15,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     end
   else
     # Local: Use regular Chrome
-    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 900] do |options|
+    driven_by :selenium, using: :headless_chrome, screen_size: [ 1400, 900 ] do |options|
       options.add_argument("--no-sandbox")
       options.add_argument("--disable-dev-shm-usage")
     end
@@ -23,7 +23,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   include Warden::Test::Helpers
 
-  setup { 
+  setup {
     Warden.test_mode!
   }
   teardown { Warden.test_reset! }

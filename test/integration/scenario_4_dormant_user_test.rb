@@ -13,13 +13,13 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
       name: "Dormant User",
       created_at: 90.days.ago
     )
-    
+
     @seller = User.create!(
       email: "seller_#{SecureRandom.hex(4)}@test.com",
       password: "password123",
       name: "Seller User"
     )
-    
+
     @post = @seller.posts.build(
       title: "Product for Dormant User",
       content: "Description",
@@ -27,14 +27,14 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
     )
     @post.save(validate: false)
     @post.create_product!(name: @post.title, price: 100000, condition: "good")
-    
+
     # 과거 거래 생성 (40일 전)
     old_seller = User.create!(
       email: "oldseller_#{SecureRandom.hex(4)}@test.com",
       password: "password123",
       name: "Old Seller"
     )
-    
+
     old_post = old_seller.posts.build(
       title: "Old Product",
       content: "Description",
@@ -43,7 +43,7 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
     )
     old_post.save(validate: false)
     old_post.create_product!(name: old_post.title, price: 50000, condition: "good")
-    
+
     @old_chat_room = ChatRoom.create!(
       post: old_post,
       buyer: @dormant_user,
@@ -52,7 +52,7 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
       created_at: 45.days.ago,
       updated_at: 45.days.ago
     )
-    
+
     # 과거 리뷰 (40일 전)
     Review.create!(
       chat_room: @old_chat_room,
@@ -62,7 +62,7 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
       comment: "Good buyer",
       created_at: 45.days.ago
     )
-    
+
     # 과거 메시지 (마지막 활동 40일 전)
     Message.create!(
       chat_room: @old_chat_room,
@@ -74,7 +74,7 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
 
   # ✅ 30일 이상 비활동 유저로 설정 확인
   test "dormant user has no recent activity" do
-    assert_not @dormant_user.recently_active?(within: 30.days), 
+    assert_not @dormant_user.recently_active?(within: 30.days),
       "Dormant user should not be recently active"
   end
 
@@ -93,9 +93,9 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
   # ✅ 힌트 문구가 경고 아님
   test "hint is not a warning" do
     hint = @dormant_user.trust_hint(context: :post)
-    
+
     # 경고성 단어가 없어야 함
-    forbidden_words = ["cảnh báo", "nguy hiểm", "chú ý", "warning", "danger"]
+    forbidden_words = [ "cảnh báo", "nguy hiểm", "chú ý", "warning", "danger" ]
     forbidden_words.each do |word|
       refute_match(/#{word}/i, hint, "Hint should not contain warning word: #{word}")
     end
@@ -104,11 +104,11 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
   # ✅ 힌트 문구가 행동 제안 수준
   test "hint is a gentle suggestion" do
     hint = @dormant_user.trust_hint(context: :post)
-    
+
     # 제안/권유 단어 사용
-    suggestion_patterns = ["nên", "hãy", "có thể", "💬"]
+    suggestion_patterns = [ "nên", "hãy", "có thể", "💬" ]
     has_suggestion = suggestion_patterns.any? { |p| hint.include?(p) }
-    
+
     assert has_suggestion, "Hint should be a gentle suggestion"
   end
 
@@ -116,7 +116,7 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
   test "UX is not overwhelming" do
     sign_in @dormant_user
     get post_path(@post)
-    
+
     # 여러 개의 경고/배너가 쌓이지 않아야 함
     warning_count = response.body.scan(/bg-red|bg-yellow|⚠️|🚨/).count
     assert warning_count <= 1, "Should not have multiple warnings"
@@ -126,8 +126,8 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
   test "no danger words in dormant user UI" do
     sign_in @dormant_user
     get post_path(@post)
-    
-    danger_words = ["주의", "위험", "nguy hiểm", "cảnh báo nghiêm trọng"]
+
+    danger_words = [ "주의", "위험", "nguy hiểm", "cảnh báo nghiêm trọng" ]
     danger_words.each do |word|
       refute_match(/#{word}/i, response.body, "Should not contain danger word: #{word}")
     end
@@ -137,10 +137,10 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
   test "no guilt-inducing language for returning user" do
     hint = @dormant_user.trust_hint(context: :post)
     summary = @dormant_user.trust_summary(context: :post)
-    
-    guilt_words = ["bỏ rơi", "vắng mặt quá lâu", "đã quên", "không còn"]
+
+    guilt_words = [ "bỏ rơi", "vắng mặt quá lâu", "đã quên", "không còn" ]
     combined_text = "#{hint} #{summary}"
-    
+
     guilt_words.each do |word|
       refute_match(/#{word}/i, combined_text, "Should not guilt-trip returning user")
     end
@@ -155,20 +155,20 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
       seller: @seller,
       trade_status: "negotiating"
     )
-    
+
     Message.create!(
       chat_room: new_chat,
       sender: @dormant_user,
       content_raw: "I'm back!",
       created_at: Time.current
     )
-    
+
     @dormant_user.reload
-    
+
     # 이제 recently_active가 true가 되어야 함
-    assert @dormant_user.recently_active?(within: 7.days), 
+    assert @dormant_user.recently_active?(within: 7.days),
       "User should now be recently active"
-    
+
     # 첫 거래가 아니고 활동적이면 힌트 없음
     if !@dormant_user.first_trade? && @dormant_user.recently_active?(within: 30.days)
       hint = @dormant_user.trust_hint(context: :post)
@@ -179,18 +179,18 @@ class Scenario4DormantUserTest < ActionDispatch::IntegrationTest
   # ✅ trust_summary는 과거 평판 반영
   test "trust_summary reflects past reputation" do
     summary = @dormant_user.trust_summary(context: :profile)
-    
+
     # 과거 리뷰가 있으므로 관련 정보 표시
     assert summary.present?, "Summary should exist"
-    assert_match(/🌙|đánh giá|hoạt động/, summary, 
+    assert_match(/🌙|đánh giá|hoạt động/, summary,
       "Summary should mention past activity or reviews")
   end
 
   private
 
   def sign_in(user)
-    post user_session_path, params: { 
-      user: { email: user.email, password: "password123" } 
+    post user_session_path, params: {
+      user: { email: user.email, password: "password123" }
     }
   end
 end

@@ -12,13 +12,13 @@ class Scenario1NewUserTest < ActionDispatch::IntegrationTest
       password: "password123",
       name: "New Test User"
     )
-    
+
     @seller = User.create!(
       email: "seller_#{SecureRandom.hex(4)}@test.com",
       password: "password123",
       name: "Seller User"
     )
-    
+
     @post = @seller.posts.build(
       title: "Test Product",
       content: "Test description",
@@ -49,7 +49,7 @@ class Scenario1NewUserTest < ActionDispatch::IntegrationTest
     sign_in @new_user
     get post_path(@post)
     assert_response :success
-    
+
     # trust_summary가 표시되어야 함
     assert_match(/🌱|👤/, response.body, "Trust summary should be displayed")
   end
@@ -58,7 +58,7 @@ class Scenario1NewUserTest < ActionDispatch::IntegrationTest
   test "post detail shows trust_hint for guidance" do
     sign_in @new_user
     get post_path(@post)
-    
+
     # hint가 있으면 강요가 아닌 제안 톤이어야 함
     hint = @seller.trust_hint(context: :post)
     if hint.present?
@@ -71,7 +71,7 @@ class Scenario1NewUserTest < ActionDispatch::IntegrationTest
   test "CTA buttons are visually prominent" do
     sign_in @new_user
     get post_path(@post)
-    
+
     # 채팅 버튼이 있어야 함 (비활성화되어 있을 수 있음)
     assert_select "button, a", /Chat|채팅|💬/
   end
@@ -80,7 +80,7 @@ class Scenario1NewUserTest < ActionDispatch::IntegrationTest
   test "hints are styled as subtle text not buttons" do
     sign_in @new_user
     get post_path(@post)
-    
+
     # trust_hint는 작은 회색 텍스트여야 함
     assert_select "p.text-xs.text-gray-500, p.text-xs.text-gray-400", minimum: 0
   end
@@ -89,8 +89,8 @@ class Scenario1NewUserTest < ActionDispatch::IntegrationTest
   test "no forbidden trust words in UI" do
     sign_in @new_user
     get post_path(@post)
-    
-    forbidden_words = ["an toàn", "tin cậy", "cảnh báo", "nguy hiểm", "xác minh"]
+
+    forbidden_words = [ "an toàn", "tin cậy", "cảnh báo", "nguy hiểm", "xác minh" ]
     forbidden_words.each do |word|
       refute_match(/#{word}/i, response.body, "Should not contain forbidden word: #{word}")
     end
@@ -110,8 +110,8 @@ class Scenario1NewUserTest < ActionDispatch::IntegrationTest
   private
 
   def sign_in(user)
-    post user_session_path, params: { 
-      user: { email: user.email, password: "password123" } 
+    post user_session_path, params: {
+      user: { email: user.email, password: "password123" }
     }
   end
 end

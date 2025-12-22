@@ -7,8 +7,8 @@ class CreateReviewReactions < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
+
     # Ensure one reaction per user per review
-    add_index :review_reactions, [:review_id, :user_id], unique: true
+    add_index :review_reactions, [ :review_id, :user_id ], unique: true
   end
 end

@@ -104,7 +104,7 @@ class ProductsTest < ApplicationSystemTestCase
 
     # Disable Turbo confirmations for this test
     page.evaluate_script("document.querySelector('[data-turbo-confirm]').removeAttribute('data-turbo-confirm')")
-    
+
     click_button "Xóa"
 
     assert_text "Đã xóa sản phẩm!"

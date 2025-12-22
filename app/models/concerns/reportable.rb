@@ -3,8 +3,8 @@ module Reportable
 
   included do
     has_many :reports, as: :reported, dependent: :destroy
-    
-    scope :reported, -> { joins(:reports).where(reports: { status: 'pending' }).distinct }
+
+    scope :reported, -> { joins(:reports).where(reports: { status: "pending" }).distinct }
     scope :not_reported_by, ->(user) {
       left_joins(:reports)
         .where(reports: { id: nil })

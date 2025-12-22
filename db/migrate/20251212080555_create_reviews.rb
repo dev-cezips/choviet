@@ -9,8 +9,8 @@ class CreateReviews < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
+
     # Add index to prevent duplicate reviews
-    add_index :reviews, [:chat_room_id, :reviewer_id], unique: true
+    add_index :reviews, [ :chat_room_id, :reviewer_id ], unique: true
   end
 end

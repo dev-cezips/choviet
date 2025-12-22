@@ -3,8 +3,8 @@ module Trackable
 
   def track_event(event_type, properties = {})
     # Skip tracking in development/test unless explicitly enabled
-    return if Rails.env.test? && !ENV['ENABLE_ANALYTICS_IN_TEST']
-    
+    return if Rails.env.test? && !ENV["ENABLE_ANALYTICS_IN_TEST"]
+
     AnalyticsEventJob.perform_later(
       user_id: current_user&.id,
       event_type: event_type,
@@ -25,7 +25,7 @@ module Trackable
 
   def detect_device
     ua = request.user_agent.to_s.downcase
-    
+
     case ua
     when /iphone|ipod/
       "ios"

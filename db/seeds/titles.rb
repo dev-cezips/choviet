@@ -208,12 +208,12 @@ puts "Granting initial titles to existing users..."
 User.find_each do |user|
   # Grant level 1 title to all users
   user.grant_title!('newcomer')
-  
+
   # Set it as primary if user has no primary title
   if user.primary_title.nil?
     user.set_primary_title!('newcomer')
   end
-  
+
   # Run title evaluation
   TitleGrantService.new(user).evaluate!
 end

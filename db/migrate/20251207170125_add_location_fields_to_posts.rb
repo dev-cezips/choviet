@@ -3,7 +3,7 @@ class AddLocationFieldsToPosts < ActiveRecord::Migration[8.0]
     add_column :posts, :latitude, :float
     add_column :posts, :longitude, :float
     add_reference :posts, :location, foreign_key: true
-    
-    add_index :posts, [:latitude, :longitude]
+
+    add_index :posts, [ :latitude, :longitude ]
   end
 end
