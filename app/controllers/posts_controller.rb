@@ -56,8 +56,9 @@ class PostsController < ApplicationController
   # POST /posts or /posts.json
   def create
     Rails.logger.info "[CREATE] raw post_type: #{params.dig(:post, :post_type).inspect}"
-    Rails.logger.info "[CREATE] permitted post_type: #{post_params[:post_type].inspect}"
-    @post = current_user.posts.build(post_params)
+    permitted_params = post_params
+    Rails.logger.info "[CREATE] permitted params include product_attributes: #{permitted_params.key?(:product_attributes)}"
+    @post = current_user.posts.build(permitted_params)
     
     # Set location from current user if not provided
     if @post.latitude.blank? && current_user.has_location?
@@ -144,22 +145,20 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      permitted = params.require(:post).permit(:title, :content, :post_type, :location_id, 
-                                   :latitude, :longitude, :target_korean, 
-                                   :community_id, :status, images: [],
-                                   product_attributes: [:id, :name, :description, :price, 
-                                                       :condition, :currency, :_destroy])
+      # Base parameters that are always allowed
+      base_params = [:title, :content, :post_type, :location_id, 
+                     :latitude, :longitude, :target_korean, 
+                     :community_id, :status, images: []]
       
-      # Debug logging
-      Rails.logger.info "POST_TYPE in params: #{permitted[:post_type].inspect}"
-      
-      # Remove product_attributes for non-marketplace posts
-      # Check both string and integer values since enum might convert
-      unless permitted[:post_type] == 'marketplace' || permitted[:post_type] == '1' || permitted[:post_type].to_i == 1
-        Rails.logger.info "Removing product_attributes for post_type: #{permitted[:post_type]}"
-        permitted.delete(:product_attributes)
+      # Only add product_attributes to permit list if it's a marketplace post
+      if params.dig(:post, :post_type) == 'marketplace' || params.dig(:post, :post_type) == '1'
+        Rails.logger.info "[PARAMS] Permitting product_attributes for marketplace post"
+        params.require(:post).permit(*base_params, 
+                                     product_attributes: [:id, :name, :description, :price, 
+                                                         :condition, :currency, :_destroy])
+      else
+        Rails.logger.info "[PARAMS] NOT permitting product_attributes for post_type: #{params.dig(:post, :post_type).inspect}"
+        params.require(:post).permit(*base_params)
       end
-      
-      permitted
     end
 end

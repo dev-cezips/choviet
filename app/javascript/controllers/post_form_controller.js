@@ -41,6 +41,12 @@ export default class extends Controller {
     // Use toggle for cleaner code
     this.marketplaceFieldsTarget.classList.toggle("hidden", !isMarketplace)
     
+    // Disable/enable all form fields inside marketplace fields
+    const inputs = this.marketplaceFieldsTarget.querySelectorAll("input, select, textarea")
+    inputs.forEach(input => {
+      input.disabled = !isMarketplace
+    })
+    
     // Set required attribute on price field
     if (this.hasPriceInputTarget) {
       this.priceInputTarget.required = isMarketplace
