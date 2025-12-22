@@ -16,18 +16,18 @@ class MarketplacePostsTest < ApplicationSystemTestCase
 
     # Use the helper method from ApplicationSystemTestCase
     set_radio_and_trigger_change("post_post_type_marketplace")
-    
+
     # Wait for marketplace fields to appear and be enabled
     assert_selector "[data-post-form-target='marketplaceFields']:not(.hidden)", wait: 5
-    
+
     # Fill in post details
     fill_in "Tiêu đề", with: "iPhone 12 Pro Max"
     fill_in "Nội dung", with: "Điện thoại iPhone 12 Pro Max còn mới, sử dụng cẩn thận"
-    
+
     # Fill in price by finding the field with data attribute
     price_field = find("[data-post-form-target='priceInput']")
     price_field.fill_in with: "15000000"
-    
+
     # Select condition
     select "Như mới", from: "Tình trạng"
 
