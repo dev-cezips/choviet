@@ -72,6 +72,9 @@ class PostsController < ApplicationController
       @post.build_product
     end
 
+    # Final safety check - ensure no product for non-marketplace posts
+    @post.product = nil unless @post.marketplace?
+
     # Handle draft saving
     if params[:commit] == "save_draft"
       @post.status = "draft"
