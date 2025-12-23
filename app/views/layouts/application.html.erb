@@ -75,6 +75,50 @@
       </main>
     </div>
     
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 mt-20">
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- About -->
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Chợ Việt</h3>
+            <p class="text-sm text-gray-600">
+              Cộng đồng người Việt tại Hàn Quốc<br>
+              베트남인을 위한 온라인 커뮤니티
+            </p>
+          </div>
+          
+          <!-- Links -->
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Thông tin</h3>
+            <ul class="space-y-2">
+              <li>
+                <%= link_to "개인정보 처리방침", privacy_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
+              </li>
+              <li>
+                <%= link_to "이용약관", terms_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- Contact -->
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Liên hệ / 문의</h3>
+            <p class="text-sm text-gray-600">
+              Email: support@choviet.com<br>
+              카카오톡: @choviet
+            </p>
+          </div>
+        </div>
+        
+        <div class="border-t border-gray-200 mt-8 pt-8 text-center">
+          <p class="text-sm text-gray-500">
+            &copy; <%= Date.current.year %> Chợ Việt. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+    
     <!-- Modal frame for reports and other modals -->
     <%= turbo_frame_tag "report_modal" do %>
     <% end %>

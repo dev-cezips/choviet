@@ -59,24 +59,57 @@
         <p class="text-xs text-gray-500 mt-1">Số điện thoại sẽ không hiển thị công khai</p>
       </div>
 
-      <!-- Location Selection -->
+      <!-- Language/Locale Field -->
       <div>
-        <%= f.label :location_code, "Khu vực", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.select :location_code, 
+        <%= f.label :locale, "Ngôn ngữ", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :locale, 
             options_for_select([
-              ["Chọn khu vực", ""],
-              ["Seoul", "seoul"],
-              ["Gyeonggi", "gyeonggi"],
-              ["Busan", "busan"],
-              ["Incheon", "incheon"],
-              ["Daegu", "daegu"],
-              ["Daejeon", "daejeon"],
-              ["Gwangju", "gwangju"],
-              ["Ulsan", "ulsan"],
-              ["Khác", "other"]
-            ], @user.location_code),
+              ["Tiếng Việt", "vi"],
+              ["한국어", "ko"],
+              ["English", "en"]
+            ], @user.locale || 'vi'),
             {},
             class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" %>
+      </div>
+
+      <!-- Location Selection -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <%= f.label :location_code, "Khu vực", class: "block text-sm font-medium text-gray-700" %>
+          <button type="button" id="detect-location-btn" class="text-sm text-primary hover:text-primary-hover flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            Dùng vị trí hiện tại
+          </button>
+        </div>
+        
+        <% if @user.location_code.blank? %>
+          <div class="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg">
+            <p>⚠️ Vui lòng chọn khu vực để xem được tin đăng gần bạn</p>
+          </div>
+        <% end %>
+        
+        <div id="location-status" class="hidden text-sm"></div>
+        
+        <% if !Location.exists? %>
+          <div class="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+            <p>⚠️ Không có khu vực nào trong hệ thống. Vui lòng chạy <code>bin/rails db:seed</code> để tạo dữ liệu.</p>
+          </div>
+        <% else %>
+          <%= f.select :location_code, 
+              options_for_select(
+                [["Chọn khu vực", ""]] + Location.order(:name_ko).map { |loc| [loc.name_vi || loc.name_ko, loc.code] },
+                @user.location_code
+              ),
+              {},
+              class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        <% end %>
+        
+        <!-- Hidden fields for GPS coordinates -->
+        <%= f.hidden_field :latitude %>
+        <%= f.hidden_field :longitude %>
       </div>
 
       <!-- Action Buttons -->
@@ -108,5 +141,62 @@
       }
       reader.readAsDataURL(file);
     }
+  });
+
+  // GPS Location Detection
+  document.getElementById('detect-location-btn').addEventListener('click', function() {
+    const statusDiv = document.getElementById('location-status');
+    const locationSelect = document.getElementById('user_location_code');
+    const latitudeField = document.getElementById('user_latitude');
+    const longitudeField = document.getElementById('user_longitude');
+    
+    statusDiv.classList.remove('hidden', 'text-green-600', 'text-red-600');
+    statusDiv.classList.add('text-blue-600');
+    statusDiv.innerHTML = '🔍 Đang xác định vị trí...';
+
+    if (!navigator.geolocation) {
+      statusDiv.classList.remove('text-blue-600');
+      statusDiv.classList.add('text-red-600');
+      statusDiv.innerHTML = '❌ Trình duyệt không hỗ trợ định vị';
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        latitudeField.value = lat;
+        longitudeField.value = lng;
+        
+        // Show success message - server will detect location on submit
+        statusDiv.classList.remove('text-blue-600');
+        statusDiv.classList.add('text-green-600');
+        statusDiv.innerHTML = '✅ Đã lấy được tọa độ GPS. Hệ thống sẽ tự động xác định khu vực khi bạn lưu.';
+        
+        setTimeout(() => {
+          statusDiv.classList.add('hidden');
+        }, 3000);
+      },
+      function(error) {
+        statusDiv.classList.remove('text-blue-600');
+        statusDiv.classList.add('text-red-600');
+        
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            statusDiv.innerHTML = '❌ Bạn đã từ chối quyền truy cập vị trí';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            statusDiv.innerHTML = '❌ Không thể xác định vị trí';
+            break;
+          case error.TIMEOUT:
+            statusDiv.innerHTML = '❌ Hết thời gian xác định vị trí';
+            break;
+          default:
+            statusDiv.innerHTML = '❌ Lỗi xác định vị trí';
+            break;
+        }
+      }
+    );
   });
 </script>

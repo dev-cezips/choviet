@@ -35,12 +35,12 @@ module ChoViet
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-    
+
     # Localization configuration
-    config.i18n.available_locales = [:vi, :ko, :en]
+    config.i18n.available_locales = [ :vi, :ko, :en ]
     config.i18n.default_locale = :vi
     config.i18n.fallbacks = true
-    
+
     # Time zone for Korea
     config.time_zone = "Seoul"
 

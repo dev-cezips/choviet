@@ -2,6 +2,9 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
+# Skip seeds in test environment
+return if Rails.env.test?
+
 puts "Creating locations..."
 
 # Create main cities
@@ -214,48 +217,52 @@ seoul_students.add_member(minh, 'admin') unless seoul_students.members.include?(
 viet_moms.add_member(lien, 'member') unless viet_moms.members.include?(lien)
 seoul_students.add_member(korean_user, 'member') unless seoul_students.members.include?(korean_user)
 
-puts "Creating posts..."
+# Only create demo posts if SEED_DEMO=1
+if ENV["SEED_DEMO"] == "1"
+  puts "Creating demo posts..."
 
-# Clear existing posts and products to ensure fresh data
-Post.destroy_all
-Product.destroy_all
+  # Clear existing posts and products to ensure fresh data
+  Post.destroy_all
+  Product.destroy_all
 
-# Marketplace post by Lien
-post1 = Post.create!(
-  user: lien,
-  post_type: "marketplace",
-  community: ansan_viet,
-  title: "Bán xe đạp cho bé",
-  content: "Mình cần bán xe đạp cho bé 4-6 tuổi. Mua được 6 tháng, còn rất mới. 
-  Lý do bán: con mình lớn nhanh quá không vừa nữa.
-  
-  - Màu hồng xinh xắn
-  - Có bánh phụ 2 bên
-  - Giỏ xe phía trước
-  - Còn nguyên hộp và phiếu bảo hành
-  
-  Giá: 50,000 won (mua mới 120,000 won)
-  Địa điểm: Gần ga Ansan
-  
-  Liên hệ qua tin nhắn nhé!",
-  location_code: "ansan",
-  location: ansan,
-  latitude: lien.latitude,
-  longitude: lien.longitude,
-  target_korean: false,
-  status: "active"
-)
+  # Marketplace post by Lien - skip validation to avoid image requirement
+  post1 = Post.new(
+    user: lien,
+    post_type: "marketplace",
+    community: ansan_viet,
+    title: "Bán xe đạp cho bé",
+    content: "Mình cần bán xe đạp cho bé 4-6 tuổi. Mua được 6 tháng, còn rất mới.
+    Lý do bán: con mình lớn nhanh quá không vừa nữa.
 
-# Create product for the marketplace post
-Product.create!(
-  post: post1,
-  name: "Xe đạp trẻ em màu hồng",
-  description: "Xe đạp cho bé 4-6 tuổi, còn rất mới",
-  price: 50000,
-  currency: "KRW",
-  condition: "like_new",
-  sold: false
-)
+    - Màu hồng xinh xắn
+    - Có bánh phụ 2 bên
+    - Giỏ xe phía trước
+    - Còn nguyên hộp và phiếu bảo hành
+
+    Giá: 50,000 won (mua mới 120,000 won)
+    Địa điểm: Gần ga Ansan
+
+    Liên hệ qua tin nhắn nhé!",
+    location_code: "ansan",
+    location: ansan,
+    latitude: lien.latitude,
+    longitude: lien.longitude,
+    target_korean: false,
+    status: "active"
+  )
+
+  # Create product first to satisfy validation
+  product = Product.new(
+    name: "Xe đạp trẻ em màu hồng",
+    description: "Xe đạp cho bé 4-6 tuổi, còn rất mới",
+    price: 50000,
+    currency: "KRW",
+    condition: "like_new",
+    sold: false
+  )
+
+  post1.product = product
+  post1.save(validate: false) # Skip validations for demo data
 
 # Community post by Minh
 post2 = Post.create!(
@@ -269,7 +276,7 @@ post2 = Post.create!(
   - Học cùng nhau ở thư viện
   - Chia sẻ tài liệu
   - Luyện tập hội thoại
-  
+
   Ai quan tâm thì comment hoặc nhắn tin cho mình nhé!
   카톡 ID: vietminh23",
   location_code: "dongdaemun",
@@ -287,10 +294,10 @@ post3 = Post.create!(
   community: seoul_students,
   title: "베트남 음식점 추천해주세요",
   content: "강남 근처에 맛있는 베트남 음식점 있나요?
-  
+
   특히 쌀국수(포)와 반미를 잘하는 곳을 찾고 있어요.
   가격대는 상관없습니다.
-  
+
   추천 부탁드립니다!",
   location_code: "gangnam",
   location: gangnam,
@@ -324,17 +331,23 @@ QuickReply.create!([
   { category: "meeting", content_vi: "Hẹn cuối tuần được không?", content_ko: "주말에 만날 수 있나요?" }
 ])
 
-puts "Seed data created successfully!"
+  puts "\nDemo posts created!"
+end # if SEED_DEMO
+
+puts "\nSeed data created successfully!"
 puts "Created:"
 puts "- #{Location.count} locations"
 puts "- #{Category.count} categories"
 puts "- #{Community.count} communities"
 puts "- #{User.count} users"
-puts "- #{Post.count} posts"
-puts "- #{Product.count} products"
+if ENV["SEED_DEMO"] == "1"
+  puts "- #{Post.count} posts"
+  puts "- #{Product.count} products"
+end
 puts "- #{QuickReply.count} quick replies"
 puts "\nYou can login with:"
 puts "Admin: admin@choviet.com / password123 (Admin Dashboard: /admin/dashboard)"
 puts "Vietnamese user: lien@example.com / password123 (Location: Ansan)"
 puts "Vietnamese student: minh@example.com / password123 (Location: Dongdaemun)"
 puts "Korean user: korean@example.com / password123 (Location: Gangnam)"
+puts "\nNote: Run SEED_DEMO=1 rails db:seed to create demo posts"

@@ -9,26 +9,26 @@ class CommunitiesController < ApplicationController
     @posts = @community.posts.active.recent.includes(:user)
     @is_member = user_signed_in? && @community.member?(current_user)
   end
-  
+
   def join
     @community = Community.find_by!(slug: params[:id])
     authenticate_user!
-    
+
     if @community.add_member(current_user)
-      redirect_to @community, notice: t('communities.joined')
+      redirect_to @community, notice: t("communities.joined")
     else
-      redirect_to @community, alert: t('communities.join_error')
+      redirect_to @community, alert: t("communities.join_error")
     end
   end
-  
+
   def leave
     @community = Community.find_by!(slug: params[:id])
     authenticate_user!
-    
+
     if @community.remove_member(current_user)
-      redirect_to @community, notice: t('communities.left')
+      redirect_to @community, notice: t("communities.left")
     else
-      redirect_to @community, alert: t('communities.leave_error')
+      redirect_to @community, alert: t("communities.leave_error")
     end
   end
 end

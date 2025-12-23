@@ -1,0 +1,93 @@
+<%= form_with model: product, local: true, html: { multipart: true } do |f| %>
+  <% if product.errors.any? %>
+    <div class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+      <p class="font-semibold mb-1">Có lỗi xảy ra:</p>
+      <ul class="list-disc list-inside">
+        <% product.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="space-y-6">
+    <!-- Product Name -->
+    <div>
+      <%= f.label :name, "Tên sản phẩm", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :name, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent", placeholder: "VD: iPhone 12 Pro Max" %>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <%= f.label :description, "Mô tả", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_area :description, rows: 4, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent", placeholder: "Mô tả chi tiết về sản phẩm..." %>
+    </div>
+
+    <!-- Price and Currency -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= f.label :price, "Giá", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.number_field :price, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent", placeholder: "150000" %>
+      </div>
+      
+      <div>
+        <%= f.label :currency, "Tiền tệ", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :currency, 
+            options_for_select([
+              ["KRW (₩)", "KRW"],
+              ["VND (₫)", "VND"],
+              ["USD ($)", "USD"]
+            ], product.currency || "KRW"),
+            {},
+            class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" %>
+      </div>
+    </div>
+
+    <!-- Condition -->
+    <div>
+      <%= f.label :condition, "Tình trạng", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.select :condition, 
+          options_for_select([
+            ["Mới", "new_item"],
+            ["Như mới", "like_new"],
+            ["Tốt", "good"],
+            ["Khá", "fair"],
+            ["Cũ", "poor"]
+          ], product.condition),
+          { prompt: "Chọn tình trạng..." },
+          class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" %>
+    </div>
+
+    <!-- Images -->
+    <div>
+      <%= f.label :images, "Hình ảnh", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.file_field :images, 
+          multiple: true, 
+          accept: "image/*",
+          class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-white hover:file:bg-primary-hover",
+          data: { 
+            direct_upload_url: rails_direct_uploads_url 
+          } %>
+      <p class="text-xs text-gray-500 mt-1">Chọn tối đa 10 ảnh. Định dạng: JPG, PNG, WebP (tối đa 10MB mỗi ảnh)</p>
+    </div>
+
+    <% if product.persisted? && product.images.attached? %>
+      <div>
+        <p class="text-sm font-medium text-gray-700 mb-2">Hình ảnh hiện tại:</p>
+        <div class="grid grid-cols-4 gap-2">
+          <% product.images.each do |image| %>
+            <div class="relative">
+              <%= image_tag image, class: "w-full h-24 object-cover rounded-lg" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Submit Button -->
+    <div class="flex justify-end gap-3 pt-4 border-t">
+      <%= link_to "Hủy", products_path, class: "px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors" %>
+      <%= f.submit product.new_record? ? "Tạo sản phẩm" : "Cập nhật", class: "px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors cursor-pointer" %>
+    </div>
+  </div>
+<% end %>

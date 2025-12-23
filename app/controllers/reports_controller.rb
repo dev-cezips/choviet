@@ -18,17 +18,17 @@ class ReportsController < ApplicationController
         reason_code: @report.reason_code,
         has_description: @report.description.present?
       })
-      
+
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.update("report_modal", ""),
-            turbo_stream.prepend("flash_messages", partial: "shared/flash", 
-              locals: { type: :notice, message: I18n.t('reports.created') })
+            turbo_stream.prepend("flash_messages", partial: "shared/flash",
+              locals: { type: :notice, message: I18n.t("reports.created") })
           ]
         end
         format.html do
-          redirect_back(fallback_location: root_path, notice: I18n.t('reports.created'))
+          redirect_back(fallback_location: root_path, notice: I18n.t("reports.created"))
         end
       end
     else
@@ -58,6 +58,15 @@ class ReportsController < ApplicationController
   end
 
   def report_params
-    params.require(:report).permit(:reason_code, :description)
+    # Accept both reason_code and reason for backward compatibility
+    permitted = params.require(:report).permit(:reason_code, :reason, :description)
+
+    # If reason is provided but not reason_code, use reason as reason_code
+    if permitted[:reason].present? && permitted[:reason_code].blank?
+      permitted[:reason_code] = permitted[:reason]
+    end
+
+    # Remove reason from params to avoid confusion
+    permitted.except(:reason)
   end
 end

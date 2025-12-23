@@ -4,12 +4,13 @@ export default class extends Controller {
   static targets = ["postType", "marketplaceFields", "priceInput"]
 
   connect() {
-    this.toggleMarketplaceFields()
     // If editing a marketplace post, ensure styles are correct
     const selectedType = this.postTypeTargets.find(input => input.checked)
     if (selectedType) {
       this.updatePostTypeStyles(selectedType)
     }
+    // Always toggle fields based on current selection
+    this.toggleMarketplaceFields()
   }
 
   postTypeChanged(event) {
@@ -34,20 +35,22 @@ export default class extends Controller {
   }
 
   toggleMarketplaceFields() {
-    const selectedType = this.postTypeTargets.find(input => input.checked)?.value
+    // More reliable way to get checked value
+    const checked = this.element.querySelector("input[name='post[post_type]']:checked")
+    const isMarketplace = checked && checked.value === "marketplace"
     
-    if (selectedType === 'marketplace') {
-      this.marketplaceFieldsTarget.classList.remove('hidden')
-      // Set required attribute on price field
-      if (this.hasPriceInputTarget) {
-        this.priceInputTarget.required = true
-      }
-    } else {
-      this.marketplaceFieldsTarget.classList.add('hidden')
-      // Remove required attribute on price field
-      if (this.hasPriceInputTarget) {
-        this.priceInputTarget.required = false
-      }
+    // Use toggle for cleaner code
+    this.marketplaceFieldsTarget.classList.toggle("hidden", !isMarketplace)
+    
+    // Disable/enable all form fields inside marketplace fields
+    const inputs = this.marketplaceFieldsTarget.querySelectorAll("input, select, textarea")
+    inputs.forEach(input => {
+      input.disabled = !isMarketplace
+    })
+    
+    // Set required attribute on price field
+    if (this.hasPriceInputTarget) {
+      this.priceInputTarget.required = isMarketplace
     }
   }
 

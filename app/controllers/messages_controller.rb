@@ -10,15 +10,15 @@ class MessagesController < ApplicationController
   def create
     @message = @chat_room.messages.build(message_params)
     @message.sender = current_user
-    @message.src_lang = current_user.locale || 'vi'
-    
+    @message.src_lang = current_user.locale || "vi"
+
     if @message.save
       # Queue translation job if needed
       needs_translation = should_translate?
       if needs_translation
         TranslateMessageJob.perform_later(@message.id)
       end
-      
+
       track_event("message_sent", {
         chat_room_id: @chat_room.id,
         post_id: @post.id,
@@ -26,7 +26,7 @@ class MessagesController < ApplicationController
         needs_translation: needs_translation,
         quick_reply_used: params[:quick_reply].present?
       })
-      
+
       respond_to do |format|
         format.turbo_stream
         format.html { redirect_to post_chat_room_path(@post, @chat_room) }
@@ -44,8 +44,8 @@ class MessagesController < ApplicationController
   end
 
   def check_participant
-    unless [@chat_room.buyer_id, @chat_room.seller_id].include?(current_user.id)
-      redirect_to root_path, alert: I18n.t('chat_rooms.not_authorized')
+    unless [ @chat_room.buyer_id, @chat_room.seller_id ].include?(current_user.id)
+      redirect_to root_path, alert: I18n.t("chat_rooms.not_authorized")
     end
   end
 

@@ -4,7 +4,7 @@ class AddLocationSettingsToUsers < ActiveRecord::Migration[8.0]
     add_column :users, :longitude, :float
     add_column :users, :location_radius, :integer, default: 3
     add_reference :users, :location, foreign_key: true
-    
-    add_index :users, [:latitude, :longitude]
+
+    add_index :users, [ :latitude, :longitude ]
   end
 end
