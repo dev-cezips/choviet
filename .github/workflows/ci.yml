@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # SQLite gem 컴파일/실행에 필요한 OS 패키지 (bundle install 전에!)
       - name: Install OS deps (SQLite, ImageMagick)
@@ -64,7 +64,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install OS deps (SQLite, ImageMagick, Chrome deps)
         run: |
@@ -120,7 +120,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install OS deps (SQLite, ImageMagick)
         run: |
