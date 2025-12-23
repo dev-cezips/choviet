@@ -146,17 +146,15 @@ class Post < ApplicationRecord
   end
 
   def reject_product?(attributes)
-    # id/currency/_destroy 같은 "의미 없는 값"은 빈값 판단에서 제외 (심볼/문자열 둘 다)
+    # Always reject product for non-marketplace posts
+    return true if post_type.to_s != "marketplace"
+
+    # For marketplace posts, check if attributes are meaningful
     ignore = [ "_destroy", "id", "currency", :_destroy, :id, :currency ]
     cleaned = attributes.except(*ignore)
 
-    # 의미 있는 필드가 전부 비었으면 → 어떤 post_type이든 product 만들지 마
-    return true if cleaned.values.all?(&:blank?)
-
-    # 값이 들어왔는데 marketplace가 아니면 → product 받지 마
-    return true unless marketplace?
-
-    false
+    # Reject if all meaningful fields are blank
+    cleaned.values.all?(&:blank?)
   end
 
   def validate_product_if_marketplace
