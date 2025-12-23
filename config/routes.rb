@@ -7,11 +7,15 @@ Rails.application.routes.draw do
   # Root route - posts index as the main feed
   root "posts#index"
 
+  # Feed routes
+  get "feed", to: "posts#feed"
+
   # Marketplace shortcut
   get "marketplace", to: "posts#index", defaults: { type: "marketplace" }
 
   resources :posts do
     resource :like, only: [ :create, :destroy ]
+    resource :favorite, only: [ :create, :destroy ]
     resources :chat_rooms, only: [ :create, :show ] do
       member do
         patch :update_status
@@ -40,6 +44,7 @@ Rails.application.routes.draw do
     resources :reports, only: [ :new, :create ]
     member do
       get :listings
+      get :favorites
     end
   end
 

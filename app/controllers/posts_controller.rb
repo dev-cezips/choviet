@@ -5,25 +5,36 @@ class PostsController < ApplicationController
   # GET /posts or /posts.json
   def index
     @keyword = params[:q]
-
-    # For MVP, show all posts regardless of location
-    @posts = Post.active
-                 .includes(:user, :location, images_attachments: :blob)
-                 .order(created_at: :desc)
-
-    # Apply search filter if keyword present
-    @posts = @posts.search_keyword(@keyword) if @keyword.present?
-
-    # Filter by post type if specified
-    @posts = @posts.where(post_type: params[:type]) if params[:type].present?
-
-    # Paginate results
-    @posts = @posts.page(params[:page])
+    @posts = build_posts_query
 
     respond_to do |format|
       format.html
       format.turbo_stream
     end
+  end
+
+  # GET /feed - Location-based feed
+  def feed
+    @keyword = params[:q]
+
+    # Try to show posts near user's location first
+    if user_signed_in? && current_user.has_location?
+      @posts = Post.active.near_location(current_user.latitude, current_user.longitude)
+    else
+      # Fallback to all active posts
+      @posts = Post.active
+    end
+
+    # Apply filters
+    @posts = apply_filters(@posts)
+
+    # Include necessary associations
+    @posts = @posts.includes(:user, :location, :product, images_attachments: :blob)
+
+    # Paginate
+    @posts = @posts.page(params[:page])
+
+    render :index # Reuse index view
   end
 
   # GET /posts/1 or /posts/1.json
@@ -182,5 +193,53 @@ class PostsController < ApplicationController
       # Last safety check - remove product_attributes unless marketplace
       permitted.delete(:product_attributes) unless is_marketplace
       permitted
+    end
+
+    def build_posts_query
+      posts = Post.active
+
+      # Apply filters
+      posts = apply_filters(posts)
+
+      # Include associations
+      posts.includes(:user, :location, :product, images_attachments: :blob)
+    end
+
+    def apply_filters(posts)
+      # Search keyword
+      posts = posts.search_keyword(@keyword) if @keyword.present?
+
+      # Filter by post type
+      posts = posts.where(post_type: params[:type]) if params[:type].present?
+
+      # Filter by location
+      posts = posts.by_location_id(params[:location_id]) if params[:location_id].present?
+
+      # Filter by price range (marketplace only)
+      if params[:min_price].present? || params[:max_price].present?
+        posts = posts.joins(:product)
+        posts = posts.where("products.price >= ?", params[:min_price]) if params[:min_price].present?
+        posts = posts.where("products.price <= ?", params[:max_price]) if params[:max_price].present?
+      end
+
+      # Filter by condition (marketplace only)
+      if params[:condition].present?
+        posts = posts.joins(:product).where(products: { condition: params[:condition] })
+      end
+
+      # Apply sorting
+      case params[:sort]
+      when "popular"
+        posts = posts.by_popularity
+      when "price_low"
+        posts = posts.by_price_low_to_high
+      when "price_high"
+        posts = posts.by_price_high_to_low
+      else
+        posts = posts.recent # Default to newest first
+      end
+
+      # Paginate
+      posts.page(params[:page])
     end
 end

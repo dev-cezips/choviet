@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [ :show, :listings ]
+  before_action :set_user, only: [ :show, :listings, :favorites ]
   before_action :authenticate_user!, only: [ :edit, :update ]
   before_action :set_current_user, only: [ :edit, :update ]
 
@@ -53,6 +53,15 @@ class UsersController < ApplicationController
                   .where(status: "active")
                   .order(created_at: :desc)
                   .page(params[:page])
+  end
+
+  def favorites
+    @posts = @user.favorite_posts.active
+                  .includes(:user, :product, :location, images_attachments: :blob)
+                  .order("favorites.created_at DESC")
+                  .page(params[:page])
+
+    render "posts/index" # Reuse posts index view
   end
 
   private

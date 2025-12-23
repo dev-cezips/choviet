@@ -9,6 +9,8 @@ class Post < ApplicationRecord
   has_one :product, dependent: :destroy, inverse_of: :post, validate: false
   has_many :chat_rooms, dependent: :destroy
   has_many :likes, dependent: :destroy
+  has_many :favorites, dependent: :destroy
+  has_many :favorited_by_users, through: :favorites, source: :user
 
   # Nested attributes
   accepts_nested_attributes_for :product, allow_destroy: true, reject_if: :reject_product?
@@ -57,11 +59,39 @@ class Post < ApplicationRecord
   scope :search_keyword, ->(keyword) {
     return all if keyword.blank?
 
-    # Use ILIKE for case-insensitive search in PostgreSQL
-    where("title ILIKE :q OR content ILIKE :q", q: "%#{sanitize_sql_like(keyword)}%")
+    # Use LIKE for SQLite (case-insensitive by default)
+    # For PostgreSQL in production, change to ILIKE
+    where("title LIKE :q OR content LIKE :q", q: "%#{sanitize_sql_like(keyword)}%")
   }
 
-  # Location scopes - using geocoder's built-in near scope
+  # Location scopes
+  scope :near_location, ->(lat, lng, distance = 5) {
+    # Simple distance calculation for SQLite
+    # For production, consider using PostGIS or proper geocoding
+    return all if lat.blank? || lng.blank?
+
+    where("latitude IS NOT NULL AND longitude IS NOT NULL")
+      .where("(ABS(latitude - ?) + ABS(longitude - ?)) < ?", lat.to_f, lng.to_f, distance.to_f)
+  }
+
+  scope :by_location_id, ->(location_id) {
+    where(location_id: location_id) if location_id.present?
+  }
+
+  # Sorting scopes
+  scope :by_popularity, -> {
+    left_joins(:likes)
+      .group(:id)
+      .order("COUNT(likes.id) DESC, posts.created_at DESC")
+  }
+
+  scope :by_price_low_to_high, -> {
+    joins(:product).order("products.price ASC")
+  }
+
+  scope :by_price_high_to_low, -> {
+    joins(:product).order("products.price DESC")
+  }
 
   # Callbacks
   before_create :set_default_status
@@ -139,6 +169,11 @@ class Post < ApplicationRecord
     likes.exists?(user: user)
   end
 
+  def favorited_by?(user)
+    return false unless user
+    favorites.exists?(user: user)
+  end
+
   private
 
   def set_default_post_type
@@ -189,7 +224,8 @@ class Post < ApplicationRecord
   end
 
   def set_location_from_user
-    if user.has_location? && !latitude.present?
+    # Only set location if not explicitly provided
+    if user&.has_location? && latitude.blank? && longitude.blank?
       self.latitude = user.latitude
       self.longitude = user.longitude
       self.location_code = user.location_code

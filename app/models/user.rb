@@ -23,6 +23,8 @@ class User < ApplicationRecord
   belongs_to :location, optional: true
   has_many :likes
   has_many :liked_posts, through: :likes, source: :post
+  has_many :favorites, dependent: :destroy
+  has_many :favorite_posts, through: :favorites, source: :post
   has_many :reviews_given, class_name: "Review", foreign_key: :reviewer_id, dependent: :destroy
   has_many :reviews_received, class_name: "Review", foreign_key: :reviewee_id, dependent: :destroy
 
