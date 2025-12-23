@@ -20,10 +20,10 @@ class Product < ApplicationRecord
   serialize :images, coder: JSON, type: Array
 
   # Validations
-  validates :name, presence: true, length: { maximum: 100 }, if: :should_validate_marketplace_fields?
-  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }, if: :should_validate_marketplace_fields?
+  validates :name, presence: true, length: { maximum: 100 }, unless: :skip_validations?
+  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }, unless: :skip_validations?
   validates :currency, inclusion: { in: %w[KRW VND USD] }
-  validates :condition, presence: true, if: :should_validate_marketplace_fields?
+  validates :condition, presence: true, unless: :skip_validations?
   validates :images, limit: { max: 10 },
                      content_type: %i[png jpg jpeg webp],
                      size: { less_than: 10.megabytes },
@@ -66,6 +66,11 @@ class Product < ApplicationRecord
   end
 
   private
+
+  def skip_validations?
+    # Skip validations only for non-marketplace posts with associated post
+    post.present? && !post.marketplace?
+  end
 
   def should_validate_marketplace_fields?
     return false if post.nil?
