@@ -58,3 +58,4 @@ class MarketplacePostsTest < ApplicationSystemTestCase
     assert_no_selector "[data-post-form-target='priceInput']", visible: true
   end
 end
+
