@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# CI 환경을 로컬에서 시뮬레이션하는 스크립트
+# "로컬에서는 되는데 CI에서는 깨짐"을 미리 방지
+
+echo "🔍 Running CI simulation..."
+echo ""
+
+# CI 환경 변수 설정
+export CI=true
+
+# 1. RuboCop 검사
+echo "📝 Running RuboCop..."
+bundle exec rubocop
+if [ $? -ne 0 ]; then
+    echo "❌ RuboCop failed"
+    exit 1
+fi
+echo "✅ RuboCop passed"
+echo ""
+
+# 2. 테스트 실행
+echo "🧪 Running tests with CI=true..."
+bundle exec rails test
+if [ $? -ne 0 ]; then
+    echo "❌ Tests failed"
+    exit 1
+fi
+echo "✅ All tests passed"
+echo ""
+
+echo "🎉 CI simulation completed successfully!"

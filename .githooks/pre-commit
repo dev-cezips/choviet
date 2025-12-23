@@ -1,0 +1,26 @@
+#!/bin/sh
+# Git pre-commit hook for Chợ Việt
+# 자동으로 RuboCop을 실행하여 코드 스타일을 검사합니다
+
+echo "🔍 Running pre-commit checks..."
+
+# RuboCop 자동 수정
+bundle exec rubocop -a
+if [ $? -eq 0 ]; then
+    # 수정된 파일들을 자동으로 stage
+    git add -u
+    echo "✅ RuboCop auto-corrections applied"
+else
+    echo "❌ RuboCop failed. Please fix errors manually."
+    exit 1
+fi
+
+# 다시 한 번 검사하여 남은 오류가 있는지 확인
+bundle exec rubocop
+if [ $? -ne 0 ]; then
+    echo "❌ RuboCop still has errors that couldn't be auto-fixed."
+    echo "Please fix them manually before committing."
+    exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"

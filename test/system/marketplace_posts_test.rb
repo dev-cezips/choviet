@@ -1,5 +1,10 @@
 require "application_system_test_case"
 
+# NOTE:
+# This test is skipped in CI due to known JavaScript timing issues.
+# Covered by integration tests instead.
+# Revisit when Playwright or improved headless setup is introduced.
+# See CI_TROUBLESHOOTING.md for full context.
 class MarketplacePostsTest < ApplicationSystemTestCase
   setup do
     skip "JavaScript timing issues in CI - tested via integration tests" if ENV["CI"]
