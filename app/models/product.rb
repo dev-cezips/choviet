@@ -20,10 +20,10 @@ class Product < ApplicationRecord
   serialize :images, coder: JSON, type: Array
 
   # Validations
-  validates :name, presence: true, length: { maximum: 100 }, if: -> { post&.marketplace? }
-  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }, if: -> { post&.marketplace? }
+  validates :name, presence: true, length: { maximum: 100 }, if: :should_validate_marketplace_fields?
+  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }, if: :should_validate_marketplace_fields?
   validates :currency, inclusion: { in: %w[KRW VND USD] }
-  validates :condition, presence: true, if: -> { post&.marketplace? }
+  validates :condition, presence: true, if: :should_validate_marketplace_fields?
   validates :images, limit: { max: 10 },
                      content_type: %i[png jpg jpeg webp],
                      size: { less_than: 10.megabytes },
@@ -66,6 +66,12 @@ class Product < ApplicationRecord
   end
 
   private
+
+  def should_validate_marketplace_fields?
+    return false if post.nil?
+    return false if post.post_type.nil?
+    post.post_type.to_s == "marketplace"
+  end
 
   def set_defaults
     self.currency ||= "KRW"
