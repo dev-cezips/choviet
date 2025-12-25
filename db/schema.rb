@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_23_214128) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_25_120003) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -97,6 +97,36 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_23_214128) do
     t.datetime "updated_at", null: false
     t.index ["community_id"], name: "index_community_memberships_on_community_id"
     t.index ["user_id"], name: "index_community_memberships_on_user_id"
+  end
+
+  create_table "conversation_messages", force: :cascade do |t|
+    t.integer "conversation_id", null: false
+    t.integer "user_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_conversation_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_conversation_messages_on_user_id"
+  end
+
+  create_table "conversation_participants", force: :cascade do |t|
+    t.integer "conversation_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "last_read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "user_id"], name: "index_conversation_participants_on_conversation_id_and_user_id", unique: true
+    t.index ["conversation_id"], name: "index_conversation_participants_on_conversation_id"
+    t.index ["user_id"], name: "index_conversation_participants_on_user_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.string "kind", default: "direct", null: false
+    t.bigint "user_a_id", null: false
+    t.bigint "user_b_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["kind", "user_a_id", "user_b_id"], name: "index_conversations_on_kind_and_user_a_id_and_user_b_id", unique: true
   end
 
   create_table "favorites", force: :cascade do |t|
@@ -309,6 +339,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_23_214128) do
   add_foreign_key "chat_rooms", "posts"
   add_foreign_key "community_memberships", "communities"
   add_foreign_key "community_memberships", "users"
+  add_foreign_key "conversation_messages", "conversations"
+  add_foreign_key "conversation_messages", "users"
+  add_foreign_key "conversation_participants", "conversations"
+  add_foreign_key "conversation_participants", "users"
+  add_foreign_key "conversations", "users", column: "user_a_id"
+  add_foreign_key "conversations", "users", column: "user_b_id"
   add_foreign_key "favorites", "posts"
   add_foreign_key "favorites", "users"
   add_foreign_key "likes", "posts"
