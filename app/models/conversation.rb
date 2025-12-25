@@ -1,4 +1,7 @@
 class Conversation < ApplicationRecord
+  belongs_to :user_a, class_name: "User", foreign_key: :user_a_id
+  belongs_to :user_b, class_name: "User", foreign_key: :user_b_id
+  
   has_many :conversation_participants, dependent: :destroy
   has_many :participants, through: :conversation_participants, source: :user
   has_many :conversation_messages, dependent: :destroy
@@ -34,12 +37,17 @@ class Conversation < ApplicationRecord
   
   def unread_count_for(user)
     cp = conversation_participants.find_by(user: user)
-    return 0 unless cp&.last_read_at
+    return 0 unless cp
     
-    conversation_messages
-      .where("created_at > ?", cp.last_read_at)
-      .where.not(user_id: user.id)
-      .count
+    # If last_read_at is nil, all messages from others are unread
+    if cp.last_read_at.nil?
+      conversation_messages.where.not(user_id: user.id).count
+    else
+      conversation_messages
+        .where("created_at > ?", cp.last_read_at)
+        .where.not(user_id: user.id)
+        .count
+    end
   end
   
   def last_message
