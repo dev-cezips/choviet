@@ -21,6 +21,8 @@ servers:
 #  ssl: true
 #  host: app.example.com
 proxy:
+  ssl: true
+  host: choviet.chat
   app_port: 3000
   healthcheck:
     path: /up
