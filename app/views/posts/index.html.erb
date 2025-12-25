@@ -1,7 +1,7 @@
 <!-- DEBUG: Current locale = <%= I18n.locale %> -->
 
 <!-- Search and Filters -->
-<%= render "search_filters" %>
+<%= render "posts/search_filters", url: @search_url %>
 
 <div class="max-w-screen-lg mx-auto">
 
@@ -117,7 +117,7 @@
     <% if @posts.respond_to?(:total_pages) && @posts.total_pages > 1 %>
       <div class="px-4 pb-4">
         <div class="flex justify-center">
-          <%= paginate @posts %>
+          <%= paginate @posts, params: request.query_parameters %>
         </div>
       </div>
     <% end %>
