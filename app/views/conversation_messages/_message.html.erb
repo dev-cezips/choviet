@@ -1,0 +1,10 @@
+<div class="flex <%= message.mine?(current_user) ? 'justify-end' : 'justify-start' %>" data-message-id="<%= message.id %>">
+  <div class="max-w-xs lg:max-w-md">
+    <div class="<%= message.mine?(current_user) ? 'bg-blue-500 text-white' : 'bg-white' %> rounded-lg px-4 py-2 shadow">
+      <p class="text-sm whitespace-pre-wrap break-words"><%= message.body %></p>
+    </div>
+    <p class="text-xs text-gray-500 mt-1 <%= message.mine?(current_user) ? 'text-right' : '' %>">
+      <%= time_ago_in_words(message.created_at) %> ago
+    </p>
+  </div>
+</div>
