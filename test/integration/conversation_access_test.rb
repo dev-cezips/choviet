@@ -24,7 +24,7 @@ class ConversationAccessTest < ActionDispatch::IntegrationTest
   end
   
   test "participants can access conversation" do
-    sign_in @user1
+    sign_in @user1, scope: :user
     
     get conversation_path(@conversation)
     assert_response :success
@@ -32,7 +32,7 @@ class ConversationAccessTest < ActionDispatch::IntegrationTest
   end
   
   test "non-participants cannot access conversation" do
-    sign_in @user3
+    sign_in @user3, scope: :user
     
     get conversation_path(@conversation)
     assert_redirected_to root_path
@@ -40,7 +40,7 @@ class ConversationAccessTest < ActionDispatch::IntegrationTest
   end
   
   test "updates last_read_at when viewing conversation" do
-    sign_in @user1
+    sign_in @user1, scope: :user
     participant = @conversation.conversation_participants.find_by(user: @user1)
     
     # Initially nil
@@ -56,7 +56,7 @@ class ConversationAccessTest < ActionDispatch::IntegrationTest
   end
   
   test "can send message to conversation" do
-    sign_in @user1
+    sign_in @user1, scope: :user
     
     assert_difference "ConversationMessage.count", 1 do
       post conversation_conversation_messages_path(@conversation), params: {
@@ -71,7 +71,7 @@ class ConversationAccessTest < ActionDispatch::IntegrationTest
   end
   
   test "cannot send message to conversation you're not part of" do
-    sign_in @user3
+    sign_in @user3, scope: :user
     
     assert_no_difference "ConversationMessage.count" do
       post conversation_conversation_messages_path(@conversation), params: {
@@ -94,7 +94,7 @@ class ConversationAccessTest < ActionDispatch::IntegrationTest
     assert_equal 0, @conversation.unread_count_for(@user1)
     
     # User2 reads the conversation
-    sign_in @user2
+    sign_in @user2, scope: :user
     get conversation_path(@conversation)
     
     # Now no unread
@@ -117,7 +117,7 @@ class ConversationAccessTest < ActionDispatch::IntegrationTest
     @conversation.conversation_messages.create!(user: @user1, body: "How are you?")
     
     # User2 views list
-    sign_in @user2
+    sign_in @user2, scope: :user
     get conversations_path
     
     assert_response :success

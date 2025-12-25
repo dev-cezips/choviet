@@ -28,7 +28,7 @@ class ChatDmFlowTest < ActionDispatch::IntegrationTest
   end
   
   test "can create DM from post when logged in" do
-    sign_in @user1
+    sign_in @user1, scope: :user
     
     get post_path(@post)
     assert_response :success
@@ -47,7 +47,7 @@ class ChatDmFlowTest < ActionDispatch::IntegrationTest
   end
   
   test "cannot DM yourself" do
-    sign_in @user2
+    sign_in @user2, scope: :user
     
     get post_path(@post)
     assert_response :success
@@ -64,7 +64,7 @@ class ChatDmFlowTest < ActionDispatch::IntegrationTest
   end
   
   test "reuses existing conversation between same users" do
-    sign_in @user1
+    sign_in @user1, scope: :user
     
     # First DM
     post dm_post_path(@post)
@@ -79,7 +79,7 @@ class ChatDmFlowTest < ActionDispatch::IntegrationTest
       product_attributes: {
         name: "Item",
         price: 100000,
-        condition: "new"
+        condition: "new_item"
       }
     )
     
@@ -99,10 +99,10 @@ class ChatDmFlowTest < ActionDispatch::IntegrationTest
       name: "Another User"
     )
     
-    sign_in @user1
+    sign_in @user1, scope: :user
     post dm_post_path(@post)
     
-    sign_in @user3
+    sign_in @user3, scope: :user
     post dm_post_path(@post)
     
     # Should have 2 different conversations
