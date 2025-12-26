@@ -41,6 +41,11 @@ class User < ApplicationRecord
   has_many :buyer_chat_rooms, class_name: "ChatRoom", foreign_key: "buyer_id"
   # Chat rooms where user is seller
   has_many :seller_chat_rooms, class_name: "ChatRoom", foreign_key: "seller_id"
+  
+  # New 1:1 conversations
+  has_many :conversation_participants, dependent: :destroy
+  has_many :conversations, through: :conversation_participants
+  has_many :conversation_messages
 
   # All chat rooms for the user
   def chat_rooms

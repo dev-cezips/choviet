@@ -43,3 +43,5 @@
 
 # Kamal secrets
 .kamal/secrets
+db/seeds_chat_test.rb
+CHAT_V1_*.md

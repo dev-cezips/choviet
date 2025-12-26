@@ -117,8 +117,8 @@ class PostScopesTest < ActiveSupport::TestCase
       longitude: nil
     )
 
-    # Test near_location scope
-    results = Post.near_location(37.5665, 126.9780, 0.01)
+    # Test near_location scope with 1km distance
+    results = Post.near_location(37.5665, 126.9780, 1)
     assert_includes results, nearby_post
     refute_includes results, far_post
     refute_includes results, no_location_post

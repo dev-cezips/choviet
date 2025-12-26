@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [ :show, :listings, :favorites ]
   before_action :authenticate_user!, only: [ :edit, :update ]
   before_action :set_current_user, only: [ :edit, :update ]
+  before_action :check_favorites_permission, only: [ :favorites ]
 
   def show
     # 판매 중인 상품
@@ -56,9 +57,32 @@ class UsersController < ApplicationController
   end
 
   def favorites
-    @posts = @user.favorite_posts.active
-                  .includes(:user, :product, :location, images_attachments: :blob)
-                  .order("favorites.created_at DESC")
+    @keyword = params[:q]
+    @search_url = favorites_user_path(@user)
+    
+    # Start with user's favorites
+    # favorite_posts already includes the join through favorites association
+    posts = @user.favorite_posts.active
+    
+    # Apply the same filters as posts controller
+    posts = posts.search_keyword(@keyword) if @keyword.present?
+    posts = posts.where(post_type: params[:type]) if params[:type].present?
+    
+    # Apply sorting
+    case params[:sort]
+    when "popular"
+      posts = posts.by_popularity
+    when "price_low"
+      posts = posts.by_price_low_to_high
+    when "price_high"
+      posts = posts.by_price_high_to_low
+    else
+      # For favorites default sort, we need to reference the join table
+      # which is already included in the favorite_posts association
+      posts = posts.order("favorites.created_at DESC")
+    end
+    
+    @posts = posts.includes(:user, :product, :location, images_attachments: :blob)
                   .page(params[:page])
 
     render "posts/index" # Reuse posts index view
@@ -99,5 +123,12 @@ class UsersController < ApplicationController
     end
 
     closest_location
+  end
+
+  def check_favorites_permission
+    # For now, allow viewing anyone's favorites (public bookmarks)
+    # In the future, you might want to add privacy settings
+    # Example: require authentication to view own favorites
+    # authenticate_user! if @user == current_user
   end
 end

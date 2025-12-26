@@ -32,8 +32,16 @@ Rails.application.routes.draw do
     resource :reaction, only: [ :create, :update, :destroy ]
   end
 
-  # Standalone chat rooms index
+  # Standalone chat rooms index (keeping for backward compatibility)
   resources :chat_rooms, only: [ :index ]
+  
+  # New 1:1 chat system (V1)
+  resources :conversations, only: [ :index, :show ] do
+    resources :conversation_messages, only: [ :create ]
+  end
+  
+  # DM shortcut from posts
+  post "/posts/:id/dm", to: "conversations#create_from_post", as: :dm_post
 
   # Message reports
   resources :messages, only: [] do

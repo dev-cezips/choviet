@@ -1,0 +1,15 @@
+<% 
+  # current_user might be nil in broadcasts, so use local variable if available
+  viewing_user = local_assigns[:current_user] || (defined?(current_user) ? current_user : nil)
+  is_mine = viewing_user ? message.mine?(viewing_user) : false
+%>
+<div class="flex <%= is_mine ? 'justify-end' : 'justify-start' %>" data-message-id="<%= message.id %>">
+  <div class="max-w-xs lg:max-w-md">
+    <div class="<%= is_mine ? 'bg-blue-500 text-white' : 'bg-white' %> rounded-lg px-4 py-2 shadow">
+      <p class="text-sm whitespace-pre-wrap break-words"><%= message.body %></p>
+    </div>
+    <p class="text-xs text-gray-500 mt-1 <%= is_mine ? 'text-right' : '' %>">
+      <%= time_ago_in_words(message.created_at) %> ago
+    </p>
+  </div>
+</div>

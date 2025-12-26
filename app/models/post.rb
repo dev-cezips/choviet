@@ -65,13 +65,18 @@ class Post < ApplicationRecord
   }
 
   # Location scopes
-  scope :near_location, ->(lat, lng, distance = 5) {
-    # Simple distance calculation for SQLite
+  scope :near_location, ->(lat, lng, distance_km = 5) {
+    # Approximate distance calculation for SQLite
+    # 1 degree ≈ 111 km at equator (good enough for Vietnam's latitude)
     # For production, consider using PostGIS or proper geocoding
     return all if lat.blank? || lng.blank?
-
+    
+    # Convert km to degrees (roughly)
+    distance_degrees = distance_km.to_f / 111.0
+    
     where("latitude IS NOT NULL AND longitude IS NOT NULL")
-      .where("(ABS(latitude - ?) + ABS(longitude - ?)) < ?", lat.to_f, lng.to_f, distance.to_f)
+      .where("latitude BETWEEN ? AND ?", lat.to_f - distance_degrees, lat.to_f + distance_degrees)
+      .where("longitude BETWEEN ? AND ?", lng.to_f - distance_degrees, lng.to_f + distance_degrees)
   }
 
   scope :by_location_id, ->(location_id) {
@@ -80,9 +85,7 @@ class Post < ApplicationRecord
 
   # Sorting scopes
   scope :by_popularity, -> {
-    left_joins(:likes)
-      .group(:id)
-      .order("COUNT(likes.id) DESC, posts.created_at DESC")
+    order(favorites_count: :desc, created_at: :desc)
   }
 
   scope :by_price_low_to_high, -> {
