@@ -20,9 +20,12 @@ class ConversationMessage < ApplicationRecord
   private
   
   def broadcast_message
-    broadcast_append_to conversation,
-      partial: "conversation_messages/message",
-      locals: { message: self, current_user: nil },
-      target: "messages"
+    # Broadcast to each participant with their own view
+    conversation.participants.each do |participant|
+      broadcast_append_to [conversation, participant],
+        partial: "conversation_messages/message",
+        locals: { message: self, current_user: participant },
+        target: "messages"
+    end
   end
 end
