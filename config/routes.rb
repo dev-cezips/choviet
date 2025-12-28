@@ -40,6 +40,11 @@ Rails.application.routes.draw do
     resources :conversation_messages, only: [ :create ]
   end
   
+  # Conversation message reports
+  resources :conversation_messages, only: [] do
+    resources :reports, only: [ :new, :create ]
+  end
+  
   # DM shortcut from posts
   post "/posts/:id/dm", to: "conversations#create_from_post", as: :dm_post
 

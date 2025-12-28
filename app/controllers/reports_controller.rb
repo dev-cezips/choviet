@@ -1,13 +1,13 @@
 class ReportsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_reportable, only: [:new, :create]
+  before_action :check_already_reported, only: [:new, :create]
 
   def new
-    @reportable = find_reportable
     @report = @reportable.reports.build
   end
 
   def create
-    @reportable = find_reportable
     @report = @reportable.reports.build(report_params)
     @report.reporter = current_user
 
@@ -45,6 +45,16 @@ class ReportsController < ApplicationController
 
   private
 
+  def set_reportable
+    @reportable = find_reportable
+  end
+
+  def check_already_reported
+    if @reportable.reported_by?(current_user)
+      redirect_back(fallback_location: root_path, alert: already_reported_message)
+    end
+  end
+
   def find_reportable
     if params[:post_id]
       Post.find(params[:post_id])
@@ -52,6 +62,13 @@ class ReportsController < ApplicationController
       User.find(params[:user_id])
     elsif params[:message_id]
       Message.find(params[:message_id])
+    elsif params[:conversation_message_id]
+      message = ConversationMessage.find(params[:conversation_message_id])
+      # Ensure user can only report messages in conversations they're part of
+      unless message.conversation.includes_user?(current_user)
+        raise ActiveRecord::RecordNotFound
+      end
+      message
     else
       raise ActiveRecord::RecordNotFound
     end
@@ -68,5 +85,13 @@ class ReportsController < ApplicationController
 
     # Remove reason from params to avoid confusion
     permitted.except(:reason)
+  end
+
+  def already_reported_message
+    if current_user.vietnamese?
+      "Bạn đã báo cáo nội dung này rồi."
+    else
+      "이미 신고한 콘텐츠입니다."
+    end
   end
 end
