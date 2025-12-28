@@ -55,6 +55,9 @@ Rails.application.routes.draw do
       get :favorites
     end
   end
+  
+  # Blocking system
+  resources :blocks, only: [ :create, :destroy ]
 
   # Profile management (for current user)
   resource :profile, controller: "users", only: [ :edit, :update ] do
