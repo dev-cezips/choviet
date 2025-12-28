@@ -1,0 +1,9 @@
+<%# Replace the block button with updated state %>
+<%= turbo_stream.replace dom_id(@blocked_user, :block_button) do %>
+  <%= render "blocks/block_button", user: @blocked_user %>
+<% end %>
+
+<%# Show success flash %>
+<%= turbo_stream.prepend "flash" do %>
+  <%= render "shared/flash", flash: { notice: unblock_success_message } %>
+<% end %>

@@ -1,6 +1,7 @@
 class ConversationMessage < ApplicationRecord
   belongs_to :conversation
   belongs_to :user
+  has_many :reports, as: :reportable, dependent: :destroy
   
   validates :body, presence: true
   

@@ -1,0 +1,21 @@
+<% if current_user && reportable.reporter != current_user %>
+  <% if reportable.reported_by?(current_user) %>
+    <span class="text-xs text-gray-500">
+      <% if current_user.vietnamese? %>
+        Đã báo cáo
+      <% else %>
+        신고됨
+      <% end %>
+    </span>
+  <% else %>
+    <%= link_to report_path_for(reportable), 
+        class: "text-sm text-red-600 hover:text-red-800 transition",
+        data: { turbo_frame: "report_modal" } do %>
+      <% if current_user.vietnamese? %>
+        Báo cáo
+      <% else %>
+        신고
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

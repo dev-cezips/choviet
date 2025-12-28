@@ -1,4 +1,6 @@
 class ConversationMessagesController < ApplicationController
+  include BlockGuard
+  
   before_action :authenticate_user!
   before_action :set_conversation
   before_action :authorize_participant!
@@ -43,5 +45,15 @@ class ConversationMessagesController < ApplicationController
   
   def message_params
     params.require(:conversation_message).permit(:body)
+  end
+  
+  # BlockGuard methods
+  def requires_blocking_check?
+    action_name == "create"
+  end
+  
+  def other_user_for_blocking
+    return nil unless @conversation
+    @conversation.other_user(current_user)
   end
 end

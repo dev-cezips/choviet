@@ -1,0 +1,35 @@
+# iPhone post by basic_user
+iphone_post:
+  user: basic_user
+  title: iPhone 14 Pro for sale
+  content: Selling my iPhone 14 Pro in excellent condition
+  post_type: marketplace
+  status: active
+  location_code: seoul
+  latitude: 37.5665
+  longitude: 126.9780
+  created_at: <%= 3.days.ago %>
+  
+# Furniture post by vietnamese_user
+furniture_post:
+  user: vietnamese_user
+  title: Sofa giá rẻ
+  content: Bán sofa còn mới 90%, dùng được 6 tháng
+  post_type: marketplace
+  status: active
+  location_code: seoul
+  latitude: 37.5665
+  longitude: 126.9780
+  created_at: <%= 1.week.ago %>
+
+# Question post by korean_user
+question_post:
+  user: korean_user
+  title: 비자 연장 문의
+  content: F-4 비자 연장하는 방법 아시는 분 계신가요?
+  post_type: question
+  status: active
+  location_code: seoul
+  latitude: 37.5665
+  longitude: 126.9780
+  created_at: <%= 2.days.ago %>

@@ -28,6 +28,8 @@
             <%= t('reports.reporting_post', default: 'Bạn đang báo cáo bài viết này') %>
           <% elsif @reportable.is_a?(User) %>
             <%= t('reports.reporting_user', default: 'Bạn đang báo cáo người dùng này') %>
+          <% elsif @reportable.is_a?(ConversationMessage) %>
+            <%= t('reports.reporting_message', default: 'Bạn đang báo cáo tin nhắn này') %>
           <% end %>
         </p>
         
@@ -40,6 +42,11 @@
           <% elsif @reportable.is_a?(User) %>
             <p class="font-medium text-gray-800"><%= @reportable.display_name %></p>
             <p class="text-sm text-gray-600"><%= @reportable.email %></p>
+          <% elsif @reportable.is_a?(ConversationMessage) %>
+            <p class="font-medium text-gray-800"><%= truncate(@reportable.body, length: 100) %></p>
+            <p class="text-sm text-gray-600 mt-1">
+              <%= t('reports.by_user', default: 'bởi') %> <%= @reportable.user.display_name %>
+            </p>
           <% end %>
         </div>
       </div>

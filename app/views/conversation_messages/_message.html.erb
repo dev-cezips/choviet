@@ -8,8 +8,18 @@
     <div class="<%= is_mine ? 'bg-blue-500 text-white' : 'bg-white' %> rounded-lg px-4 py-2 shadow">
       <p class="text-sm whitespace-pre-wrap break-words"><%= message.body %></p>
     </div>
-    <p class="text-xs text-gray-500 mt-1 <%= is_mine ? 'text-right' : '' %>">
-      <%= time_ago_in_words(message.created_at) %> ago
-    </p>
+    <div class="flex items-center gap-2 mt-1 <%= is_mine ? 'justify-end' : '' %>">
+      <p class="text-xs text-gray-500">
+        <%= time_ago_in_words(message.created_at) %> ago
+      </p>
+      <% if viewing_user && !is_mine %>
+        <span class="text-xs text-gray-400">•</span>
+        <%= link_to new_conversation_message_report_path(message), 
+            class: "text-xs text-gray-500 hover:text-red-600 transition",
+            data: { turbo_frame: "report_modal" } do %>
+          <%= viewing_user.vietnamese? ? "Báo cáo" : "신고" %>
+        <% end %>
+      <% end %>
+    </div>
   </div>
 </div>

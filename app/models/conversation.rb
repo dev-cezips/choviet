@@ -9,6 +9,13 @@ class Conversation < ApplicationRecord
   # Ensure user_a_id is always smaller than user_b_id
   before_validation :normalize_user_ids, if: -> { kind == "direct" }
   
+  # Scopes
+  scope :not_blocked_for, ->(user) {
+    joins("LEFT JOIN blocks b1 ON b1.blocker_id = #{user.id} AND (b1.blocked_id = conversations.user_a_id OR b1.blocked_id = conversations.user_b_id)")
+      .joins("LEFT JOIN blocks b2 ON b2.blocked_id = #{user.id} AND (b2.blocker_id = conversations.user_a_id OR b2.blocker_id = conversations.user_b_id)")
+      .where("b1.id IS NULL AND b2.id IS NULL")
+  }
+  
   def self.find_or_create_direct(user1, user2)
     return nil if user1 == user2 # Can't chat with yourself
     

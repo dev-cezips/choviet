@@ -1,0 +1,244 @@
+<div class="bg-white min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-2xl font-bold">
+        <%= current_user.vietnamese? ? "Chi tiết báo cáo" : "신고 상세" %> #<%= @report.id %>
+      </h1>
+      <%= link_to admin_reports_path, class: "text-blue-600 hover:text-blue-800" do %>
+        ← <%= current_user.vietnamese? ? "Danh sách" : "목록으로" %>
+      <% end %>
+    </div>
+
+    <!-- Report Details -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+      <h2 class="text-lg font-semibold mb-4">
+        <%= current_user.vietnamese? ? "Thông tin báo cáo" : "신고 정보" %>
+      </h2>
+      
+      <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">
+            <%= current_user.vietnamese? ? "Người báo cáo" : "신고자" %>
+          </dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <%= link_to @report.reporter.display_name, user_path(@report.reporter), 
+                class: "text-blue-600 hover:text-blue-800", target: "_blank" %>
+          </dd>
+        </div>
+        
+        <div>
+          <dt class="text-sm font-medium text-gray-500">
+            <%= current_user.vietnamese? ? "Thời gian" : "신고 시간" %>
+          </dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <%= l(@report.created_at, format: :long) %>
+          </dd>
+        </div>
+        
+        <div>
+          <dt class="text-sm font-medium text-gray-500">
+            <%= current_user.vietnamese? ? "Loại báo cáo" : "신고 유형" %>
+          </dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+              <%= @report.category || @report.reason_code %>
+            </span>
+          </dd>
+        </div>
+        
+        <div>
+          <dt class="text-sm font-medium text-gray-500">
+            <%= current_user.vietnamese? ? "Trạng thái" : "상태" %>
+          </dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <% status_class = case @report.status
+               when "pending" then "bg-yellow-100 text-yellow-800"
+               when "reviewed" then "bg-blue-100 text-blue-800"  
+               when "resolved" then "bg-green-100 text-green-800"
+               when "dismissed" then "bg-gray-100 text-gray-800"
+               end %>
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_class %>">
+              <%= @report.status %>
+            </span>
+          </dd>
+        </div>
+        
+        <% if @report.reason.present? %>
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-gray-500">
+            <%= current_user.vietnamese? ? "Chi tiết" : "상세 내용" %>
+          </dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <%= @report.reason %>
+          </dd>
+        </div>
+        <% end %>
+        
+        <% if @report.handled_by.present? %>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">
+            <%= current_user.vietnamese? ? "Người xử lý" : "처리자" %>
+          </dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <%= @report.handled_by.display_name %>
+          </dd>
+        </div>
+        
+        <div>
+          <dt class="text-sm font-medium text-gray-500">
+            <%= current_user.vietnamese? ? "Thời gian xử lý" : "처리 시간" %>
+          </dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <%= l(@report.handled_at, format: :long) if @report.handled_at %>
+          </dd>
+        </div>
+        <% end %>
+        
+        <% if @report.admin_note.present? %>
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-gray-500">
+            <%= current_user.vietnamese? ? "Ghi chú admin" : "관리자 메모" %>
+          </dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <%= @report.admin_note %>
+          </dd>
+        </div>
+        <% end %>
+      </dl>
+    </div>
+
+    <!-- Reported Content -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+      <h2 class="text-lg font-semibold mb-4">
+        <%= current_user.vietnamese? ? "Nội dung bị báo cáo" : "신고된 콘텐츠" %>
+      </h2>
+      
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <% case @report.reportable_type %>
+        <% when "Post" %>
+          <h3 class="font-medium text-gray-900"><%= @report.reportable.title %></h3>
+          <p class="text-sm text-gray-600 mt-1">
+            <%= current_user.vietnamese? ? "Bởi" : "작성자" %>: <%= @report.reportable.user.display_name %>
+          </p>
+          <div class="mt-3 text-sm text-gray-700">
+            <%= truncate(@report.reportable.content, length: 500) %>
+          </div>
+          <div class="mt-4">
+            <%= link_to current_user.vietnamese? ? "Xem bài viết" : "게시물 보기", 
+                post_path(@report.reportable), 
+                target: "_blank",
+                class: "text-blue-600 hover:text-blue-800 text-sm" %>
+          </div>
+        <% when "User" %>
+          <div class="flex items-center gap-4">
+            <% if @report.reportable.avatar.attached? %>
+              <%= image_tag @report.reportable.avatar, class: "w-16 h-16 rounded-full" %>
+            <% else %>
+              <div class="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
+                <%= @report.reportable.display_name.first.upcase %>
+              </div>
+            <% end %>
+            <div>
+              <h3 class="font-medium text-gray-900"><%= @report.reportable.display_name %></h3>
+              <p class="text-sm text-gray-600"><%= @report.reportable.email %></p>
+              <p class="text-sm text-gray-500">
+                <%= current_user.vietnamese? ? "Tham gia" : "가입일" %>: 
+                <%= l(@report.reportable.created_at.to_date) %>
+              </p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <%= link_to current_user.vietnamese? ? "Xem hồ sơ" : "프로필 보기", 
+                user_path(@report.reportable), 
+                target: "_blank",
+                class: "text-blue-600 hover:text-blue-800 text-sm" %>
+          </div>
+        <% when "ConversationMessage" %>
+          <div class="bg-white p-3 rounded border">
+            <p class="text-sm text-gray-900"><%= @report.reportable.body %></p>
+            <p class="text-xs text-gray-500 mt-2">
+              <%= current_user.vietnamese? ? "Bởi" : "작성자" %>: 
+              <%= @report.reportable.user.display_name %> • 
+              <%= time_ago_in_words(@report.reportable.created_at) %> ago
+            </p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Related Reports -->
+    <% if @related_reports.any? %>
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+      <h2 class="text-lg font-semibold mb-4">
+        <%= current_user.vietnamese? ? "Báo cáo liên quan" : "관련 신고" %> 
+        (<%= @related_reports.count %>)
+      </h2>
+      
+      <div class="space-y-3">
+        <% @related_reports.each do |related| %>
+          <div class="border rounded p-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-sm">
+                  <span class="font-medium"><%= related.reporter.display_name %></span> • 
+                  <%= related.category || related.reason_code %> • 
+                  <%= time_ago_in_words(related.created_at) %> ago
+                </p>
+                <% if related.reason.present? %>
+                  <p class="text-sm text-gray-600 mt-1"><%= related.reason %></p>
+                <% end %>
+              </div>
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= related.status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800' %>">
+                <%= related.status %>
+              </span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <% end %>
+
+    <!-- Actions -->
+    <% if @report.handled_at.nil? %>
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-lg font-semibold mb-4">
+        <%= current_user.vietnamese? ? "Xử lý báo cáo" : "신고 처리" %>
+      </h2>
+      
+      <div class="flex gap-4">
+        <%= form_with url: resolve_admin_report_path(@report), method: :patch, local: true do |f| %>
+          <div class="flex-1">
+            <%= f.text_area :admin_note, 
+                placeholder: current_user.vietnamese? ? "Ghi chú (tùy chọn)" : "메모 (선택사항)",
+                rows: 3,
+                class: "w-full px-3 py-2 border rounded-md mb-3" %>
+            
+            <div class="flex items-center gap-3 mb-3">
+              <%= check_box_tag :hide_content, "true", false, class: "rounded" %>
+              <%= label_tag :hide_content, 
+                  current_user.vietnamese? ? "Ẩn nội dung" : "콘텐츠 숨기기",
+                  class: "text-sm" %>
+            </div>
+            
+            <%= f.submit current_user.vietnamese? ? "Xử lý báo cáo" : "신고 처리", 
+                class: "px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700" %>
+          </div>
+        <% end %>
+        
+        <%= form_with url: dismiss_admin_report_path(@report), method: :patch, local: true do |f| %>
+          <div class="flex-1">
+            <%= f.text_area :admin_note, 
+                placeholder: current_user.vietnamese? ? "Lý do bác bỏ (tùy chọn)" : "기각 사유 (선택사항)",
+                rows: 3,
+                class: "w-full px-3 py-2 border rounded-md mb-3" %>
+            
+            <%= f.submit current_user.vietnamese? ? "Bác bỏ báo cáo" : "신고 기각", 
+                class: "px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>

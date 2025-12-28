@@ -81,6 +81,13 @@
       </span>
     </div>
     
+    <!-- Block Button -->
+    <% if current_user && @user != current_user %>
+      <div class="mt-3 text-center">
+        <%= render "blocks/block_button", user: @user %>
+      </div>
+    <% end %>
+    
     <!-- Trust Summary -->
     <div class="mt-3 text-center px-4">
       <p class="text-sm text-white/90"><%= @user.trust_summary(context: :profile) %></p>

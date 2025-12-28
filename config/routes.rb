@@ -87,7 +87,18 @@ Rails.application.routes.draw do
 
   # Admin routes
   namespace :admin do
+    root to: "dashboard#index"
     get "dashboard", to: "dashboard#index"
+    
+    resources :reports, only: [:index, :show] do
+      member do
+        patch :resolve
+        patch :dismiss
+      end
+      collection do
+        post :batch_action
+      end
+    end
   end
 
   # Locale switching
