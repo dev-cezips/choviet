@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_25_120003) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_26_103000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -50,6 +50,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_25_120003) do
     t.index ["event_type", "created_at"], name: "index_analytics_events_on_event_type_and_created_at"
     t.index ["event_type"], name: "index_analytics_events_on_event_type"
     t.index ["user_id"], name: "index_analytics_events_on_user_id"
+  end
+
+  create_table "blocks", force: :cascade do |t|
+    t.bigint "blocker_id", null: false
+    t.bigint "blocked_id", null: false
+    t.string "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blocked_id"], name: "index_blocks_on_blocked_id"
+    t.index ["blocker_id", "blocked_id"], name: "index_blocks_on_blocker_id_and_blocked_id", unique: true
+    t.index ["blocker_id"], name: "index_blocks_on_blocker_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -230,17 +241,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_25_120003) do
 
   create_table "reports", force: :cascade do |t|
     t.integer "reporter_id", null: false
-    t.string "reported_type", null: false
-    t.integer "reported_id", null: false
+    t.string "reportable_type", null: false
+    t.integer "reportable_id", null: false
     t.string "reason_code", null: false
     t.text "description"
     t.string "status", default: "pending", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "reason"
+    t.string "category"
+    t.text "admin_note"
+    t.bigint "handled_by_id"
+    t.datetime "handled_at"
+    t.index ["handled_by_id"], name: "index_reports_on_handled_by_id"
     t.index ["reason_code"], name: "index_reports_on_reason_code"
-    t.index ["reported_type", "reported_id"], name: "index_reports_on_reported"
-    t.index ["reporter_id", "reported_id", "reported_type"], name: "index_unique_report", unique: true
+    t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reported"
+    t.index ["reporter_id", "reportable_id", "reportable_type"], name: "index_unique_report", unique: true
     t.index ["reporter_id"], name: "index_reports_on_reporter_id"
     t.index ["status"], name: "index_reports_on_status"
   end
@@ -335,6 +351,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_25_120003) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "analytics_events", "users"
+  add_foreign_key "blocks", "users", column: "blocked_id"
+  add_foreign_key "blocks", "users", column: "blocker_id"
   add_foreign_key "categories", "categories", column: "parent_id"
   add_foreign_key "chat_rooms", "posts"
   add_foreign_key "community_memberships", "communities"
@@ -356,6 +374,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_25_120003) do
   add_foreign_key "posts", "locations"
   add_foreign_key "posts", "users"
   add_foreign_key "products", "posts"
+  add_foreign_key "reports", "users", column: "handled_by_id"
   add_foreign_key "reports", "users", column: "reporter_id"
   add_foreign_key "review_reactions", "reviews"
   add_foreign_key "review_reactions", "users"
