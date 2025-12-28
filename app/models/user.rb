@@ -17,7 +17,7 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :sent_messages, class_name: "Message", foreign_key: "sender_id"
   has_many :submitted_reports, class_name: "Report", foreign_key: "reporter_id"
-  # has_many :reports, as: :reportable # TODO: Implement reportable polymorphic association
+  has_many :reports, as: :reportable, dependent: :destroy
   has_many :community_memberships, dependent: :destroy
   has_many :communities, through: :community_memberships
   belongs_to :location, optional: true
@@ -27,6 +27,12 @@ class User < ApplicationRecord
   has_many :favorite_posts, through: :favorites, source: :post
   has_many :reviews_given, class_name: "Review", foreign_key: :reviewer_id, dependent: :destroy
   has_many :reviews_received, class_name: "Review", foreign_key: :reviewee_id, dependent: :destroy
+  
+  # Blocking associations
+  has_many :blocks_given, class_name: "Block", foreign_key: "blocker_id", dependent: :destroy
+  has_many :blocks_received, class_name: "Block", foreign_key: "blocked_id", dependent: :destroy
+  has_many :blocked_users, through: :blocks_given, source: :blocked
+  has_many :blocked_by_users, through: :blocks_received, source: :blocker
 
   # Avatar attachment
   has_one_attached :avatar
@@ -292,6 +298,19 @@ class User < ApplicationRecord
 
   def display_name
     name.presence || email.split("@").first
+  end
+  
+  # Blocking methods
+  def blocking?(other_user)
+    blocked_users.exists?(other_user.id)
+  end
+
+  def blocked_by?(other_user)
+    blocked_by_users.exists?(other_user.id)
+  end
+
+  def blocked_with?(other_user)
+    Block.blocked?(self, other_user)
   end
 
   def all_chat_rooms
