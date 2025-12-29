@@ -1,5 +1,4 @@
 class Admin::DashboardController < Admin::BaseController
-
   def index
     @stats = {
       # User metrics

@@ -1,10 +1,10 @@
 class Admin::ReportsController < Admin::BaseController
-  before_action :set_report, only: [:show, :resolve, :dismiss]
+  before_action :set_report, only: [ :show, :resolve, :dismiss ]
 
   def index
     @reports = Report.includes(:reporter, :reportable, :handled_by)
                     .order(created_at: :desc)
-                    # .page(params[:page]) # TODO: Add pagination gem
+    # .page(params[:page]) # TODO: Add pagination gem
 
     # Filters
     @reports = @reports.where(status: params[:status]) if params[:status].present?
@@ -29,12 +29,10 @@ class Admin::ReportsController < Admin::BaseController
 
   def resolve
     @report.handle!(current_user, action: :resolved, note: params[:admin_note])
-    
     # Optional: Take action on the reportable (e.g., hide post, suspend user)
     if params[:hide_content] == "true" && @report.reportable.respond_to?(:hide!)
       @report.reportable.hide!
     end
-    
     redirect_to admin_reports_path, notice: resolve_success_message
   end
 
@@ -46,7 +44,6 @@ class Admin::ReportsController < Admin::BaseController
   def batch_action
     report_ids = params[:report_ids] || []
     action = params[:batch_action]
-    
     case action
     when "resolve"
       Report.where(id: report_ids).find_each do |report|
