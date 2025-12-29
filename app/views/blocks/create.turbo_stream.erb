@@ -5,5 +5,8 @@
 
 <%# Show success flash %>
 <%= turbo_stream.prepend "flash" do %>
-  <%= render "shared/flash", flash: { notice: block_success_message } %>
+  <% flash.now[:notice] = t('blocks.created') %>
+  <% flash.each do |type, message| %>
+    <%= render "shared/flash", type: type, message: message %>
+  <% end %>
 <% end %>

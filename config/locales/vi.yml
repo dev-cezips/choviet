@@ -203,3 +203,7 @@ vi:
       false_report: "Báo cáo sai có thể ảnh hưởng đến uy tín của bạn"
       review: "Chúng tôi sẽ xem xét trong 24h"
       auto_hide: "Nội dung có 3 báo cáo sẽ tự động ẩn"
+  
+  blocks:
+    created: "Đã chặn người dùng này"
+    destroyed: "Đã bỏ chặn người dùng này"

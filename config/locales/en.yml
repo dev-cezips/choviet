@@ -31,3 +31,24 @@ en:
   hello: "Hello world"
   reports:
     created: "Report submitted successfully. We'll review it within 24 hours."
+    title: "🚨 Report Violation"
+    reporting_post: "You are reporting this post"
+    reporting_user: "You are reporting this user"
+    reporting_message: "You are reporting this message"
+    by_user: "by"
+    reason: "Reason for report"
+    description: "Additional details (optional)"
+    description_placeholder: "Describe the violation..."
+    submit: "Submit Report"
+    submitting: "Submitting..."
+    cancel: "Cancel"
+    notice:
+      title: "📢 Notice:"
+      false_report: "False reports may affect your reputation"
+      review: "We'll review within 24 hours"
+      auto_hide: "Content with 3 reports will be automatically hidden"
+  blocks:
+    created: "You have blocked this user"
+    destroyed: "You have unblocked this user"
+  users:
+    updated: "Profile updated successfully!"

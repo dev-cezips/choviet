@@ -8,8 +8,10 @@
         data: { turbo_stream: true } do %>
       <% if current_user.vietnamese? %>
         Bỏ chặn
-      <% else %>
+      <% elsif current_user.korean? %>
         차단 해제
+      <% else %>
+        Unblock
       <% end %>
     <% end %>
   <% else %>
@@ -25,8 +27,10 @@
         } do %>
       <% if current_user.vietnamese? %>
         Chặn
-      <% else %>
+      <% elsif current_user.korean? %>
         차단
+      <% else %>
+        Block
       <% end %>
     <% end %>
   <% end %>

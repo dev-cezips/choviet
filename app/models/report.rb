@@ -60,19 +60,27 @@ class Report < ApplicationRecord
   end
 
   def self.reason_options_for_select(locale = :vi)
-    if locale.to_s == "vi"
+    case locale.to_s
+    when "vi"
       [
         [ "🚫 Spam / Quảng cáo", "spam" ],
         [ "🤬 Ngôn từ đả kích", "abusive" ],
         [ "💸 Lừa đảo", "scam" ],
         [ "🔞 Nội dung không phù hợp", "inappropriate" ]
       ]
-    else
+    when "ko"
       [
         [ "🚫 스팸 / 홍보", "spam" ],
         [ "🤬 욕설 / 비방", "abusive" ],
         [ "💸 사기 의심", "scam" ],
         [ "🔞 부적절한 콘텐츠", "inappropriate" ]
+      ]
+    else # English
+      [
+        [ "🚫 Spam / Advertising", "spam" ],
+        [ "🤬 Abusive Language", "abusive" ],
+        [ "💸 Scam / Fraud", "scam" ],
+        [ "🔞 Inappropriate Content", "inappropriate" ]
       ]
     end
   end

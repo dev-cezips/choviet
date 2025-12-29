@@ -64,13 +64,13 @@
           </dd>
         </div>
         
-        <% if @report.reason.present? %>
+        <% if @report.description.present? %>
         <div class="sm:col-span-2">
           <dt class="text-sm font-medium text-gray-500">
             <%= current_user.vietnamese? ? "Chi tiết" : "상세 내용" %>
           </dt>
           <dd class="mt-1 text-sm text-gray-900">
-            <%= @report.reason %>
+            <%= @report.description %>
           </dd>
         </div>
         <% end %>
@@ -185,8 +185,8 @@
                   <%= related.category || related.reason_code %> • 
                   <%= time_ago_in_words(related.created_at) %> ago
                 </p>
-                <% if related.reason.present? %>
-                  <p class="text-sm text-gray-600 mt-1"><%= related.reason %></p>
+                <% if related.description.present? %>
+                  <p class="text-sm text-gray-600 mt-1"><%= related.description %></p>
                 <% end %>
               </div>
               <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= related.status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800' %>">
