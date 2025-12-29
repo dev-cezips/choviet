@@ -1,7 +1,7 @@
 class ReportsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_reportable, only: [:new, :create]
-  before_action :check_already_reported, only: [:new, :create]
+  before_action :set_reportable, only: [ :new, :create ]
+  before_action :check_already_reported, only: [ :new, :create ]
 
   def new
     @report = @reportable.reports.build

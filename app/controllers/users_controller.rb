@@ -59,15 +59,15 @@ class UsersController < ApplicationController
   def favorites
     @keyword = params[:q]
     @search_url = favorites_user_path(@user)
-    
+
     # Start with user's favorites
     # favorite_posts already includes the join through favorites association
     posts = @user.favorite_posts.active
-    
+
     # Apply the same filters as posts controller
     posts = posts.search_keyword(@keyword) if @keyword.present?
     posts = posts.where(post_type: params[:type]) if params[:type].present?
-    
+
     # Apply sorting
     case params[:sort]
     when "popular"
@@ -81,7 +81,7 @@ class UsersController < ApplicationController
       # which is already included in the favorite_posts association
       posts = posts.order("favorites.created_at DESC")
     end
-    
+
     @posts = posts.includes(:user, :product, :location, images_attachments: :blob)
                   .page(params[:page])
 
@@ -99,8 +99,8 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :bio, :phone, :location_code, :avatar, :locale, 
-                                  :latitude, :longitude, :notification_push_enabled, 
+    params.require(:user).permit(:name, :bio, :phone, :location_code, :avatar, :locale,
+                                  :latitude, :longitude, :notification_push_enabled,
                                   :notification_dm_enabled, :notification_email_enabled)
   end
 
