@@ -5,8 +5,8 @@ Rails.application.config.after_initialize do
   # Only check in production-like environments
   if Rails.env.production? || ENV["CHECK_CACHE_ATOMIC"].present?
     # When explicitly requested, also print to STDOUT/STDERR so rails runner/CI can see it
-    def cache_check_stdout(level, msg)
-      return unless ENV["CHECK_CACHE_ATOMIC"].present?
+    print_to_stdout = lambda do |level, msg|
+      next unless ENV["CHECK_CACHE_ATOMIC"].present?
 
       io = (level == :error ? $stderr : $stdout)
       io.puts(msg)
@@ -30,11 +30,11 @@ Rails.application.config.after_initialize do
       Rails.cache.delete(test_key)
 
       if first_write && !second_write && value == 1
-        msg = "[Cache Check] ✅ Cache store supports atomic unless_exist (#{Rails.cache.class})"
+        msg = "[Cache Check] ✅ Cache store supports unless_exist semantics (#{Rails.cache.class}) - single-process verified"
         Rails.logger.info(msg)
-        cache_check_stdout(:info, msg)
+        print_to_stdout.call(:info, msg)
       else
-        msg1 = "[Cache Check] ⚠️ Cache store may NOT support atomic unless_exist!"
+        msg1 = "[Cache Check] ⚠️ Cache store does NOT support unless_exist semantics!"
         msg2 = "[Cache Check] Results: first_write=#{first_write}, second_write=#{second_write}, value=#{value}"
         msg3 = "[Cache Check] This may cause race conditions in spam prevention!"
 
@@ -42,20 +42,20 @@ Rails.application.config.after_initialize do
         Rails.logger.error(msg2)
         Rails.logger.error(msg3)
 
-        cache_check_stdout(:error, msg1)
-        cache_check_stdout(:error, msg2)
-        cache_check_stdout(:error, msg3)
+        print_to_stdout.call(:error, msg1)
+        print_to_stdout.call(:error, msg2)
+        print_to_stdout.call(:error, msg3)
 
         if Rails.env.production?
-          msg4 = "[Cache Check] CRITICAL: Spam prevention may not work correctly!"
+          msg4 = "[Cache Check] CRITICAL: Spam prevention may not work correctly without proper unless_exist support!"
           Rails.logger.error(msg4)
-          cache_check_stdout(:error, msg4)
+          print_to_stdout.call(:error, msg4)
         end
       end
     rescue => e
-      msg = "[Cache Check] Failed to verify atomic cache behavior: #{e.class}: #{e.message}"
+      msg = "[Cache Check] Failed to verify cache unless_exist behavior: #{e.class}: #{e.message}"
       Rails.logger.error(msg)
-      cache_check_stdout(:error, msg)
+      print_to_stdout.call(:error, msg)
     end
   end
 end
