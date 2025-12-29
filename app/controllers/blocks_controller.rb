@@ -1,16 +1,15 @@
 class BlocksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_blocked_user, only: [:create]
-  before_action :set_block, only: [:destroy]
+  before_action :set_blocked_user, only: [ :create ]
+  before_action :set_block, only: [ :destroy ]
 
   def create
     @block = current_user.blocks_given.build(blocked: @blocked_user, reason: params[:reason])
-    
     if @block.save
       respond_to do |format|
         format.html { redirect_back(fallback_location: root_path, notice: block_success_message) }
         format.turbo_stream
-        format.json { render json: { status: 'blocked', message: block_success_message } }
+        format.json { render json: { status: "blocked", message: block_success_message } }
       end
     else
       respond_to do |format|
@@ -24,11 +23,10 @@ class BlocksController < ApplicationController
   def destroy
     @blocked_user = @block.blocked
     @block.destroy
-    
     respond_to do |format|
       format.html { redirect_back(fallback_location: root_path, notice: unblock_success_message) }
       format.turbo_stream
-      format.json { render json: { status: 'unblocked', message: unblock_success_message } }
+      format.json { render json: { status: "unblocked", message: unblock_success_message } }
     end
   end
 
@@ -36,7 +34,6 @@ class BlocksController < ApplicationController
 
   def set_blocked_user
     @blocked_user = User.find(params[:blocked_id])
-    
     # Can't block yourself
     if @blocked_user == current_user
       redirect_back(fallback_location: root_path, alert: self_block_error_message)

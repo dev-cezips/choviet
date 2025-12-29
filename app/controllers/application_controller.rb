@@ -22,7 +22,6 @@ class ApplicationController < ActionController::Base
 
   def change_locale
     locale = normalize_locale(params[:locale])
-    
     unless supported_locale?(locale)
       return respond_to do |format|
         format.html { redirect_back(fallback_location: root_path) }
