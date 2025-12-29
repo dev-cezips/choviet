@@ -1,7 +1,8 @@
 class Message < ApplicationRecord
+  include Reportable
+
   belongs_to :chat_room
   belongs_to :sender, class_name: "User", foreign_key: "sender_id", optional: true
-  has_many :reports, as: :reported, dependent: :destroy
 
   # Validations
   validates :content_raw, presence: true, length: { maximum: 1000 }

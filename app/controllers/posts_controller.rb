@@ -5,6 +5,7 @@ class PostsController < ApplicationController
   # GET /posts or /posts.json
   def index
     @keyword = params[:q]
+    @search_url = posts_path
     @posts = build_posts_query
 
     respond_to do |format|
@@ -16,6 +17,7 @@ class PostsController < ApplicationController
   # GET /feed - Location-based feed
   def feed
     @keyword = params[:q]
+    @search_url = feed_posts_path
 
     # Try to show posts near user's location first
     if user_signed_in? && current_user.has_location?
@@ -206,6 +208,7 @@ class PostsController < ApplicationController
     end
 
     def apply_filters(posts)
+      # TODO: Extract to PostQuery or Posts::Query object to share with UsersController
       # Search keyword
       posts = posts.search_keyword(@keyword) if @keyword.present?
 
@@ -239,7 +242,6 @@ class PostsController < ApplicationController
         posts = posts.recent # Default to newest first
       end
 
-      # Paginate
-      posts.page(params[:page])
+      posts
     end
 end

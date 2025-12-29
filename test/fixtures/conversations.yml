@@ -1,0 +1,13 @@
+# Conversation between basic_user and vietnamese_user
+user_conversation:
+  kind: direct
+  user_a: basic_user
+  user_b: vietnamese_user
+  created_at: <%= 1.week.ago %>
+
+# Conversation between korean_user and vietnamese_user
+korean_viet_conversation:
+  kind: direct
+  user_a: korean_user
+  user_b: vietnamese_user
+  created_at: <%= 2.weeks.ago %>

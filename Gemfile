@@ -53,6 +53,9 @@ gem "aasm", "~> 5.5"
 # Active Storage validations
 gem "active_storage_validations", "~> 1.1"
 
+# Rate limiting
+gem "rack-attack", "~> 6.7"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 # gem "tzinfo-data", platforms: %i[ windows jruby ]
 
@@ -102,3 +105,6 @@ gem "jsbundling-rails", "~> 1.3"
 # Error tracking
 gem "sentry-ruby"
 gem "sentry-rails"
+
+# Push notifications
+gem "jwt" # For Google Service Account authentication

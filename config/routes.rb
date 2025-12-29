@@ -32,8 +32,21 @@ Rails.application.routes.draw do
     resource :reaction, only: [ :create, :update, :destroy ]
   end
 
-  # Standalone chat rooms index
+  # Standalone chat rooms index (keeping for backward compatibility)
   resources :chat_rooms, only: [ :index ]
+
+  # New 1:1 chat system (V1)
+  resources :conversations, only: [ :index, :show ] do
+    resources :conversation_messages, only: [ :create ]
+  end
+
+  # Conversation message reports
+  resources :conversation_messages, only: [] do
+    resources :reports, only: [ :new, :create ]
+  end
+
+  # DM shortcut from posts
+  post "/posts/:id/dm", to: "conversations#create_from_post", as: :dm_post
 
   # Message reports
   resources :messages, only: [] do
@@ -45,6 +58,23 @@ Rails.application.routes.draw do
     member do
       get :listings
       get :favorites
+    end
+  end
+
+  # Blocking system
+  resources :blocks, only: [ :create, :destroy ]
+
+  # Push notifications
+  resources :push_endpoints, only: [ :create, :destroy ]
+
+  # API routes for native apps
+  namespace :api do
+    namespace :v1 do
+      resources :push_endpoints, only: [ :create ] do
+        collection do
+          delete :destroy
+        end
+      end
     end
   end
 
@@ -71,7 +101,18 @@ Rails.application.routes.draw do
 
   # Admin routes
   namespace :admin do
+    root to: "dashboard#index"
     get "dashboard", to: "dashboard#index"
+
+    resources :reports, only: [ :index, :show ] do
+      member do
+        patch :resolve
+        patch :dismiss
+      end
+      collection do
+        post :batch_action
+      end
+    end
   end
 
   # Locale switching

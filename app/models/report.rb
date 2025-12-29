@@ -1,26 +1,37 @@
 class Report < ApplicationRecord
   # Associations
   belongs_to :reporter, class_name: "User"
-  belongs_to :reported, polymorphic: true
+  belongs_to :reportable, polymorphic: true
+  belongs_to :handled_by, class_name: "User", optional: true
 
   # Enums
+  enum :status, {
+    pending: "pending",
+    reviewed: "reviewed",
+    resolved: "resolved",
+    dismissed: "dismissed"
+  }
+
+  enum :category, {
+    spam: "spam",
+    harassment: "harassment",
+    fraud: "fraud",
+    inappropriate: "inappropriate",
+    other: "other"
+  }, prefix: true
+
+  # Legacy support - keeping reason_code enum
   enum :reason_code, {
     spam: "spam",           # 스팸/홍보
     abusive: "abusive",     # 욕설/비방
     scam: "scam",          # 사기 의심
     inappropriate: "inappropriate"  # 부적절한 콘텐츠
-  }
-
-  enum :status, {
-    pending: "pending",     # 대기중
-    resolved: "resolved",   # 처리됨
-    dismissed: "dismissed"  # 기각됨
-  }
+  }, prefix: true
 
   # Validations
   validates :reason_code, presence: true
   validates :reporter_id, uniqueness: {
-    scope: [ :reported_type, :reported_id ],
+    scope: [ :reportable_type, :reportable_id ],
     message: "이미 신고하셨습니다"
   }
   validate :cannot_report_self
@@ -28,6 +39,9 @@ class Report < ApplicationRecord
   # Scopes
   scope :recent, -> { order(created_at: :desc) }
   scope :by_reason, ->(reason) { where(reason_code: reason) }
+  scope :unhandled, -> { where(handled_at: nil) }
+  scope :handled, -> { where.not(handled_at: nil) }
+  scope :by_reportable_type, ->(type) { where(reportable_type: type) }
 
   # Callbacks
   after_create :increment_report_count
@@ -35,20 +49,38 @@ class Report < ApplicationRecord
   after_create :check_auto_flag
 
   # Class methods
+  # Instance methods
+  def handle!(admin_user, action:, note: nil)
+    update!(
+      status: action,
+      handled_by: admin_user,
+      handled_at: Time.current,
+      admin_note: note
+    )
+  end
+
   def self.reason_options_for_select(locale = :vi)
-    if locale.to_s == "vi"
+    case locale.to_s
+    when "vi"
       [
         [ "🚫 Spam / Quảng cáo", "spam" ],
         [ "🤬 Ngôn từ đả kích", "abusive" ],
         [ "💸 Lừa đảo", "scam" ],
         [ "🔞 Nội dung không phù hợp", "inappropriate" ]
       ]
-    else
+    when "ko"
       [
         [ "🚫 스팸 / 홍보", "spam" ],
         [ "🤬 욕설 / 비방", "abusive" ],
         [ "💸 사기 의심", "scam" ],
         [ "🔞 부적절한 콘텐츠", "inappropriate" ]
+      ]
+    else # English
+      [
+        [ "🚫 Spam / Advertising", "spam" ],
+        [ "🤬 Abusive Language", "abusive" ],
+        [ "💸 Scam / Fraud", "scam" ],
+        [ "🔞 Inappropriate Content", "inappropriate" ]
       ]
     end
   end
@@ -56,30 +88,42 @@ class Report < ApplicationRecord
   private
 
   def cannot_report_self
-    if reported_type == "User" && reported_id == reporter_id
+    if reportable_type == "User" && reportable_id == reporter_id
       errors.add(:base, "자기 자신을 신고할 수 없습니다")
-    elsif reported_type == "Post" && reported&.user_id == reporter_id
+    elsif reportable_type == "Post" && reportable&.user_id == reporter_id
       errors.add(:base, "자신의 게시물을 신고할 수 없습니다")
+    elsif reportable_type == "Message" && reportable&.sender_id == reporter_id
+      errors.add(:base, "자신의 메시지를 신고할 수 없습니다")
+    elsif reportable_type == "ConversationMessage" && reportable&.user_id == reporter_id
+      errors.add(:base, "자신의 메시지를 신고할 수 없습니다")
     end
   end
 
   def increment_report_count
     # Track report counts for analytics
-    Rails.cache.increment("reports:#{reported_type}:#{reported_id}:count")
+    Rails.cache.increment("reports:#{reportable_type}:#{reportable_id}:count")
   end
 
   def auto_hide_if_threshold_reached
     # Auto-hide content if it reaches 3 reports
-    if reported.reports.count >= 3 && reported.respond_to?(:status)
-      reported.update(status: "hidden")
+    if reportable.reports.count >= 3
+      if reportable.respond_to?(:status)
+        if reportable.class.defined_enums["status"]&.key?("hidden")
+          reportable.update(status: "hidden")
+        elsif reportable.class.defined_enums["status"]&.key?("deleted")
+          reportable.update(status: "deleted")
+        end
+      elsif reportable.respond_to?(:visibility)
+        reportable.update(visibility: false)
+      end
     end
   end
 
   def check_auto_flag
     # Only check for User reports
-    return unless reported_type == "User"
+    return unless reportable_type == "User"
 
-    reported_user = reported
+    reported_user = reportable
     if reported_user.auto_flagged?
       # Find all chat rooms where the reported user is involved
       chat_rooms = ChatRoom.where(buyer: reported_user)

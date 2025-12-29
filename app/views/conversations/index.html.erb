@@ -1,0 +1,66 @@
+<div class="max-w-4xl mx-auto px-4 py-6">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Tin nhắn</h1>
+  
+  <% if @conversations.any? %>
+    <div class="bg-white rounded-lg shadow divide-y">
+      <% @conversations.each do |conversation| %>
+        <% other_user = conversation.other_user(current_user) %>
+        <% last_message = conversation.last_message %>
+        <% unread_count = conversation.unread_count_for(current_user) %>
+        
+        <%= link_to conversation_path(conversation), class: "block px-4 py-4 hover:bg-gray-50 transition-colors" do %>
+          <div class="flex items-center gap-3">
+            <!-- Avatar -->
+            <% if other_user.avatar.attached? %>
+              <%= image_tag other_user.avatar, class: "w-12 h-12 rounded-full object-cover flex-shrink-0" %>
+            <% else %>
+              <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold flex-shrink-0">
+                <%= other_user.display_name.first.upcase %>
+              </div>
+            <% end %>
+            
+            <!-- Content -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h3 class="font-semibold text-gray-900 truncate">
+                  <%= other_user.display_name %>
+                </h3>
+                <% if last_message %>
+                  <span class="text-xs text-gray-500">
+                    <%= time_ago_in_words(last_message.created_at) %> ago
+                  </span>
+                <% end %>
+              </div>
+              
+              <% if last_message %>
+                <p class="text-sm text-gray-600 truncate">
+                  <% if last_message.user == current_user %>
+                    <span class="text-gray-500">Bạn:</span>
+                  <% end %>
+                  <%= last_message.body %>
+                </p>
+              <% else %>
+                <p class="text-sm text-gray-400 italic">Chưa có tin nhắn</p>
+              <% end %>
+            </div>
+            
+            <!-- Unread Badge -->
+            <% if unread_count > 0 %>
+              <div class="bg-blue-500 text-white text-xs rounded-full px-2 py-1 min-w-[1.5rem] text-center">
+                <%= unread_count %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-lg shadow p-8 text-center">
+      <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">Chưa có cuộc trò chuyện nào</h3>
+      <p class="text-gray-500">Bắt đầu nhắn tin với người bán để tạo cuộc trò chuyện mới</p>
+    </div>
+  <% end %>
+</div>

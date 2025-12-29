@@ -1,0 +1,46 @@
+ko:
+  # Application name
+  app_name: "쪼 비엣"
+  tagline: "한국의 베트남 커뮤니티"
+  all: "전체"
+  
+  # Navigation
+  nav:
+    home: "홈"
+    marketplace: "마켓"
+    community: "커뮤니티"
+    messages: "메시지"
+    profile: "프로필"
+    sign_in: "로그인"
+    sign_out: "로그아웃"
+    sign_up: "회원가입"
+  
+  # Common buttons and actions
+  actions:
+    new: "새로 만들기"
+    edit: "수정"
+    delete: "삭제"
+    save: "저장"
+    cancel: "취소"
+    back: "뒤로"
+    search: "검색"
+    filter: "필터"
+    post: "게시"
+    send: "보내기"
+    upload: "업로드"
+    contact: "연락하기"
+    share: "공유"
+    report: "신고"
+  
+  # Reports
+  reports:
+    created: "신고가 성공적으로 제출되었습니다. 24시간 이내에 검토하겠습니다."
+    notice:
+      title: "📢 알림:"
+      false_report: "허위 신고는 귀하의 신뢰도에 영향을 줄 수 있습니다"
+      review: "24시간 이내에 검토하겠습니다"
+      auto_hide: "3개의 신고가 있는 콘텐츠는 자동으로 숨겨집니다"
+  
+  blocks:
+    created: "이 사용자를 차단했습니다"
+    destroyed: "차단을 해제했습니다"

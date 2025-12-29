@@ -10,37 +10,69 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  # Explicit whitelist (policy): keep this small & clear
+  SUPPORTED_LOCALES = %i[vi ko en].freeze
+
   private
 
   def set_locale
-    I18n.locale = :vi   # 강제 베트남어 - No Korean Stress 원칙
+    I18n.locale = extract_locale
     Rails.logger.debug "=== LOCALE SET TO: #{I18n.locale} ==="
   end
 
   def change_locale
-    if params[:locale].present?
-      session[:locale] = params[:locale]
-      redirect_back(fallback_location: root_path)
+    locale = normalize_locale(params[:locale])
+    unless supported_locale?(locale)
+      return respond_to do |format|
+        format.html { redirect_back(fallback_location: root_path) }
+        format.json { render json: { error: "unsupported_locale" }, status: :unprocessable_entity }
+      end
+    end
+
+    session[:locale] = locale.to_s
+    I18n.locale = locale
+    Rails.logger.debug "=== LOCALE CHANGED TO: #{I18n.locale} ==="
+
+    respond_to do |format|
+      format.html { redirect_back(fallback_location: root_path) }
+      format.json { render json: { locale: I18n.locale }, status: :ok }
     end
   end
 
   def extract_locale
-    parsed_locale = params[:locale] ||
-                   session[:locale] ||
-                   (current_user.locale if user_signed_in?) ||
-                   extract_locale_from_accept_language_header ||
-                   "vi"
+    candidate = params[:locale] ||
+                session[:locale] ||
+                (current_user&.locale if user_signed_in?) ||
+                extract_locale_from_accept_language_header ||
+                I18n.default_locale
 
-    I18n.available_locales.map(&:to_s).include?(parsed_locale) ? parsed_locale : "vi"
+    locale = normalize_locale(candidate)
+    supported_locale?(locale) ? locale : I18n.default_locale
+  end
+
+  # "ko-KR", "vi-VN", "EN" -> :ko, :vi, :en
+  def normalize_locale(value)
+    s = value.to_s.downcase.strip
+    return nil if s.empty?
+    s[0, 2].to_sym
+  end
+
+  def supported_locale?(locale)
+    locale.present? && SUPPORTED_LOCALES.include?(locale) && I18n.available_locales.include?(locale)
   end
 
   def extract_locale_from_accept_language_header
-    request.env["HTTP_ACCEPT_LANGUAGE"]&.scan(/^[a-z]{2}/)&.first
+    header = request.env["HTTP_ACCEPT_LANGUAGE"].to_s
+    # Take first locale preference: "ko-KR,ko;q=0.9,en;q=0.8" -> "ko"
+    first = header.split(",").first.to_s
+    first[/\A([a-z]{2})/i, 1]&.downcase
   end
 
   def default_url_options
     {}  # No locale in URLs since we force Vietnamese
   end
+
+  public :change_locale
 
   def after_sign_in_path_for(resource)
     # If user was trying to access a specific page before login, go there

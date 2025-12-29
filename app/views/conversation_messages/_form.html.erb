@@ -1,0 +1,13 @@
+<%= form_with model: [conversation, message], id: "message_form", class: "flex gap-2" do |f| %>
+  <%= f.text_field :body,
+      placeholder: "Nhập tin nhắn...",
+      class: "flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+      autocomplete: "off",
+      required: true %>
+  
+  <%= f.button type: :submit, class: "px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors" do %>
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+    </svg>
+  <% end %>
+<% end %>

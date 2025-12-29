@@ -86,7 +86,7 @@ class Scenario5AntiFraudReportTest < ActionDispatch::IntegrationTest
 
       Report.create!(
         reporter: reporter,
-        reported: @reported_user,
+        reportable: @reported_user,
         reason_code: "spam"
       )
     end
@@ -109,7 +109,7 @@ class Scenario5AntiFraudReportTest < ActionDispatch::IntegrationTest
 
       Report.create!(
         reporter: reporter,
-        reported: @reported_user,
+        reportable: @reported_user,
         reason_code: "scam"
       )
     end
@@ -128,7 +128,7 @@ class Scenario5AntiFraudReportTest < ActionDispatch::IntegrationTest
 
     Report.create!(
       reporter: extra_reporter,
-      reported: @reported_user,
+      reportable: @reported_user,
       reason_code: "abusive"
     )
 
@@ -214,7 +214,7 @@ class Scenario5AntiFraudReportTest < ActionDispatch::IntegrationTest
 
       Report.create!(
         reporter: reporter,
-        reported: @reported_user,
+        reportable: @reported_user,
         reason_code: "spam"
       )
     end

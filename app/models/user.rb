@@ -17,7 +17,7 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :sent_messages, class_name: "Message", foreign_key: "sender_id"
   has_many :submitted_reports, class_name: "Report", foreign_key: "reporter_id"
-  # has_many :reports, as: :reportable # TODO: Implement reportable polymorphic association
+  has_many :reports, as: :reportable, dependent: :destroy
   has_many :community_memberships, dependent: :destroy
   has_many :communities, through: :community_memberships
   belongs_to :location, optional: true
@@ -27,6 +27,17 @@ class User < ApplicationRecord
   has_many :favorite_posts, through: :favorites, source: :post
   has_many :reviews_given, class_name: "Review", foreign_key: :reviewer_id, dependent: :destroy
   has_many :reviews_received, class_name: "Review", foreign_key: :reviewee_id, dependent: :destroy
+
+  # Blocking associations
+  has_many :blocks_given, class_name: "Block", foreign_key: "blocker_id", dependent: :destroy
+  has_many :blocks_received, class_name: "Block", foreign_key: "blocked_id", dependent: :destroy
+  has_many :blocked_users, through: :blocks_given, source: :blocked
+  has_many :blocked_by_users, through: :blocks_received, source: :blocker
+
+  # Push notifications
+  has_many :push_endpoints, dependent: :destroy
+  has_many :notifications_received, class_name: "Notification", foreign_key: "recipient_id", dependent: :destroy
+  has_many :notifications_sent, class_name: "Notification", foreign_key: "actor_id", dependent: :destroy
 
   # Avatar attachment
   has_one_attached :avatar
@@ -41,6 +52,11 @@ class User < ApplicationRecord
   has_many :buyer_chat_rooms, class_name: "ChatRoom", foreign_key: "buyer_id"
   # Chat rooms where user is seller
   has_many :seller_chat_rooms, class_name: "ChatRoom", foreign_key: "seller_id"
+
+  # New 1:1 conversations
+  has_many :conversation_participants, dependent: :destroy
+  has_many :conversations, through: :conversation_participants
+  has_many :conversation_messages
 
   # All chat rooms for the user
   def chat_rooms
@@ -287,6 +303,28 @@ class User < ApplicationRecord
 
   def display_name
     name.presence || email.split("@").first
+  end
+
+  # Blocking methods
+  def blocking?(other_user)
+    blocked_users.exists?(other_user.id)
+  end
+
+  def blocked_by?(other_user)
+    blocked_by_users.exists?(other_user.id)
+  end
+
+  def blocked_with?(other_user)
+    Block.blocked?(self, other_user)
+  end
+
+  # Push notification methods
+  def push_enabled?
+    notification_push_enabled != false
+  end
+
+  def dm_notifications_enabled?
+    notification_dm_enabled != false
   end
 
   def all_chat_rooms

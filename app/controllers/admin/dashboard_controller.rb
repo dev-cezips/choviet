@@ -1,6 +1,4 @@
-class Admin::DashboardController < ApplicationController
-  before_action :authenticate_admin!
-
+class Admin::DashboardController < Admin::BaseController
   def index
     @stats = {
       # User metrics
@@ -43,11 +41,5 @@ class Admin::DashboardController < ApplicationController
 
     # Recent events for live monitoring
     @recent_events = AnalyticsEvent.recent.includes(:user).limit(50)
-  end
-
-  private
-
-  def authenticate_admin!
-    redirect_to root_path unless current_user&.admin?
   end
 end

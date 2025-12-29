@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_23_214128) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_27_103000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -50,6 +50,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_23_214128) do
     t.index ["event_type", "created_at"], name: "index_analytics_events_on_event_type_and_created_at"
     t.index ["event_type"], name: "index_analytics_events_on_event_type"
     t.index ["user_id"], name: "index_analytics_events_on_user_id"
+  end
+
+  create_table "blocks", force: :cascade do |t|
+    t.bigint "blocker_id", null: false
+    t.bigint "blocked_id", null: false
+    t.string "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blocked_id"], name: "index_blocks_on_blocked_id"
+    t.index ["blocker_id", "blocked_id"], name: "index_blocks_on_blocker_id_and_blocked_id", unique: true
+    t.index ["blocker_id"], name: "index_blocks_on_blocker_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -97,6 +108,36 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_23_214128) do
     t.datetime "updated_at", null: false
     t.index ["community_id"], name: "index_community_memberships_on_community_id"
     t.index ["user_id"], name: "index_community_memberships_on_user_id"
+  end
+
+  create_table "conversation_messages", force: :cascade do |t|
+    t.integer "conversation_id", null: false
+    t.integer "user_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_conversation_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_conversation_messages_on_user_id"
+  end
+
+  create_table "conversation_participants", force: :cascade do |t|
+    t.integer "conversation_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "last_read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "user_id"], name: "index_conversation_participants_on_conversation_id_and_user_id", unique: true
+    t.index ["conversation_id"], name: "index_conversation_participants_on_conversation_id"
+    t.index ["user_id"], name: "index_conversation_participants_on_user_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.string "kind", default: "direct", null: false
+    t.bigint "user_a_id", null: false
+    t.bigint "user_b_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["kind", "user_a_id", "user_b_id"], name: "index_conversations_on_kind_and_user_a_id_and_user_b_id", unique: true
   end
 
   create_table "favorites", force: :cascade do |t|
@@ -147,6 +188,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_23_214128) do
     t.index ["system_message"], name: "index_messages_on_system_message"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.integer "recipient_id", null: false
+    t.integer "actor_id"
+    t.string "notifiable_type"
+    t.bigint "notifiable_id"
+    t.integer "kind", default: 0, null: false
+    t.string "title"
+    t.text "body"
+    t.json "data"
+    t.integer "status", default: 0, null: false
+    t.datetime "delivered_at"
+    t.string "failure_reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_notifications_on_actor_id"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
+    t.index ["recipient_id", "kind", "created_at"], name: "index_notifications_for_listing"
+    t.index ["recipient_id", "status"], name: "index_notifications_on_recipient_id_and_status"
+    t.index ["recipient_id"], name: "index_notifications_on_recipient_id"
+    t.index ["status"], name: "index_notifications_on_status"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "post_type"
@@ -190,6 +253,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_23_214128) do
     t.index ["post_id"], name: "index_products_on_post_id"
   end
 
+  create_table "push_endpoints", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "platform", default: 0, null: false
+    t.string "token", null: false
+    t.string "device_id"
+    t.string "endpoint_url"
+    t.json "keys"
+    t.boolean "active", default: true, null: false
+    t.datetime "last_seen_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_push_endpoints_on_active"
+    t.index ["user_id", "platform", "token"], name: "index_push_endpoints_unique", unique: true
+    t.index ["user_id"], name: "index_push_endpoints_on_user_id"
+  end
+
   create_table "quick_replies", force: :cascade do |t|
     t.string "category"
     t.string "content_vi"
@@ -200,17 +279,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_23_214128) do
 
   create_table "reports", force: :cascade do |t|
     t.integer "reporter_id", null: false
-    t.string "reported_type", null: false
-    t.integer "reported_id", null: false
+    t.string "reportable_type", null: false
+    t.integer "reportable_id", null: false
     t.string "reason_code", null: false
     t.text "description"
     t.string "status", default: "pending", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "reason"
+    t.string "category"
+    t.text "admin_note"
+    t.bigint "handled_by_id"
+    t.datetime "handled_at"
+    t.index ["handled_by_id"], name: "index_reports_on_handled_by_id"
     t.index ["reason_code"], name: "index_reports_on_reason_code"
-    t.index ["reported_type", "reported_id"], name: "index_reports_on_reported"
-    t.index ["reporter_id", "reported_id", "reported_type"], name: "index_unique_report", unique: true
+    t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reported"
+    t.index ["reporter_id", "reportable_id", "reportable_type"], name: "index_unique_report", unique: true
     t.index ["reporter_id"], name: "index_reports_on_reporter_id"
     t.index ["status"], name: "index_reports_on_status"
   end
@@ -291,12 +375,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_23_214128) do
     t.integer "level", default: 1, null: false
     t.decimal "rating", precision: 3, scale: 2, default: "0.0"
     t.integer "trades_count", default: 0
+    t.boolean "notification_push_enabled", default: true, null: false
+    t.boolean "notification_dm_enabled", default: true, null: false
+    t.boolean "notification_email_enabled", default: true, null: false
     t.index ["admin"], name: "index_users_on_admin"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["exp"], name: "index_users_on_exp"
     t.index ["latitude", "longitude"], name: "index_users_on_latitude_and_longitude"
     t.index ["level"], name: "index_users_on_level"
     t.index ["location_id"], name: "index_users_on_location_id"
+    t.index ["notification_push_enabled"], name: "index_users_on_notification_push_enabled"
     t.index ["rating"], name: "index_users_on_rating"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["trades_count"], name: "index_users_on_trades_count"
@@ -305,21 +393,33 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_23_214128) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "analytics_events", "users"
+  add_foreign_key "blocks", "users", column: "blocked_id"
+  add_foreign_key "blocks", "users", column: "blocker_id"
   add_foreign_key "categories", "categories", column: "parent_id"
   add_foreign_key "chat_rooms", "posts"
   add_foreign_key "community_memberships", "communities"
   add_foreign_key "community_memberships", "users"
+  add_foreign_key "conversation_messages", "conversations"
+  add_foreign_key "conversation_messages", "users"
+  add_foreign_key "conversation_participants", "conversations"
+  add_foreign_key "conversation_participants", "users"
+  add_foreign_key "conversations", "users", column: "user_a_id"
+  add_foreign_key "conversations", "users", column: "user_b_id"
   add_foreign_key "favorites", "posts"
   add_foreign_key "favorites", "users"
   add_foreign_key "likes", "posts"
   add_foreign_key "likes", "users"
   add_foreign_key "locations", "locations", column: "parent_id"
   add_foreign_key "messages", "chat_rooms"
+  add_foreign_key "notifications", "users", column: "actor_id"
+  add_foreign_key "notifications", "users", column: "recipient_id"
   add_foreign_key "posts", "categories"
   add_foreign_key "posts", "communities"
   add_foreign_key "posts", "locations"
   add_foreign_key "posts", "users"
   add_foreign_key "products", "posts"
+  add_foreign_key "push_endpoints", "users"
+  add_foreign_key "reports", "users", column: "handled_by_id"
   add_foreign_key "reports", "users", column: "reporter_id"
   add_foreign_key "review_reactions", "reviews"
   add_foreign_key "review_reactions", "users"
