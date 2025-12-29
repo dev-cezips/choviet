@@ -20,18 +20,18 @@ class MarketplacePostsTest < ApplicationSystemTestCase
 
   test "creating a marketplace post with price" do
     skip "JavaScript dynamic form fields not working reliably in headless environment"
-    
+
     visit new_post_path
 
     # Wait for page to fully load
     assert_selector "form[data-controller*='post-form']"
-    
+
     # Click on marketplace label instead of using radio button directly
     find("label", text: "Mua bán").click
 
     # Wait for marketplace fields to appear
     assert_selector "[data-post-form-target='marketplaceFields']", visible: true
-    
+
     # Fill in post details
     fill_in "Tiêu đề", with: "iPhone 12 Pro Max"
     fill_in "Nội dung", with: "Điện thoại iPhone 12 Pro Max còn mới, sử dụng cẩn thận"

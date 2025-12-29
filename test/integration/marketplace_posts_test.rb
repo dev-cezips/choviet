@@ -15,7 +15,7 @@ class MarketplacePostsTest < ActionDispatch::IntegrationTest
       user: { email: @user.email, password: "password123" }
     }
     follow_redirect!
-    
+
     # Create marketplace post
     assert_difference("Post.count", 1) do
       assert_difference("Product.count", 1) do
@@ -33,10 +33,10 @@ class MarketplacePostsTest < ActionDispatch::IntegrationTest
         }
       end
     end
-    
+
     assert_redirected_to post_path(Post.last)
     follow_redirect!
-    
+
     # Verify post content
     assert_response :success
     assert_select "h1", "iPhone 12 Pro Max"
@@ -50,7 +50,7 @@ class MarketplacePostsTest < ActionDispatch::IntegrationTest
       user: { email: @user.email, password: "password123" }
     }
     follow_redirect!
-    
+
     # Try to create marketplace post without price
     assert_no_difference("Post.count") do
       post posts_path, params: {
@@ -65,7 +65,7 @@ class MarketplacePostsTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    
+
     assert_response :unprocessable_entity
     assert_match "Price", response.body
   end
@@ -76,7 +76,7 @@ class MarketplacePostsTest < ActionDispatch::IntegrationTest
       user: { email: @user.email, password: "password123" }
     }
     follow_redirect!
-    
+
     # Create question post with product attributes (should be ignored)
     assert_difference("Post.count", 1) do
       assert_no_difference("Product.count") do
@@ -93,7 +93,7 @@ class MarketplacePostsTest < ActionDispatch::IntegrationTest
         }
       end
     end
-    
+
     post = Post.last
     assert_equal "question", post.post_type
     assert_nil post.product
