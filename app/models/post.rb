@@ -70,10 +70,10 @@ class Post < ApplicationRecord
     # 1 degree ≈ 111 km at equator (good enough for Vietnam's latitude)
     # For production, consider using PostGIS or proper geocoding
     return all if lat.blank? || lng.blank?
-    
+
     # Convert km to degrees (roughly)
     distance_degrees = distance_km.to_f / 111.0
-    
+
     where("latitude IS NOT NULL AND longitude IS NOT NULL")
       .where("latitude BETWEEN ? AND ?", lat.to_f - distance_degrees, lat.to_f + distance_degrees)
       .where("longitude BETWEEN ? AND ?", lng.to_f - distance_degrees, lng.to_f + distance_degrees)

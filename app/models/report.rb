@@ -11,15 +11,15 @@ class Report < ApplicationRecord
     resolved: "resolved",
     dismissed: "dismissed"
   }
-  
+
   enum :category, {
     spam: "spam",
-    harassment: "harassment", 
+    harassment: "harassment",
     fraud: "fraud",
     inappropriate: "inappropriate",
     other: "other"
   }, prefix: true
-  
+
   # Legacy support - keeping reason_code enum
   enum :reason_code, {
     spam: "spam",           # 스팸/홍보
@@ -31,7 +31,7 @@ class Report < ApplicationRecord
   # Validations
   validates :reason_code, presence: true
   validates :reporter_id, uniqueness: {
-    scope: [:reportable_type, :reportable_id],
+    scope: [ :reportable_type, :reportable_id ],
     message: "이미 신고하셨습니다"
   }
   validate :cannot_report_self

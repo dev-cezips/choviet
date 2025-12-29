@@ -12,7 +12,7 @@ module Push
 
     def deliver!(endpoint:, title:, body:, data: {})
       token = endpoint.token
-      
+
       uri = URI(FCM_ENDPOINT % { project_id: @project_id })
       req = Net::HTTP::Post.new(uri)
       req["Authorization"] = "Bearer #{@access_token}"
@@ -21,9 +21,9 @@ module Push
       payload = {
         message: {
           token: token,
-          notification: { 
-            title: title, 
-            body: body 
+          notification: {
+            title: title,
+            body: body
           },
           data: stringify_hash(data),
           android: {

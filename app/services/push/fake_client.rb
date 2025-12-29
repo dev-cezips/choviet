@@ -7,12 +7,12 @@ module Push
       Rails.logger.info "[PUSH:FAKE] Body: #{body}"
       Rails.logger.info "[PUSH:FAKE] Data: #{data.inspect}"
       Rails.logger.info "[PUSH:FAKE] Token: #{endpoint.token[0..20]}..." if endpoint.token
-      
+
       # Simulate random failures in development for testing
       if Rails.env.development? && rand < 0.1
         raise "Simulated push delivery failure"
       end
-      
+
       # Track in Rails cache for testing
       if Rails.env.test?
         Rails.cache.write(
@@ -21,7 +21,7 @@ module Push
           expires_in: 1.hour
         )
       end
-      
+
       true
     end
   end

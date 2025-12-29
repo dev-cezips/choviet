@@ -27,13 +27,13 @@ class User < ApplicationRecord
   has_many :favorite_posts, through: :favorites, source: :post
   has_many :reviews_given, class_name: "Review", foreign_key: :reviewer_id, dependent: :destroy
   has_many :reviews_received, class_name: "Review", foreign_key: :reviewee_id, dependent: :destroy
-  
+
   # Blocking associations
   has_many :blocks_given, class_name: "Block", foreign_key: "blocker_id", dependent: :destroy
   has_many :blocks_received, class_name: "Block", foreign_key: "blocked_id", dependent: :destroy
   has_many :blocked_users, through: :blocks_given, source: :blocked
   has_many :blocked_by_users, through: :blocks_received, source: :blocker
-  
+
   # Push notifications
   has_many :push_endpoints, dependent: :destroy
   has_many :notifications_received, class_name: "Notification", foreign_key: "recipient_id", dependent: :destroy
@@ -52,7 +52,7 @@ class User < ApplicationRecord
   has_many :buyer_chat_rooms, class_name: "ChatRoom", foreign_key: "buyer_id"
   # Chat rooms where user is seller
   has_many :seller_chat_rooms, class_name: "ChatRoom", foreign_key: "seller_id"
-  
+
   # New 1:1 conversations
   has_many :conversation_participants, dependent: :destroy
   has_many :conversations, through: :conversation_participants
@@ -304,7 +304,7 @@ class User < ApplicationRecord
   def display_name
     name.presence || email.split("@").first
   end
-  
+
   # Blocking methods
   def blocking?(other_user)
     blocked_users.exists?(other_user.id)
@@ -317,12 +317,12 @@ class User < ApplicationRecord
   def blocked_with?(other_user)
     Block.blocked?(self, other_user)
   end
-  
+
   # Push notification methods
   def push_enabled?
     notification_push_enabled != false
   end
-  
+
   def dm_notifications_enabled?
     notification_dm_enabled != false
   end

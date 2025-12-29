@@ -11,7 +11,7 @@ module ReportsHelper
       current_user.vietnamese? ? "nội dung" : "콘텐츠"
     end
   end
-  
+
   def report_path_for(reportable)
     case reportable
     when Post
@@ -26,23 +26,23 @@ module ReportsHelper
       "#"
     end
   end
-  
+
   def report_categories_for_select
     if current_user.vietnamese?
       [
-        ["Spam / Quảng cáo", "spam"],
-        ["Quấy rối / Lạm dụng", "harassment"],
-        ["Lừa đảo", "fraud"],
-        ["Nội dung không phù hợp", "inappropriate"],
-        ["Khác", "other"]
+        [ "Spam / Quảng cáo", "spam" ],
+        [ "Quấy rối / Lạm dụng", "harassment" ],
+        [ "Lừa đảo", "fraud" ],
+        [ "Nội dung không phù hợp", "inappropriate" ],
+        [ "Khác", "other" ]
       ]
     else
       [
-        ["스팸 / 광고", "spam"],
-        ["괴롭힘 / 남용", "harassment"],
-        ["사기", "fraud"],
-        ["부적절한 콘텐츠", "inappropriate"],
-        ["기타", "other"]
+        [ "스팸 / 광고", "spam" ],
+        [ "괴롭힘 / 남용", "harassment" ],
+        [ "사기", "fraud" ],
+        [ "부적절한 콘텐츠", "inappropriate" ],
+        [ "기타", "other" ]
       ]
     end
   end

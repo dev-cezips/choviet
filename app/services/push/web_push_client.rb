@@ -5,13 +5,13 @@ module Push
       @vapid_public_key = Rails.application.credentials.dig(:push, :vapid, :public_key)
       @vapid_subject = Rails.application.credentials.dig(:push, :vapid, :subject) || "mailto:support@choviet.com"
     end
-    
+
     def deliver!(endpoint:, title:, body:, data: {})
       return false unless endpoint.web?
       return false unless valid_config?
-      
-      require 'webpush' # Gem will be added later
-      
+
+      require "webpush" # Gem will be added later
+
       message = {
         title: title,
         body: body,
@@ -21,7 +21,7 @@ module Push
           url: data[:url] || Rails.application.routes.url_helpers.root_url
         )
       }
-      
+
       Webpush.payload_send(
         message: JSON.generate(message),
         endpoint: endpoint.endpoint_url,
@@ -33,16 +33,16 @@ module Push
           subject: @vapid_subject
         }
       )
-      
+
       endpoint.touch_last_seen!
       true
     rescue => e
       Rails.logger.error "[PUSH:WEB] Failed: #{e.message}"
       raise
     end
-    
+
     private
-    
+
     def valid_config?
       @vapid_key.present? && @vapid_public_key.present?
     end

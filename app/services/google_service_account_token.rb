@@ -41,7 +41,7 @@ class GoogleServiceAccountToken
     body = JSON.parse(res.body)
     token = body.fetch("access_token")
     expires_in = body.fetch("expires_in", 3600) - 300 # 5 minutes buffer
-    
+
     Rails.cache.write("google_sa_access_token", token, expires_in: expires_in.seconds)
     token
   rescue => e

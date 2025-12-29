@@ -3,7 +3,7 @@ module Push
     def deliver!(endpoint:, title:, body:, data: {})
       raise NotImplementedError, "Subclasses must implement deliver!"
     end
-    
+
     # Batch delivery for efficiency
     def deliver_batch!(endpoints:, title:, body:, data: {})
       results = []
