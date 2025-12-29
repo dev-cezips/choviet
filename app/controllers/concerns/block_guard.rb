@@ -41,10 +41,9 @@ module BlockGuard
   end
 
   def blocking_error_message
-    if current_user.locale == "ko"
-      "차단된 사용자와는 대화할 수 없습니다."
-    else
-      "Bạn không thể trò chuyện với người dùng đã bị chặn."
-    end
+    I18n.t(
+      "errors.blocked_dm",
+      default: "차단된 사용자와는 대화할 수 없습니다."
+    )
   end
 end

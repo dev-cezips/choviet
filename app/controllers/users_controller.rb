@@ -99,7 +99,9 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :bio, :phone, :location_code, :avatar, :locale, :latitude, :longitude)
+    params.require(:user).permit(:name, :bio, :phone, :location_code, :avatar, :locale, 
+                                  :latitude, :longitude, :notification_push_enabled, 
+                                  :notification_dm_enabled, :notification_email_enabled)
   end
 
   def detect_location_from_coordinates(lat, lng)

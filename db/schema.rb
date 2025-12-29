@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_26_103000) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_27_103000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -188,6 +188,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_26_103000) do
     t.index ["system_message"], name: "index_messages_on_system_message"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.integer "recipient_id", null: false
+    t.integer "actor_id"
+    t.string "notifiable_type"
+    t.bigint "notifiable_id"
+    t.integer "kind", default: 0, null: false
+    t.string "title"
+    t.text "body"
+    t.json "data"
+    t.integer "status", default: 0, null: false
+    t.datetime "delivered_at"
+    t.string "failure_reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_notifications_on_actor_id"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
+    t.index ["recipient_id", "kind", "created_at"], name: "index_notifications_for_listing"
+    t.index ["recipient_id", "status"], name: "index_notifications_on_recipient_id_and_status"
+    t.index ["recipient_id"], name: "index_notifications_on_recipient_id"
+    t.index ["status"], name: "index_notifications_on_status"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "post_type"
@@ -229,6 +251,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_26_103000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["post_id"], name: "index_products_on_post_id"
+  end
+
+  create_table "push_endpoints", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "platform", default: 0, null: false
+    t.string "token", null: false
+    t.string "device_id"
+    t.string "endpoint_url"
+    t.json "keys"
+    t.boolean "active", default: true, null: false
+    t.datetime "last_seen_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_push_endpoints_on_active"
+    t.index ["user_id", "platform", "token"], name: "index_push_endpoints_unique", unique: true
+    t.index ["user_id"], name: "index_push_endpoints_on_user_id"
   end
 
   create_table "quick_replies", force: :cascade do |t|
@@ -337,12 +375,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_26_103000) do
     t.integer "level", default: 1, null: false
     t.decimal "rating", precision: 3, scale: 2, default: "0.0"
     t.integer "trades_count", default: 0
+    t.boolean "notification_push_enabled", default: true, null: false
+    t.boolean "notification_dm_enabled", default: true, null: false
+    t.boolean "notification_email_enabled", default: true, null: false
     t.index ["admin"], name: "index_users_on_admin"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["exp"], name: "index_users_on_exp"
     t.index ["latitude", "longitude"], name: "index_users_on_latitude_and_longitude"
     t.index ["level"], name: "index_users_on_level"
     t.index ["location_id"], name: "index_users_on_location_id"
+    t.index ["notification_push_enabled"], name: "index_users_on_notification_push_enabled"
     t.index ["rating"], name: "index_users_on_rating"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["trades_count"], name: "index_users_on_trades_count"
@@ -369,11 +411,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_26_103000) do
   add_foreign_key "likes", "users"
   add_foreign_key "locations", "locations", column: "parent_id"
   add_foreign_key "messages", "chat_rooms"
+  add_foreign_key "notifications", "users", column: "actor_id"
+  add_foreign_key "notifications", "users", column: "recipient_id"
   add_foreign_key "posts", "categories"
   add_foreign_key "posts", "communities"
   add_foreign_key "posts", "locations"
   add_foreign_key "posts", "users"
   add_foreign_key "products", "posts"
+  add_foreign_key "push_endpoints", "users"
   add_foreign_key "reports", "users", column: "handled_by_id"
   add_foreign_key "reports", "users", column: "reporter_id"
   add_foreign_key "review_reactions", "reviews"

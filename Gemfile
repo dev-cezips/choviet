@@ -105,3 +105,6 @@ gem "jsbundling-rails", "~> 1.3"
 # Error tracking
 gem "sentry-ruby"
 gem "sentry-rails"
+
+# Push notifications
+gem "jwt" # For Google Service Account authentication

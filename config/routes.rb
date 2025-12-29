@@ -63,6 +63,20 @@ Rails.application.routes.draw do
   
   # Blocking system
   resources :blocks, only: [ :create, :destroy ]
+  
+  # Push notifications
+  resources :push_endpoints, only: [ :create, :destroy ]
+  
+  # API routes for native apps
+  namespace :api do
+    namespace :v1 do
+      resources :push_endpoints, only: [:create] do
+        collection do
+          delete :destroy
+        end
+      end
+    end
+  end
 
   # Profile management (for current user)
   resource :profile, controller: "users", only: [ :edit, :update ] do

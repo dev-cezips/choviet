@@ -18,7 +18,7 @@ class Report < ApplicationRecord
     fraud: "fraud",
     inappropriate: "inappropriate",
     other: "other"
-  }, _prefix: true
+  }, prefix: true
   
   # Legacy support - keeping reason_code enum
   enum :reason_code, {
@@ -26,10 +26,10 @@ class Report < ApplicationRecord
     abusive: "abusive",     # 욕설/비방
     scam: "scam",          # 사기 의심
     inappropriate: "inappropriate"  # 부적절한 콘텐츠
-  }
+  }, prefix: true
 
   # Validations
-  validates :reason, presence: true
+  validates :reason_code, presence: true
   validates :reporter_id, uniqueness: {
     scope: [:reportable_type, :reportable_id],
     message: "이미 신고하셨습니다"
@@ -84,6 +84,8 @@ class Report < ApplicationRecord
       errors.add(:base, "자기 자신을 신고할 수 없습니다")
     elsif reportable_type == "Post" && reportable&.user_id == reporter_id
       errors.add(:base, "자신의 게시물을 신고할 수 없습니다")
+    elsif reportable_type == "Message" && reportable&.sender_id == reporter_id
+      errors.add(:base, "자신의 메시지를 신고할 수 없습니다")
     elsif reportable_type == "ConversationMessage" && reportable&.user_id == reporter_id
       errors.add(:base, "자신의 메시지를 신고할 수 없습니다")
     end
@@ -96,8 +98,16 @@ class Report < ApplicationRecord
 
   def auto_hide_if_threshold_reached
     # Auto-hide content if it reaches 3 reports
-    if reportable.reports.count >= 3 && reportable.respond_to?(:status)
-      reportable.update(status: "hidden")
+    if reportable.reports.count >= 3
+      if reportable.respond_to?(:status)
+        if reportable.class.defined_enums["status"]&.key?("hidden")
+          reportable.update(status: "hidden")
+        elsif reportable.class.defined_enums["status"]&.key?("deleted")
+          reportable.update(status: "deleted")
+        end
+      elsif reportable.respond_to?(:visibility)
+        reportable.update(visibility: false)
+      end
     end
   end
 

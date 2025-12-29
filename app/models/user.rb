@@ -33,6 +33,11 @@ class User < ApplicationRecord
   has_many :blocks_received, class_name: "Block", foreign_key: "blocked_id", dependent: :destroy
   has_many :blocked_users, through: :blocks_given, source: :blocked
   has_many :blocked_by_users, through: :blocks_received, source: :blocker
+  
+  # Push notifications
+  has_many :push_endpoints, dependent: :destroy
+  has_many :notifications_received, class_name: "Notification", foreign_key: "recipient_id", dependent: :destroy
+  has_many :notifications_sent, class_name: "Notification", foreign_key: "actor_id", dependent: :destroy
 
   # Avatar attachment
   has_one_attached :avatar
@@ -311,6 +316,15 @@ class User < ApplicationRecord
 
   def blocked_with?(other_user)
     Block.blocked?(self, other_user)
+  end
+  
+  # Push notification methods
+  def push_enabled?
+    notification_push_enabled != false
+  end
+  
+  def dm_notifications_enabled?
+    notification_dm_enabled != false
   end
 
   def all_chat_rooms

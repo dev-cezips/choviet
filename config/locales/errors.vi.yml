@@ -1,0 +1,3 @@
+vi:
+  errors:
+    blocked_dm: "Bạn không thể trò chuyện với người dùng đã bị chặn."

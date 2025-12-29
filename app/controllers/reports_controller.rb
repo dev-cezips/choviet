@@ -13,8 +13,8 @@ class ReportsController < ApplicationController
 
     if @report.save
       track_event("report_created", {
-        reportable_type: @report.reported_type,
-        reportable_id: @report.reported_id,
+        reportable_type: @report.reportable_type,
+        reportable_id: @report.reportable_id,
         reason_code: @report.reason_code,
         has_description: @report.description.present?
       })

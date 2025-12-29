@@ -66,6 +66,9 @@ class ChatDmFlowTest < ActionDispatch::IntegrationTest
   test "reuses existing conversation between same users" do
     sign_in @user1, scope: :user
     
+    # Check initial state
+    initial_count = Conversation.count
+    
     # First DM
     post dm_post_path(@post)
     conversation1 = Conversation.last
@@ -89,7 +92,7 @@ class ChatDmFlowTest < ActionDispatch::IntegrationTest
     
     # Should be the same conversation
     assert_equal conversation1.id, conversation2.id
-    assert_equal 1, Conversation.count
+    assert_equal initial_count + 1, Conversation.count
   end
   
   test "creates separate conversations for different user pairs" do
@@ -99,6 +102,9 @@ class ChatDmFlowTest < ActionDispatch::IntegrationTest
       name: "Another User"
     )
     
+    # Check initial state
+    initial_count = Conversation.count
+    
     sign_in @user1, scope: :user
     post dm_post_path(@post)
     
@@ -106,7 +112,7 @@ class ChatDmFlowTest < ActionDispatch::IntegrationTest
     post dm_post_path(@post)
     
     # Should have 2 different conversations
-    assert_equal 2, Conversation.count
+    assert_equal initial_count + 2, Conversation.count
   end
   
   test "must be logged in to DM" do
