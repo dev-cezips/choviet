@@ -81,39 +81,40 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- About -->
           <div>
-            <h3 class="text-lg font-semibold mb-4">Chợ Việt</h3>
+            <h3 class="text-lg font-semibold mb-4"><%= t('footer.about.title') %></h3>
             <p class="text-sm text-gray-600">
-              Cộng đồng người Việt tại Hàn Quốc<br>
-              베트남인을 위한 온라인 커뮤니티
+              <%= t('footer.about.description') %><% if I18n.locale == :vi %><br>
+              베트남인을 위한 온라인 커뮤니티<% elsif I18n.locale == :ko %><br>
+              Cộng đồng người Việt tại Hàn Quốc<% end %>
             </p>
           </div>
           
           <!-- Links -->
           <div>
-            <h3 class="text-lg font-semibold mb-4">Thông tin</h3>
+            <h3 class="text-lg font-semibold mb-4"><%= t('footer.links.title') %></h3>
             <ul class="space-y-2">
               <li>
-                <%= link_to "개인정보 처리방침", privacy_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
+                <%= link_to t('footer.links.privacy'), privacy_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
               </li>
               <li>
-                <%= link_to "이용약관", terms_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
+                <%= link_to t('footer.links.terms'), terms_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
               </li>
             </ul>
           </div>
           
           <!-- Contact -->
           <div>
-            <h3 class="text-lg font-semibold mb-4">Liên hệ / 문의</h3>
+            <h3 class="text-lg font-semibold mb-4"><%= t('footer.contact.title') %></h3>
             <p class="text-sm text-gray-600">
-              Email: support@choviet.com<br>
-              카카오톡: @choviet
+              <%= t('footer.contact.email').html_safe %><br>
+              <%= t('footer.contact.kakao').html_safe %>
             </p>
           </div>
         </div>
         
         <div class="border-t border-gray-200 mt-8 pt-8 text-center">
           <p class="text-sm text-gray-500">
-            &copy; <%= Date.current.year %> Chợ Việt. All rights reserved.
+            <%= t('footer.copyright').html_safe.gsub('2024', Date.current.year.to_s) %>
           </p>
         </div>
       </div>
@@ -133,7 +134,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
           <span class="absolute right-full mr-3 py-1 px-2 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-            Đăng bài mới
+            <%= t('fab.new_post') %>
           </span>
         <% end %>
       </div>
@@ -144,7 +145,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
           <span class="absolute right-full mr-3 py-1 px-2 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-            Đăng nhập để viết bài
+            <%= t('fab.login_to_post') %>
           </span>
         <% end %>
       </div>
