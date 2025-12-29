@@ -6,11 +6,11 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
     @other_user = users(:vietnamese_user)
     @admin = users(:admin_user)
     @conversation = conversations(:user_conversation)
-    
+
     # Create conversation participants
     @conversation.conversation_participants.find_or_create_by!(user: @user)
     @conversation.conversation_participants.find_or_create_by!(user: @other_user)
-    
+
     # Create a post for testing
     @post = @other_user.posts.create!(
       title: "Test Post",
@@ -23,17 +23,17 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
   test "user can block another user from their profile" do
     skip "JavaScript confirm dialog not working in CI headless environment"
     login_as @user, scope: :user
-    
+
     # Visit other user's profile
     visit user_path(@other_user)
-    
+
     # Click block button
     assert_text "Nguyễn Văn A"
     click_button "Block"
-    
+
     # Confirm in dialog
     accept_confirm
-    
+
     # Should see unblock button now
     assert_text "Unblock"
     assert @user.reload.blocking?(@other_user)
@@ -42,9 +42,9 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
   test "blocked users cannot send messages" do
     # Create a block first
     @user.blocks_given.create!(blocked: @other_user)
-    
+
     login_as @other_user, scope: :user
-    
+
     # Try to DM from a post created by @user
     user_post = @user.posts.create!(
       title: "User Test Post",
@@ -54,7 +54,7 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
     )
     visit post_path(user_post)
     click_button "Nhắn tin riêng" # Vietnamese UI
-    
+
     # Should be redirected with error
     assert_text "Bạn không thể trò chuyện với người dùng đã bị chặn"
   end
@@ -66,16 +66,16 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
       user: @other_user,
       body: "This is spam message!"
     )
-    
+
     login_as @user, scope: :user
-    
+
     # Visit conversation
     visit conversation_path(@conversation)
     assert_text "This is spam message!"
-    
+
     # Click report link
     click_link "Report" # English text since @user locale is 'en'
-    
+
     # Wait for modal to load and fill report form
     within "turbo-frame#report_modal" do
       # Choose spam option - wait for it to be visible
@@ -84,10 +84,10 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
       fill_in "report_description", with: "This user is sending spam" # Use full field ID
       click_button "Submit Report" # English text
     end
-    
+
     # Should see success message
     assert_text "Report submitted successfully" # English for user with 'en' locale
-    
+
     # Verify report was created
     assert Report.exists?(
       reporter: @user,
@@ -105,36 +105,36 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
       description: "This looks like a scam",
       status: "pending"
     )
-    
+
     login_as @admin, scope: :user
-    
+
     # Visit admin reports page
     visit admin_reports_path
-    
+
     # Should see the report
     assert_text "Quản lý báo cáo"
     assert_text "scam"
     assert_text "Basic User"
-    
+
     # Click to view report details
     click_link "Xem"
-    
+
     # Should see report details
     assert_text "Chi tiết báo cáo ##{report.id}"
     assert_text "This looks like a scam"
     assert_text "Test Post"
-    
+
     # Resolve the report (use within to target the resolve form specifically)
     within "form[action*='resolve']" do
       fill_in "admin_note", with: "Verified as fraudulent listing"
       check "Ẩn nội dung"
       click_button "Xử lý báo cáo"
     end
-    
+
     # Should redirect back to list
     assert_text "Đã xử lý báo cáo thành công"
     assert_current_path admin_reports_path
-    
+
     # Verify report was handled
     report.reload
     assert_equal "resolved", report.status
@@ -143,17 +143,17 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
 
   test "rate limit warning appears when approaching limit" do
     skip "Rate limit testing requires special setup"
-    
+
     login_as @user, scope: :user
     visit conversation_path(@conversation)
-    
+
     # Send many messages quickly
     25.times do |i|
       fill_in "conversation_message[body]", with: "Message #{i}"
       click_button "Send"
       sleep 0.1 # Small delay to avoid overwhelming the test
     end
-    
+
     # Should see rate limit warning
     assert_selector ".bg-yellow-50", text: "속도 제한 경고"
   end
@@ -162,21 +162,21 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
     skip "JavaScript confirm dialog not working in CI headless environment"
     login_as @user, scope: :user
     visit user_path(@other_user)
-    
+
     # Initial state - should see block button
     assert_button "Block"
-    
+
     # Click block
     click_button "Block"
     accept_confirm
-    
+
     # Should update to unblock without reload
     assert_no_button "Block"
     assert_button "Unblock"
-    
+
     # Click unblock
     click_button "Unblock"
-    
+
     # Should update back to block
     assert_button "Block"
     assert_no_button "Unblock"
@@ -188,7 +188,7 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
     post1 = @user.posts.create!(title: "Post 1", content: "Test content 1", post_type: "free_talk", status: "active")
     post2 = @user.posts.create!(title: "Post 2", content: "Test content 2", post_type: "free_talk", status: "active")
     post3 = @user.posts.create!(title: "Post 3", content: "Test content 3", post_type: "free_talk", status: "active")
-    
+
     Report.create!(
       reporter: @other_user,
       reportable: post1,
@@ -210,13 +210,13 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
       description: "Spam 3",
       status: "pending"
     )
-    
+
     login_as @admin, scope: :user
     visit admin_reports_path
-    
+
     # Select all reports
     find("#select-all").check
-    
+
     # Make sure checkboxes are actually checked and have values
     assert find("#select-all").checked?
     checkboxes = all(".report-checkbox")
@@ -225,12 +225,12 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
       assert checkbox.checked?
       assert checkbox.value.present?
     end
-    
+
     # Choose batch action
     batch_select = find("select[name='batch_action']")
     batch_select.select "Bác bỏ"
     assert_equal "dismiss", batch_select.value
-    
+
     # Add report IDs to the form manually since JavaScript event handling doesn't work in tests
     page.execute_script(<<~JS)
       const form = document.getElementById('batch-form');
@@ -240,7 +240,7 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
       actionInput.name = 'batch_action';
       actionInput.value = 'dismiss';
       form.appendChild(actionInput);
-      
+
       // Add report IDs
       const checkboxes = document.querySelectorAll('.report-checkbox:checked');
       checkboxes.forEach(cb => {
@@ -252,14 +252,13 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
       });
       form.submit();
     JS
-    
+
     # Should process all reports
     assert_text "Đã bác bỏ 3 báo cáo"
-    
+
     # Verify all are dismissed
     Report.all.each do |report|
       assert_equal "dismissed", report.status
     end
   end
-
 end

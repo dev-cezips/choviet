@@ -25,7 +25,7 @@ class LocaleSelectionTest < ActionDispatch::IntegrationTest
     # params locale은 해당 요청에만 적용됨
     get post_path(@post), params: { locale: "ko" }
     assert_equal :ko, I18n.locale
-    
+
     # session에 저장되지 않았으므로 다음 요청에서는 default locale
     get post_path(@post)
     assert_equal I18n.default_locale, I18n.locale
@@ -73,7 +73,7 @@ class LocaleSelectionTest < ActionDispatch::IntegrationTest
   test "change_locale action updates session for valid locale" do
     get set_locale_path(locale: "ko")
     assert_response :redirect
-    
+
     # Check that locale persists in session
     get post_path(@post)
     assert_equal :ko, I18n.locale
@@ -82,7 +82,7 @@ class LocaleSelectionTest < ActionDispatch::IntegrationTest
   test "change_locale action ignores invalid locale" do
     get set_locale_path(locale: "invalid")
     assert_response :redirect
-    
+
     # Should still use default locale
     get post_path(@post)
     assert_equal I18n.default_locale, I18n.locale
@@ -92,10 +92,10 @@ class LocaleSelectionTest < ActionDispatch::IntegrationTest
     # Direct param does not persist to session
     get post_path(@post), params: { locale: "ko" }
     assert_equal :ko, I18n.locale
-    
+
     get post_path(@post)
     assert_equal I18n.default_locale, I18n.locale
-    
+
     # But change_locale action does persist
     get set_locale_path(locale: "ko")
     get post_path(@post)

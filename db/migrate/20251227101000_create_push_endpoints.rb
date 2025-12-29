@@ -9,11 +9,11 @@ class CreatePushEndpoints < ActiveRecord::Migration[8.0]
       t.json :keys # For web push auth/p256dh keys
       t.boolean :active, null: false, default: true
       t.datetime :last_seen_at
-      
+
       t.timestamps
     end
-    
-    add_index :push_endpoints, [:user_id, :platform, :token], unique: true, name: 'index_push_endpoints_unique'
+
+    add_index :push_endpoints, [ :user_id, :platform, :token ], unique: true, name: 'index_push_endpoints_unique'
     add_index :push_endpoints, :active
   end
 end

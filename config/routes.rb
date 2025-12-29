@@ -34,17 +34,17 @@ Rails.application.routes.draw do
 
   # Standalone chat rooms index (keeping for backward compatibility)
   resources :chat_rooms, only: [ :index ]
-  
+
   # New 1:1 chat system (V1)
   resources :conversations, only: [ :index, :show ] do
     resources :conversation_messages, only: [ :create ]
   end
-  
+
   # Conversation message reports
   resources :conversation_messages, only: [] do
     resources :reports, only: [ :new, :create ]
   end
-  
+
   # DM shortcut from posts
   post "/posts/:id/dm", to: "conversations#create_from_post", as: :dm_post
 
@@ -60,17 +60,17 @@ Rails.application.routes.draw do
       get :favorites
     end
   end
-  
+
   # Blocking system
   resources :blocks, only: [ :create, :destroy ]
-  
+
   # Push notifications
   resources :push_endpoints, only: [ :create, :destroy ]
-  
+
   # API routes for native apps
   namespace :api do
     namespace :v1 do
-      resources :push_endpoints, only: [:create] do
+      resources :push_endpoints, only: [ :create ] do
         collection do
           delete :destroy
         end
@@ -103,8 +103,8 @@ Rails.application.routes.draw do
   namespace :admin do
     root to: "dashboard#index"
     get "dashboard", to: "dashboard#index"
-    
-    resources :reports, only: [:index, :show] do
+
+    resources :reports, only: [ :index, :show ] do
       member do
         patch :resolve
         patch :dismiss

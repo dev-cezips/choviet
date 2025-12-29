@@ -4,14 +4,14 @@ class CreateBlocks < ActiveRecord::Migration[8.0]
       t.bigint :blocker_id, null: false
       t.bigint :blocked_id, null: false
       t.string :reason
-      
+
       t.timestamps
     end
-    
+
     add_index :blocks, :blocker_id
     add_index :blocks, :blocked_id
-    add_index :blocks, [:blocker_id, :blocked_id], unique: true
-    
+    add_index :blocks, [ :blocker_id, :blocked_id ], unique: true
+
     add_foreign_key :blocks, :users, column: :blocker_id
     add_foreign_key :blocks, :users, column: :blocked_id
   end
