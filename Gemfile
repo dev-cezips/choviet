@@ -51,7 +51,7 @@ gem "faraday", "~> 2.7"
 gem "aasm", "~> 5.5"
 
 # Active Storage validations
-gem "active_storage_validations", "~> 1.1"
+gem "active_storage_validations", "~> 3.0"
 
 # Rate limiting
 gem "rack-attack", "~> 6.7"
