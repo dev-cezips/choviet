@@ -212,7 +212,7 @@ vi:
       title: "Liên hệ"
       email: "Email: support@choviet.com"
       kakao: "KakaoTalk: @choviet"
-    copyright: "&copy; 2024 Chợ Việt. Bảo lưu mọi quyền."
+    copyright: "&copy; %{year} Chợ Việt. Bảo lưu mọi quyền."
   
   # Floating action button
   fab:

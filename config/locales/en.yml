@@ -97,7 +97,7 @@ en:
       title: "Contact"
       email: "Email: support@choviet.com"
       kakao: "KakaoTalk: @choviet"
-    copyright: "&copy; 2024 Cho Viet. All rights reserved."
+    copyright: "&copy; %{year} Cho Viet. All rights reserved."
   
   # Floating action button
   fab:

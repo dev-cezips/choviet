@@ -83,9 +83,7 @@
           <div>
             <h3 class="text-lg font-semibold mb-4"><%= t('footer.about.title') %></h3>
             <p class="text-sm text-gray-600">
-              <%= t('footer.about.description') %><% if I18n.locale == :vi %><br>
-              베트남인을 위한 온라인 커뮤니티<% elsif I18n.locale == :ko %><br>
-              Cộng đồng người Việt tại Hàn Quốc<% end %>
+              <%= t('footer.about.description') %>
             </p>
           </div>
           
@@ -106,15 +104,15 @@
           <div>
             <h3 class="text-lg font-semibold mb-4"><%= t('footer.contact.title') %></h3>
             <p class="text-sm text-gray-600">
-              <%= t('footer.contact.email').html_safe %><br>
-              <%= t('footer.contact.kakao').html_safe %>
+              <%= t('footer.contact.email') %><br>
+              <%= t('footer.contact.kakao') %>
             </p>
           </div>
         </div>
         
         <div class="border-t border-gray-200 mt-8 pt-8 text-center">
           <p class="text-sm text-gray-500">
-            <%= t('footer.copyright').html_safe.gsub('2024', Date.current.year.to_s) %>
+            <%= t('footer.copyright', year: Date.current.year).html_safe %>
           </p>
         </div>
       </div>

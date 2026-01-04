@@ -69,7 +69,7 @@ ko:
       title: "문의"
       email: "이메일: support@choviet.com"
       kakao: "카카오톡: @choviet"
-    copyright: "&copy; 2024 쪼 비엣. All rights reserved."
+    copyright: "&copy; %{year} 쪼 비엣. All rights reserved."
   
   # Floating action button
   fab:
