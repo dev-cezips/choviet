@@ -24,6 +24,7 @@ vi:
     cancel: "Hủy"
     back: "Quay lại"
     search: "Tìm kiếm"
+    search_placeholder: "Tìm kiếm trong Chợ Việt..."
     filter: "Lọc"
     post: "Đăng bài"
     send: "Gửi"
@@ -197,6 +198,26 @@ vi:
     submit: "Gửi báo cáo"
     submitting: "Đang gửi..."
     cancel: "Hủy"
+  
+  # Footer
+  footer:
+    about:
+      title: "Chợ Việt"
+      description: "Cộng đồng người Việt tại Hàn Quốc"
+    links:
+      title: "Thông tin"
+      privacy: "Chính sách bảo mật"
+      terms: "Điều khoản sử dụng"
+    contact:
+      title: "Liên hệ"
+      email: "Email: support@choviet.com"
+      kakao: "KakaoTalk: @choviet"
+    copyright: "&copy; %{year} Chợ Việt. Bảo lưu mọi quyền."
+  
+  # Floating action button
+  fab:
+    new_post: "Đăng bài mới"
+    login_to_post: "Đăng nhập để viết bài"
     created: "Đã gửi báo cáo thành công. Chúng tôi sẽ xem xét trong 24h."
     notice:
       title: "📢 Lưu ý:"

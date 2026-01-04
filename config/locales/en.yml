@@ -52,3 +52,54 @@ en:
     destroyed: "You have unblocked this user"
   users:
     updated: "Profile updated successfully!"
+  
+  # Application basics
+  app_name: "Cho Viet"
+  tagline: "Vietnamese Community in Korea"
+  all: "All"
+  
+  # Navigation
+  nav:
+    home: "Home"
+    marketplace: "Market"
+    community: "Community"
+    messages: "Messages"
+    profile: "Profile"
+    sign_in: "Sign In"
+    sign_out: "Sign Out"
+    sign_up: "Sign Up"
+  
+  # Common actions
+  actions:
+    new: "New"
+    edit: "Edit"
+    delete: "Delete"
+    save: "Save"
+    cancel: "Cancel"
+    back: "Back"
+    search: "Search"
+    search_placeholder: "Search in Cho Viet..."
+    filter: "Filter"
+    post: "Post"
+    send: "Send"
+    upload: "Upload"
+  
+  # Footer
+  footer:
+    about:
+      title: "Cho Viet"
+      description: "Vietnamese Community in Korea"
+    links:
+      title: "Information"
+      privacy: "Privacy Policy"
+      terms: "Terms of Service"
+    contact:
+      title: "Contact"
+      email: "Email: support@choviet.com"
+      kakao: "KakaoTalk: @choviet"
+    copyright: "&copy; %{year} Cho Viet. All rights reserved."
+  
+  # Floating action button
+  fab:
+    new_post: "New Post"
+    login_to_post: "Login to write a post"

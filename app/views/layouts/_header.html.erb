@@ -10,7 +10,7 @@
           <div class="flex items-center">
             <%= link_to root_path, class: "text-xl font-bold flex items-center", style: "color: #0068FF;" do %>
               <span class="text-2xl mr-2">🏪</span>
-              Chợ Việt
+              <%= t('app_name') %>
             <% end %>
           </div>
 
@@ -46,11 +46,11 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-                Đăng bài
+                <%= t('actions.post') %>
               <% end %>
               
               <!-- User Avatar (Link to Dashboard) -->
-              <%= link_to dashboard_path, class: "flex items-center", title: "Của tôi" do %>
+              <%= link_to dashboard_path, class: "flex items-center", title: t('nav.profile') do %>
                 <div style="width: 32px; height: 32px; background-color: #0068FF; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;">
                   <% if current_user.name.present? %>
                     <%= current_user.name.first.upcase %>
@@ -60,8 +60,8 @@
                 </div>
               <% end %>
             <% else %>
-              <%= link_to "Đăng nhập", new_user_session_path, class: "text-gray-700 hover:text-blue-600 text-sm font-medium" %>
-              <%= link_to "Đăng ký", new_user_registration_path, class: "text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm", style: "background-color: #0068FF;" %>
+              <%= link_to t('nav.sign_in'), new_user_session_path, class: "text-gray-700 hover:text-blue-600 text-sm font-medium" %>
+              <%= link_to t('nav.sign_up'), new_user_registration_path, class: "text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm", style: "background-color: #0068FF;" %>
             <% end %>
           </div>
         </div>
@@ -84,7 +84,7 @@
                 type="text"
                 name="q"
                 value="<%= params[:q] %>"
-                placeholder="Tìm kiếm trong Chợ Việt..."
+                placeholder="<%= t('actions.search_placeholder') %>"
                 class="w-full border border-gray-300 rounded-full px-4 py-2 pl-10 pr-10 text-charcoal focus:outline-none focus:ring-2 focus:ring-zalo-blue focus:border-transparent bg-gray-50"
                 autocomplete="off"
                 data-search-expand-target="searchInput"
@@ -107,7 +107,7 @@
 
           <!-- User Avatar (Also in expanded state) -->
           <% if user_signed_in? %>
-            <%= link_to dashboard_path, class: "flex items-center", title: "Của tôi" do %>
+            <%= link_to dashboard_path, class: "flex items-center", title: t('nav.profile') do %>
               <div style="width: 32px; height: 32px; background-color: #0068FF; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;">
                 <% if current_user.name.present? %>
                   <%= current_user.name.first.upcase %>
@@ -127,7 +127,7 @@
         <div class="flex gap-1 overflow-x-auto scrollbar-hide">
           <%= link_to posts_path(q: params[:q]), 
               class: active_link_class(posts_path, "px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200") do %>
-            Tất cả
+            <%= t('all') %>
           <% end %>
           
           <%= link_to posts_path(type: 'question', q: params[:q]), 
