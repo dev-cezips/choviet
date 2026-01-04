@@ -1,0 +1,85 @@
+en:
+  admin:
+    # Common
+    dashboard: "Dashboard"
+    back_to_list: "← Back to List"
+    
+    # Reports
+    reports:
+      title: "Report Management"
+      detail_title: "Report Details"
+      report_info: "Report Information"
+      reported_content: "Reported Content"
+      related_reports: "Related Reports"
+      process_report: "Process Report"
+      
+      # Statuses
+      statuses:
+        pending: "Pending"
+        reviewed: "Reviewed"
+        resolved: "Resolved"
+        dismissed: "Dismissed"
+        all: "All Statuses"
+        
+      # Types
+      types:
+        all: "All Types"
+        post: "Post"
+        user: "User"
+        message: "Message"
+        
+      # Stats
+      stats:
+        pending: "Pending"
+        resolved: "Resolved"
+        dismissed: "Dismissed"
+        total: "Total Reports"
+        
+      # Table headers
+      table:
+        id: "ID"
+        type: "Type"
+        target: "Target"
+        reason: "Reason"
+        reporter: "Reporter"
+        time: "Time"
+        status: "Status"
+        actions: "Actions"
+        
+      # Actions
+      actions:
+        view: "View"
+        resolve: "Resolve"
+        dismiss: "Dismiss"
+        filter: "Filter"
+        with_selected: "With selected:"
+        
+      # Details
+      details:
+        reporter: "Reporter"
+        reported_at: "Reported At"
+        type: "Report Type"
+        status: "Status"
+        details: "Details"
+        resolved_by: "Resolved By"
+        resolved_at: "Resolved At"
+        admin_notes: "Admin Notes"
+        
+      # Content
+      content:
+        by: "By"
+        view_post: "View Post"
+        view_profile: "View Profile"
+        joined: "Joined"
+        
+      # Forms
+      forms:
+        note_placeholder: "Notes (optional)"
+        dismiss_reason_placeholder: "Dismiss reason (optional)"
+        hide_content: "Hide Content"
+        process_report: "Process Report"
+        dismiss_report: "Dismiss Report"
+        
+      # Filters
+      filters:
+        unprocessed_only: "Unprocessed Only"

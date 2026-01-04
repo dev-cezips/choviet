@@ -3,10 +3,10 @@
     <!-- Header -->
     <div class="flex items-center justify-between mb-8">
       <h1 class="text-2xl font-bold">
-        <%= current_user.vietnamese? ? "Quản lý báo cáo" : "신고 관리" %>
+        <%= t('admin.reports.title') %>
       </h1>
       <%= link_to admin_dashboard_path, class: "text-blue-600 hover:text-blue-800" do %>
-        ← <%= current_user.vietnamese? ? "Dashboard" : "대시보드" %>
+        ← <%= t('admin.dashboard') %>
       <% end %>
     </div>
 
@@ -15,25 +15,25 @@
       <div class="bg-yellow-50 p-4 rounded-lg">
         <div class="text-2xl font-bold text-yellow-700"><%= @stats[:pending] %></div>
         <div class="text-sm text-gray-600">
-          <%= current_user.vietnamese? ? "Chờ xử lý" : "대기 중" %>
+          <%= t('admin.reports.stats.pending') %>
         </div>
       </div>
       <div class="bg-green-50 p-4 rounded-lg">
         <div class="text-2xl font-bold text-green-700"><%= @stats[:resolved] %></div>
         <div class="text-sm text-gray-600">
-          <%= current_user.vietnamese? ? "Đã xử lý" : "처리 완료" %>
+          <%= t('admin.reports.stats.resolved') %>
         </div>
       </div>
       <div class="bg-gray-50 p-4 rounded-lg">
         <div class="text-2xl font-bold text-gray-700"><%= @stats[:dismissed] %></div>
         <div class="text-sm text-gray-600">
-          <%= current_user.vietnamese? ? "Đã bác bỏ" : "기각됨" %>
+          <%= t('admin.reports.stats.dismissed') %>
         </div>
       </div>
       <div class="bg-blue-50 p-4 rounded-lg">
         <div class="text-2xl font-bold text-blue-700"><%= @stats[:total] %></div>
         <div class="text-sm text-gray-600">
-          <%= current_user.vietnamese? ? "Tổng số" : "총 신고" %>
+          <%= t('admin.reports.stats.total') %>
         </div>
       </div>
     </div>
@@ -43,31 +43,31 @@
       <%= form_with url: admin_reports_path, method: :get, local: true, class: "flex flex-wrap gap-4" do |f| %>
         <%= f.select :status, 
             options_for_select([
-              [current_user.vietnamese? ? "Tất cả trạng thái" : "모든 상태", ""],
-              [current_user.vietnamese? ? "Chờ xử lý" : "대기 중", "pending"],
-              [current_user.vietnamese? ? "Đã xem" : "검토됨", "reviewed"],
-              [current_user.vietnamese? ? "Đã xử lý" : "처리됨", "resolved"],
-              [current_user.vietnamese? ? "Đã bác bỏ" : "기각됨", "dismissed"]
+              [t('admin.reports.statuses.all'), ""],
+              [t('admin.reports.statuses.pending'), "pending"],
+              [t('admin.reports.statuses.reviewed'), "reviewed"],
+              [t('admin.reports.statuses.resolved'), "resolved"],
+              [t('admin.reports.statuses.dismissed'), "dismissed"]
             ], params[:status]),
             {}, 
             class: "px-3 py-2 border rounded-md" %>
             
         <%= f.select :type,
             options_for_select([
-              [current_user.vietnamese? ? "Tất cả loại" : "모든 유형", ""],
-              [current_user.vietnamese? ? "Bài viết" : "게시물", "Post"],
-              [current_user.vietnamese? ? "Người dùng" : "사용자", "User"],
-              [current_user.vietnamese? ? "Tin nhắn" : "메시지", "ConversationMessage"]
+              [t('admin.reports.types.all'), ""],
+              [t('admin.reports.types.post'), "Post"],
+              [t('admin.reports.types.user'), "User"],
+              [t('admin.reports.types.message'), "ConversationMessage"]
             ], params[:type]),
             {},
             class: "px-3 py-2 border rounded-md" %>
             
         <label class="flex items-center">
           <%= check_box_tag :unhandled, "true", params[:unhandled] == "true", class: "mr-2" %>
-          <%= current_user.vietnamese? ? "Chỉ chưa xử lý" : "미처리만" %>
+          <%= t('admin.reports.filters.unprocessed_only') %>
         </label>
         
-        <%= f.submit current_user.vietnamese? ? "Lọc" : "필터", class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" %>
+        <%= f.submit t('admin.reports.actions.filter'), class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" %>
       <% end %>
     </div>
 
@@ -80,28 +80,28 @@
               <input type="checkbox" id="select-all" class="rounded">
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= current_user.vietnamese? ? "ID" : "ID" %>
+              <%= t('admin.reports.table.id') %>
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= current_user.vietnamese? ? "Loại" : "유형" %>
+              <%= t('admin.reports.table.type') %>
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= current_user.vietnamese? ? "Đối tượng" : "대상" %>
+              <%= t('admin.reports.table.target') %>
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= current_user.vietnamese? ? "Lý do" : "사유" %>
+              <%= t('admin.reports.table.reason') %>
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= current_user.vietnamese? ? "Người báo cáo" : "신고자" %>
+              <%= t('admin.reports.table.reporter') %>
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= current_user.vietnamese? ? "Thời gian" : "시간" %>
+              <%= t('admin.reports.table.time') %>
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= current_user.vietnamese? ? "Trạng thái" : "상태" %>
+              <%= t('admin.reports.table.status') %>
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= current_user.vietnamese? ? "Hành động" : "작업" %>
+              <%= t('admin.reports.table.actions') %>
             </th>
           </tr>
         </thead>
@@ -156,7 +156,7 @@
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <%= link_to current_user.vietnamese? ? "Xem" : "보기", 
+                <%= link_to t('admin.reports.actions.view'), 
                     admin_report_path(report), 
                     class: "text-indigo-600 hover:text-indigo-900" %>
               </td>
@@ -170,13 +170,13 @@
     <div class="mt-4 flex items-center gap-4">
       <%= form_with url: batch_action_admin_reports_path, local: true, id: "batch-form" do |f| %>
         <span class="text-sm text-gray-600">
-          <%= current_user.vietnamese? ? "Với các mục đã chọn:" : "선택한 항목:" %>
+          <%= t('admin.reports.actions.with_selected') %>
         </span>
         <%= f.select :batch_action, 
             options_for_select([
               ["", ""],
-              [current_user.vietnamese? ? "Xử lý" : "처리", "resolve"],
-              [current_user.vietnamese? ? "Bác bỏ" : "기각", "dismiss"]
+              [t('admin.reports.actions.resolve'), "resolve"],
+              [t('admin.reports.actions.dismiss'), "dismiss"]
             ]),
             {},
             class: "px-3 py-2 border rounded-md",
