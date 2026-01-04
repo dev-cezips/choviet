@@ -112,15 +112,15 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
     visit admin_reports_path
 
     # Should see the report
-    assert_text "Quản lý báo cáo"
+    assert_text I18n.t("admin.reports.title")
     assert_text "scam"
     assert_text "Basic User"
 
     # Click to view report details
-    click_link "Xem"
+    click_link I18n.t("admin.reports.actions.view")
 
     # Should see report details
-    assert_text "Chi tiết báo cáo ##{report.id}"
+    assert_text "#{I18n.t('admin.reports.detail_title')} ##{report.id}"
     assert_text "This looks like a scam"
     assert_text "Test Post"
 
