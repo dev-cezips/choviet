@@ -1,0 +1,85 @@
+ko:
+  admin:
+    # Common
+    dashboard: "대시보드"
+    back_to_list: "← 목록으로"
+    
+    # Reports
+    reports:
+      title: "신고 관리"
+      detail_title: "신고 상세"
+      report_info: "신고 정보"
+      reported_content: "신고된 콘텐츠"
+      related_reports: "관련 신고"
+      process_report: "신고 처리"
+      
+      # Statuses
+      statuses:
+        pending: "대기 중"
+        reviewed: "검토됨"
+        resolved: "처리 완료"
+        dismissed: "기각됨"
+        all: "모든 상태"
+        
+      # Types
+      types:
+        all: "모든 유형"
+        post: "게시물"
+        user: "사용자"
+        message: "메시지"
+        
+      # Stats
+      stats:
+        pending: "대기 중"
+        resolved: "처리 완료"
+        dismissed: "기각됨"
+        total: "총 신고"
+        
+      # Table headers
+      table:
+        id: "ID"
+        type: "유형"
+        target: "대상"
+        reason: "사유"
+        reporter: "신고자"
+        time: "시간"
+        status: "상태"
+        actions: "작업"
+        
+      # Actions
+      actions:
+        view: "보기"
+        resolve: "처리"
+        dismiss: "기각"
+        filter: "필터"
+        with_selected: "선택한 항목:"
+        
+      # Details
+      details:
+        reporter: "신고자"
+        reported_at: "신고 시간"
+        type: "신고 유형"
+        status: "상태"
+        details: "상세 내용"
+        resolved_by: "처리자"
+        resolved_at: "처리 시간"
+        admin_notes: "관리자 메모"
+        
+      # Content
+      content:
+        by: "작성자"
+        view_post: "게시물 보기"
+        view_profile: "프로필 보기"
+        joined: "가입일"
+        
+      # Forms
+      forms:
+        note_placeholder: "메모 (선택사항)"
+        dismiss_reason_placeholder: "기각 사유 (선택사항)"
+        hide_content: "콘텐츠 숨기기"
+        process_report: "신고 처리"
+        dismiss_report: "신고 기각"
+        
+      # Filters
+      filters:
+        unprocessed_only: "미처리만"

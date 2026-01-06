@@ -1,0 +1,85 @@
+vi:
+  admin:
+    # Common
+    dashboard: "Dashboard"
+    back_to_list: "← Danh sách"
+    
+    # Reports
+    reports:
+      title: "Quản lý báo cáo"
+      detail_title: "Chi tiết báo cáo"
+      report_info: "Thông tin báo cáo"
+      reported_content: "Nội dung bị báo cáo"
+      related_reports: "Báo cáo liên quan"
+      process_report: "Xử lý báo cáo"
+      
+      # Statuses
+      statuses:
+        pending: "Chờ xử lý"
+        reviewed: "Đã xem"
+        resolved: "Đã xử lý"
+        dismissed: "Đã bác bỏ"
+        all: "Tất cả trạng thái"
+        
+      # Types
+      types:
+        all: "Tất cả loại"
+        post: "Bài viết"
+        user: "Người dùng"
+        message: "Tin nhắn"
+        
+      # Stats
+      stats:
+        pending: "Chờ xử lý"
+        resolved: "Đã xử lý"
+        dismissed: "Đã bác bỏ"
+        total: "Tổng số"
+        
+      # Table headers
+      table:
+        id: "ID"
+        type: "Loại"
+        target: "Đối tượng"
+        reason: "Lý do"
+        reporter: "Người báo cáo"
+        time: "Thời gian"
+        status: "Trạng thái"
+        actions: "Hành động"
+        
+      # Actions
+      actions:
+        view: "Xem"
+        resolve: "Xử lý"
+        dismiss: "Bác bỏ"
+        filter: "Lọc"
+        with_selected: "Với các mục đã chọn:"
+        
+      # Details
+      details:
+        reporter: "Người báo cáo"
+        reported_at: "Thời gian"
+        type: "Loại báo cáo"
+        status: "Trạng thái"
+        details: "Chi tiết"
+        resolved_by: "Người xử lý"
+        resolved_at: "Thời gian xử lý"
+        admin_notes: "Ghi chú admin"
+        
+      # Content
+      content:
+        by: "Bởi"
+        view_post: "Xem bài viết"
+        view_profile: "Xem hồ sơ"
+        joined: "Tham gia"
+        
+      # Forms
+      forms:
+        note_placeholder: "Ghi chú (tùy chọn)"
+        dismiss_reason_placeholder: "Lý do bác bỏ (tùy chọn)"
+        hide_content: "Ẩn nội dung"
+        process_report: "Xử lý báo cáo"
+        dismiss_report: "Bác bỏ báo cáo"
+        
+      # Filters
+      filters:
+        unprocessed_only: "Chỉ chưa xử lý"
