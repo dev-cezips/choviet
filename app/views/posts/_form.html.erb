@@ -31,16 +31,15 @@
           <label class="relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors <%= 'border-blue-500 bg-blue-50' if post.post_type == type %>">
             <%= form.radio_button :post_type, type, class: "sr-only", data: { "post-form-target": "postType", "auto-save-target": "input", "unsaved-changes-target": "input", action: "change->post-form#postTypeChanged change->auto-save#inputChanged change->unsaved-changes#inputChanged" } %>
             <div class="text-center">
-              <% if type == 'question' %>
+              <% case type %>
+              <% when 'question' %>
                 <div class="text-2xl mb-1">❓</div>
-                <span class="text-sm font-medium">Hỏi đáp</span>
-              <% elsif type == 'marketplace' %>
+              <% when 'marketplace' %>
                 <div class="text-2xl mb-1">🛍️</div>
-                <span class="text-sm font-medium">Mua bán</span>
-              <% elsif type == 'free_talk' %>
+              <% when 'free_talk' %>
                 <div class="text-2xl mb-1">💬</div>
-                <span class="text-sm font-medium">Tự do</span>
               <% end %>
+              <span class="text-sm font-medium"><%= t("posts.types.#{type}") %></span>
             </div>
           </label>
         <% end %>

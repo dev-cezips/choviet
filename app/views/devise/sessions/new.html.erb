@@ -40,9 +40,7 @@
         
           <!-- Email -->
           <div>
-            <%= f.label :email, class: "block text-sm font-medium text-gray-700" do %>
-              Email
-            <% end %>
+            <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
             <div class="mt-1">
               <%= f.email_field :email, 
                   autofocus: true,
@@ -55,9 +53,7 @@
 
           <!-- Password -->
           <div>
-            <%= f.label :password, class: "block text-sm font-medium text-gray-700" do %>
-              Mật khẩu
-            <% end %>
+            <%= f.label :password, class: "block text-sm font-medium text-gray-700" %>
             <div class="mt-1">
               <%= f.password_field :password,
                   autocomplete: "current-password",
@@ -115,19 +111,19 @@
 
       <!-- Benefits -->
       <div class="mt-8 bg-gray-50 -mx-10 -mb-8 px-10 py-6 sm:rounded-b-xl">
-        <h3 class="text-sm font-medium text-gray-900 mb-3">Tham gia Chợ Việt để:</h3>
+        <h3 class="text-sm font-medium text-gray-900 mb-3"><%= t('features.join_benefits.title') %></h3>
         <ul class="space-y-2 text-sm text-gray-600">
           <li class="flex items-start">
             <span class="text-green-500 mr-2">✓</span>
-            <span>Mua bán với cộng đồng Việt Nam</span>
+            <span><%= t('features.join_benefits.marketplace') %></span>
           </li>
           <li class="flex items-start">
             <span class="text-green-500 mr-2">✓</span>
-            <span>Hỏi đáp mọi thắc mắc về cuộc sống</span>
+            <span><%= t('features.join_benefits.qa') %></span>
           </li>
           <li class="flex items-start">
             <span class="text-green-500 mr-2">✓</span>
-            <span>Kết nối với người Việt gần bạn</span>
+            <span><%= t('features.join_benefits.connect') %></span>
           </li>
         </ul>
       </div>

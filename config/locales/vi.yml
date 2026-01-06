@@ -26,6 +26,7 @@ vi:
     search: "Tìm kiếm"
     search_placeholder: "Tìm kiếm trong Chợ Việt..."
     filter: "Lọc"
+    clear_filters: "Xóa bộ lọc"
     post: "Đăng bài"
     send: "Gửi"
     upload: "Tải lên"
@@ -41,13 +42,6 @@ vi:
     created: "Đã đăng bài thành công!"
     updated: "Đã cập nhật bài viết!"
     deleted: "Đã xóa bài viết!"
-    post_types:
-      question: "Hỏi đáp"
-      marketplace: "Mua bán"
-      free_talk: "Tự do"
-      job: "Việc làm"
-      housing: "Nhà ở"
-      service: "Dịch vụ"
     types:
       question: "Hỏi đáp"
       marketplace: "Mua bán"
@@ -66,6 +60,14 @@ vi:
       content: "Nội dung chi tiết..."
       location: "Chọn khu vực"
       price: "Giá tiền"
+      search: "Tìm kiếm..."
+      price_from: "Giá từ"
+      price_to: "đến"
+    sorting:
+      newest: "Mới nhất"
+      popular: "Phổ biến"
+      price_low: "Giá thấp đến cao"
+      price_high: "Giá cao đến thấp"
   
   # Products
   products:
@@ -98,6 +100,14 @@ vi:
     saved_posts: "Bài đã lưu"
     settings: "Cài đặt"
     verification_badge: "Đã xác minh"
+  
+  # Features/Benefits
+  features:
+    join_benefits:
+      title: "Tham gia Chợ Việt để:"
+      marketplace: "Mua bán với cộng đồng Việt Nam"
+      qa: "Hỏi đáp mọi thắc mắc về cuộc sống"
+      connect: "Kết nối với người Việt gần bạn"
     reputation: "Uy tín: %{score}"
     member_since: "Thành viên từ %{date}"
     updated: "Hồ sơ đã được cập nhật thành công!"
