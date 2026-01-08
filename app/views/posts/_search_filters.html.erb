@@ -4,7 +4,7 @@
       <!-- Search Bar -->
       <div class="flex gap-2">
         <%= text_field_tag :q, params[:q], 
-            placeholder: "Tìm kiếm...",
+            placeholder: t('posts.placeholders.search'),
             class: "flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
         <%= button_tag type: "submit", 
             class: "px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors" do %>
@@ -19,20 +19,20 @@
         <!-- Post Type Filter -->
         <select name="type" onchange="this.form.submit()" 
                 class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="">Tất cả loại</option>
-          <option value="question" <%= "selected" if params[:type] == "question" %>>Hỏi đáp</option>
-          <option value="marketplace" <%= "selected" if params[:type] == "marketplace" %>>Mua bán</option>
-          <option value="free_talk" <%= "selected" if params[:type] == "free_talk" %>>Trò chuyện</option>
+          <option value=""><%= t("posts.filters.all_types") %></option>
+          <% %w[question marketplace free_talk].each do |type| %>
+            <option value="<%= type %>" <%= "selected" if params[:type] == type %>><%= t("posts.types.#{type}") %></option>
+          <% end %>
         </select>
         
         <!-- Sort Filter -->
         <select name="sort" onchange="this.form.submit()"
                 class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="">Mới nhất</option>
-          <option value="popular" <%= "selected" if params[:sort] == "popular" %>>Phổ biến</option>
+          <option value=""><%= t('posts.sorting.newest') %></option>
+          <option value="popular" <%= "selected" if params[:sort] == "popular" %>><%= t('posts.sorting.popular') %></option>
           <% if params[:type] == "marketplace" %>
-            <option value="price_low" <%= "selected" if params[:sort] == "price_low" %>>Giá thấp đến cao</option>
-            <option value="price_high" <%= "selected" if params[:sort] == "price_high" %>>Giá cao đến thấp</option>
+            <option value="price_low" <%= "selected" if params[:sort] == "price_low" %>><%= t('posts.sorting.price_low') %></option>
+            <option value="price_high" <%= "selected" if params[:sort] == "price_high" %>><%= t('posts.sorting.price_high') %></option>
           <% end %>
         </select>
         
@@ -40,18 +40,18 @@
         <% if params[:type] == "marketplace" %>
           <div class="flex items-center gap-1">
             <%= number_field_tag :min_price, params[:min_price], 
-                placeholder: "Giá từ",
+                placeholder: t('posts.placeholders.price_from'),
                 class: "w-24 px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
             <span class="text-gray-500">-</span>
             <%= number_field_tag :max_price, params[:max_price],
-                placeholder: "đến",
+                placeholder: t('posts.placeholders.price_to'),
                 class: "w-24 px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
           </div>
         <% end %>
         
         <!-- Clear Filters -->
         <% if params[:q].present? || params[:type].present? || params[:sort].present? || params[:min_price].present? || params[:max_price].present? %>
-          <%= link_to "Xóa bộ lọc", posts_path, 
+          <%= link_to t('actions.clear_filters'), posts_path, 
               class: "px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 transition-colors" %>
         <% end %>
       </div>

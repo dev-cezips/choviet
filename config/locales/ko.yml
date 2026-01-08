@@ -26,6 +26,7 @@ ko:
     search: "검색"
     search_placeholder: "쪼 비엣에서 검색..."
     filter: "필터"
+    clear_filters: "필터 초기화"
     post: "게시"
     send: "보내기"
     upload: "업로드"
@@ -71,7 +72,64 @@ ko:
       kakao: "카카오톡: @choviet"
     copyright: "&copy; %{year} 쪼 비엣. All rights reserved."
   
+  # Posts
+  posts:
+    title: "게시글"
+    new: "새 글 작성"
+    edit: "게시글 수정"
+    created: "게시글이 성공적으로 작성되었습니다!"
+    updated: "게시글이 업데이트되었습니다!"
+    deleted: "게시글이 삭제되었습니다!"
+    types:
+      question: "질문"
+      marketplace: "중고거래"
+      free_talk: "자유게시판"
+      job: "구인구직"
+      housing: "부동산"
+      service: "서비스"
+    statuses:
+      draft: "초안"
+      active: "게시중"
+      sold: "판매완료"
+      expired: "만료됨"
+      deleted: "삭제됨"
+    placeholders:
+      title: "게시글 제목..."
+      content: "상세 내용..."
+      location: "지역 선택"
+      price: "가격"
+      search: "검색..."
+      price_from: "가격부터"
+      price_to: "까지"
+    sorting:
+      newest: "최신순"
+      popular: "인기순"
+      price_low: "가격 낮은순"
+      price_high: "가격 높은순"
+    filters:
+      all_types: "모든 종류"
+  
+  # Products
+  products:
+    conditions:
+      new_item: "새 상품"
+      like_new: "거의 새것"
+      good: "양호"
+      fair: "보통"
+      poor: "하급"
+    sold: "판매완료"
+    available: "판매중"
+    price: "가격: %{price} %{currency}"
+  
   # Floating action button
   fab:
     new_post: "새 글 작성"
     login_to_post: "로그인 후 작성 가능"
+  
+  # Features/Benefits
+  features:
+    join_benefits:
+      title: "쪼 비엣에 가입하면:"
+      marketplace: "베트남 커뮤니티와 거래"
+      qa: "생활 관련 모든 질문 해결"
+      connect: "가까운 베트남인과 연결"

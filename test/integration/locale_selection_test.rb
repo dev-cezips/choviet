@@ -44,7 +44,7 @@ class LocaleSelectionTest < ActionDispatch::IntegrationTest
       locale: "ko"
     )
 
-    sign_in user
+    sign_in user, scope: :user
 
     get post_path(@post)
     assert_equal :ko, I18n.locale

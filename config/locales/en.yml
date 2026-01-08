@@ -80,6 +80,7 @@ en:
     search: "Search"
     search_placeholder: "Search in Cho Viet..."
     filter: "Filter"
+    clear_filters: "Clear filters"
     post: "Post"
     send: "Send"
     upload: "Upload"
@@ -99,7 +100,64 @@ en:
       kakao: "KakaoTalk: @choviet"
     copyright: "&copy; %{year} Cho Viet. All rights reserved."
   
+  # Posts
+  posts:
+    title: "Posts"
+    new: "New Post"
+    edit: "Edit Post"
+    created: "Post created successfully!"
+    updated: "Post updated successfully!"
+    deleted: "Post deleted successfully!"
+    types:
+      question: "Q&A"
+      marketplace: "Buy/Sell"
+      free_talk: "Free Talk"
+      job: "Jobs"
+      housing: "Housing"
+      service: "Services"
+    statuses:
+      draft: "Draft"
+      active: "Active"
+      sold: "Sold"
+      expired: "Expired"
+      deleted: "Deleted"
+    placeholders:
+      title: "Post title..."
+      content: "Post content..."
+      location: "Select location"
+      price: "Price"
+      search: "Search..."
+      price_from: "Price from"
+      price_to: "to"
+    sorting:
+      newest: "Newest"
+      popular: "Popular"
+      price_low: "Price: Low to High"
+      price_high: "Price: High to Low"
+    filters:
+      all_types: "All types"
+  
+  # Products
+  products:
+    conditions:
+      new_item: "Brand New"
+      like_new: "Like New"
+      good: "Good"
+      fair: "Fair"
+      poor: "Poor"
+    sold: "Sold"
+    available: "Available"
+    price: "Price: %{price} %{currency}"
+  
   # Floating action button
   fab:
     new_post: "New Post"
     login_to_post: "Login to write a post"
+  
+  # Features/Benefits
+  features:
+    join_benefits:
+      title: "Join Cho Viet to:"
+      marketplace: "Buy and sell with the Vietnamese community"
+      qa: "Get answers to all your questions about life"
+      connect: "Connect with Vietnamese people near you"
