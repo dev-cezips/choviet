@@ -68,6 +68,8 @@ vi:
       popular: "Phổ biến"
       price_low: "Giá thấp đến cao"
       price_high: "Giá cao đến thấp"
+    filters:
+      all_types: "Tất cả loại"
   
   # Products
   products:

@@ -27,7 +27,7 @@
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-2">Loại bài viết</label>
       <div class="grid grid-cols-3 gap-2 md:gap-3">
-        <% Post.post_types.keys.first(3).each do |type| %>
+        <% %w[question marketplace free_talk].each do |type| %>
           <label class="relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors <%= 'border-blue-500 bg-blue-50' if post.post_type == type %>">
             <%= form.radio_button :post_type, type, class: "sr-only", data: { "post-form-target": "postType", "auto-save-target": "input", "unsaved-changes-target": "input", action: "change->post-form#postTypeChanged change->auto-save#inputChanged change->unsaved-changes#inputChanged" } %>
             <div class="text-center">
