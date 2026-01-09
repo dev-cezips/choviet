@@ -62,7 +62,12 @@ module ApplicationHelper
 
   # Post type icon helper - accepts either post object or type string
   def post_type_icon(post_or_type)
-    type = post_or_type.is_a?(Post) ? post_or_type.post_type : post_or_type.to_s
+    type = if post_or_type.respond_to?(:post_type)
+             post_or_type.post_type
+    else
+             post_or_type.to_s
+    end
+
     icons = {
       "question" => "❓",
       "marketplace" => "🛍️",
@@ -76,13 +81,18 @@ module ApplicationHelper
 
   # Post type label helper - accepts either post object or type string
   def post_type_label(post_or_type)
-    type = post_or_type.is_a?(Post) ? post_or_type.post_type : post_or_type.to_s
+    type = if post_or_type.respond_to?(:post_type)
+             post_or_type.post_type
+    else
+             post_or_type.to_s
+    end
+
     I18n.t("posts.types.#{type}", default: type.humanize)
   end
 
   # Post type options for select
   def post_type_options
-    post_type_order.map { |type| [post_type_label(type), type] }
+    post_type_order.map { |type| [ post_type_label(type), type ] }
   end
 
   # Location display helper

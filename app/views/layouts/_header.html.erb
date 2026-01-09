@@ -132,7 +132,7 @@
           
           <% post_type_order.each do |type| %>
             <%= link_to posts_path(type: type, q: params[:q]), 
-                class: active_link_class(posts_path(type: type), "px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200") do %>
+                class: active_link_class(posts_path(type: type, q: params[:q]), "px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200") do %>
               <%= post_type_icon(type) %> <%= post_type_label(type) %>
             <% end %>
           <% end %>
