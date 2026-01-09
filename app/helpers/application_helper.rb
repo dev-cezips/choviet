@@ -55,8 +55,14 @@ module ApplicationHelper
     end
   end
 
-  # Post type icon helper
-  def post_type_icon(post)
+  # Post type display order
+  def post_type_order
+    %w[question marketplace free_talk]
+  end
+
+  # Post type icon helper - accepts either post object or type string
+  def post_type_icon(post_or_type)
+    type = post_or_type.is_a?(Post) ? post_or_type.post_type : post_or_type.to_s
     icons = {
       "question" => "❓",
       "marketplace" => "🛍️",
@@ -65,12 +71,18 @@ module ApplicationHelper
       "housing" => "🏠",
       "service" => "🔧"
     }
-    icons[post.post_type] || "📝"
+    icons[type] || "📝"
   end
 
-  # Post type label helper
-  def post_type_label(post)
-    I18n.t("posts.types.#{post.post_type}", default: post.post_type.humanize)
+  # Post type label helper - accepts either post object or type string
+  def post_type_label(post_or_type)
+    type = post_or_type.is_a?(Post) ? post_or_type.post_type : post_or_type.to_s
+    I18n.t("posts.types.#{type}", default: type.humanize)
+  end
+
+  # Post type options for select
+  def post_type_options
+    post_type_order.map { |type| [post_type_label(type), type] }
   end
 
   # Location display helper
