@@ -20,8 +20,8 @@
         <select name="type" onchange="this.form.submit()" 
                 class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value=""><%= t("posts.filters.all_types") %></option>
-          <% %w[question marketplace free_talk].each do |type| %>
-            <option value="<%= type %>" <%= "selected" if params[:type] == type %>><%= t("posts.types.#{type}") %></option>
+          <% post_type_order.each do |type| %>
+            <option value="<%= type %>" <%= "selected" if params[:type] == type %>><%= post_type_label(type) %></option>
           <% end %>
         </select>
         

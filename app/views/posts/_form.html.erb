@@ -27,19 +27,12 @@
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-2">Loại bài viết</label>
       <div class="grid grid-cols-3 gap-2 md:gap-3">
-        <% %w[question marketplace free_talk].each do |type| %>
+        <% post_type_order.each do |type| %>
           <label class="relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors <%= 'border-blue-500 bg-blue-50' if post.post_type == type %>">
             <%= form.radio_button :post_type, type, class: "sr-only", data: { "post-form-target": "postType", "auto-save-target": "input", "unsaved-changes-target": "input", action: "change->post-form#postTypeChanged change->auto-save#inputChanged change->unsaved-changes#inputChanged" } %>
             <div class="text-center">
-              <% case type %>
-              <% when 'question' %>
-                <div class="text-2xl mb-1">❓</div>
-              <% when 'marketplace' %>
-                <div class="text-2xl mb-1">🛍️</div>
-              <% when 'free_talk' %>
-                <div class="text-2xl mb-1">💬</div>
-              <% end %>
-              <span class="text-sm font-medium"><%= t("posts.types.#{type}") %></span>
+              <div class="text-2xl mb-1"><%= post_type_icon(type) %></div>
+              <span class="text-sm font-medium"><%= post_type_label(type) %></span>
             </div>
           </label>
         <% end %>
