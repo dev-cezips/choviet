@@ -37,7 +37,7 @@
                   <%= product.condition_text %>
                 </span>
                 <% if product.sold? %>
-                  <span class="text-red-600 font-medium">Đã bán</span>
+                  <span class="text-red-600 font-medium"><%= t("products.sold", default: "Sold") %></span>
                 <% end %>
               </div>
             </div>

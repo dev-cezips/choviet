@@ -77,6 +77,7 @@ ko:
     title: "게시글"
     new: "새 글 작성"
     edit: "게시글 수정"
+    edit_draft: "임시 저장글 수정"
     created: "게시글이 성공적으로 작성되었습니다!"
     updated: "게시글이 업데이트되었습니다!"
     deleted: "게시글이 삭제되었습니다!"

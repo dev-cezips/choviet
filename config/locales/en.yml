@@ -105,6 +105,7 @@ en:
     title: "Posts"
     new: "New Post"
     edit: "Edit Post"
+    edit_draft: "Edit Draft"
     created: "Post created successfully!"
     updated: "Post updated successfully!"
     deleted: "Post deleted successfully!"
