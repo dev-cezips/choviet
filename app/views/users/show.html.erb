@@ -41,25 +41,28 @@
     
     <!-- Level Badge -->
     <div class="text-center mb-3">
-      <span class="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold text-sm shadow-lg">
-        ⭐ Level <%= @user.level %>
-      </span>
+      <%= render "shared/badge",
+          icon: "⭐",
+          label: "Level #{@user.level}",
+          variant: :gradient %>
     </div>
     
     <!-- Primary Title -->
     <% if @user.primary_title %>
       <div class="text-center mb-3">
-        <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/30 backdrop-blur border border-white/40 text-white font-medium text-sm">
-          <%= @user.primary_title.display_icon %> <%= @user.primary_title.name_vi %>
-        </span>
+        <%= render "shared/badge",
+            icon: @user.primary_title.display_icon,
+            label: @user.primary_title.name_vi,
+            variant: :glass %>
       </div>
     <% end %>
     
     <!-- Location Badge -->
     <div class="text-center">
-      <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/20 border border-white/30 text-sm">
-        📍 <%= @user.location ? location_display(@user.location) : "Chưa xác thực vị trí" %>
-      </span>
+      <%= render "shared/badge",
+          icon: "📍",
+          label: @user.location ? location_display(@user.location) : "Chưa xác thực vị trí",
+          variant: :glass_light %>
     </div>
     
     <!-- Temperature Bar -->
