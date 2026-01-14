@@ -139,6 +139,8 @@ en:
   
   # Products
   products:
+    condition_label: "Condition"
+    select_condition: "Select condition..."
     conditions:
       new_item: "Brand New"
       like_new: "Like New"

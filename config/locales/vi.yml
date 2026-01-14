@@ -73,6 +73,8 @@ vi:
   
   # Products
   products:
+    condition_label: "Tình trạng"
+    select_condition: "Chọn tình trạng..."
     conditions:
       new_item: "Mới 100%"
       like_new: "Như mới"

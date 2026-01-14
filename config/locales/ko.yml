@@ -111,6 +111,8 @@ ko:
   
   # Products
   products:
+    condition_label: "상태"
+    select_condition: "상태 선택..."
     conditions:
       new_item: "새 상품"
       like_new: "거의 새것"

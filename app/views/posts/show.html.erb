@@ -62,23 +62,15 @@
         <%= simple_format(@post.content) %>
       </div>
       
-      <% if @post.marketplace? && @post.product %>
+      <% if @post.marketplace? && @post.product&.condition.present? %>
         <!-- Product Condition -->
         <div class="bg-gray-50 rounded-lg p-4 mb-6">
-          <p class="text-sm text-gray-600 mb-1">Tình trạng</p>
+          <p class="text-sm text-gray-600 mb-1"><%= t("products.condition_label", default: "Tình trạng") %></p>
           <p class="font-medium">
-            <% case @post.product.condition %>
-            <% when 'new_item' %>
-              🆕 Mới 100%
-            <% when 'like_new' %>
-              ✨ Như mới
-            <% when 'good' %>
-              👍 Tốt
-            <% when 'fair' %>
-              🔄 Bình thường
-            <% when 'poor' %>
-              ⚠️ Cũ
-            <% end %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm <%= product_condition_badge_class(@post.product.condition) %>">
+              <%= product_condition_icon(@post.product.condition) %>
+              <%= product_condition_label(@post.product.condition) %>
+            </span>
           </p>
         </div>
       <% end %>
