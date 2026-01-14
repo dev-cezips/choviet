@@ -243,3 +243,9 @@ vi:
   blocks:
     created: "Đã chặn người dùng này"
     destroyed: "Đã bỏ chặn người dùng này"
+
+  # Trade statuses (chat rooms)
+  trade_statuses:
+    negotiating: "Đang thương lượng"
+    completed: "Giao dịch hoàn tất"
+    cancelled: "Đã hủy"

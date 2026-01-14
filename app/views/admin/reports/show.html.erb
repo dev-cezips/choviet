@@ -52,15 +52,10 @@
             <%= t('admin.reports.details.status') %>
           </dt>
           <dd class="mt-1 text-sm text-gray-900">
-            <% status_class = case @report.status
-               when "pending" then "bg-yellow-100 text-yellow-800"
-               when "reviewed" then "bg-blue-100 text-blue-800"  
-               when "resolved" then "bg-green-100 text-green-800"
-               when "dismissed" then "bg-gray-100 text-gray-800"
-               end %>
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_class %>">
-              <%= @report.status %>
-            </span>
+            <%= render "shared/badge",
+                icon: report_status_icon(@report),
+                label: report_status_label(@report),
+                class_name: report_status_badge_class(@report) %>
           </dd>
         </div>
         
@@ -189,9 +184,10 @@
                   <p class="text-sm text-gray-600 mt-1"><%= related.description %></p>
                 <% end %>
               </div>
-              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= related.status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800' %>">
-                <%= related.status %>
-              </span>
+              <%= render "shared/badge",
+                  icon: report_status_icon(related),
+                  label: report_status_label(related),
+                  class_name: report_status_badge_class(related) %>
             </div>
           </div>
         <% end %>

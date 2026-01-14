@@ -106,17 +106,10 @@
       <!-- Trade Status Badge -->
       <div class="flex items-center space-x-3">
         <% if @chat_room.trade_status.present? %>
-          <div class="<%= case @chat_room.trade_status
-                         when 'negotiating' then 'bg-yellow-100 text-yellow-800'
-                         when 'completed' then 'bg-green-100 text-green-800'
-                         when 'cancelled' then 'bg-red-100 text-red-800'
-                         end %> px-3 py-1 rounded-full text-sm font-medium flex items-center">
-            <%= case @chat_room.trade_status
-                when 'negotiating' then '🟡 Đang thương lượng'
-                when 'completed' then '🟢 Giao dịch hoàn tất'
-                when 'cancelled' then '🔴 Đã hủy'
-                end %>
-          </div>
+          <%= render "shared/badge",
+              icon: trade_status_icon(@chat_room),
+              label: trade_status_label(@chat_room),
+              class_name: trade_status_badge_class(@chat_room) %>
         <% end %>
         
         <button class="text-gray-500 hover:text-gray-700">

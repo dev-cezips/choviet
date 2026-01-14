@@ -202,6 +202,70 @@ module ApplicationHelper
     post_status_order.map { |s| [ post_status_label(s), s ] }
   end
 
+  # Trade status display order
+  def trade_status_order
+    %w[negotiating completed cancelled]
+  end
+
+  # Trade status label (i18n) - accepts either chat_room object or status string
+  def trade_status_label(chat_room_or_status)
+    status = normalize_trade_status(chat_room_or_status)
+    I18n.t("trade_statuses.#{status}", default: status.humanize)
+  end
+
+  # Trade status icon
+  def trade_status_icon(chat_room_or_status)
+    status = normalize_trade_status(chat_room_or_status)
+    {
+      "negotiating" => "🟡",
+      "completed" => "🟢",
+      "cancelled" => "🔴"
+    }.fetch(status, "⚪")
+  end
+
+  # Trade status badge class
+  def trade_status_badge_class(chat_room_or_status)
+    status = normalize_trade_status(chat_room_or_status)
+    {
+      "negotiating" => "bg-yellow-100 text-yellow-800",
+      "completed" => "bg-green-100 text-green-800",
+      "cancelled" => "bg-red-100 text-red-800"
+    }.fetch(status, "bg-gray-100 text-gray-800")
+  end
+
+  # Report status display order
+  def report_status_order
+    %w[pending reviewed resolved dismissed]
+  end
+
+  # Report status label (i18n) - accepts either report object or status string
+  def report_status_label(report_or_status)
+    status = normalize_report_status(report_or_status)
+    I18n.t("admin.reports.statuses.#{status}", default: status.humanize)
+  end
+
+  # Report status icon
+  def report_status_icon(report_or_status)
+    status = normalize_report_status(report_or_status)
+    {
+      "pending" => "🟡",
+      "reviewed" => "🔵",
+      "resolved" => "🟢",
+      "dismissed" => "⚪"
+    }.fetch(status, "⚪")
+  end
+
+  # Report status badge class
+  def report_status_badge_class(report_or_status)
+    status = normalize_report_status(report_or_status)
+    {
+      "pending" => "bg-yellow-100 text-yellow-800",
+      "reviewed" => "bg-blue-100 text-blue-800",
+      "resolved" => "bg-green-100 text-green-800",
+      "dismissed" => "bg-gray-100 text-gray-800"
+    }.fetch(status, "bg-gray-100 text-gray-800")
+  end
+
   # Location display helper
   def location_display(location, user = nil)
     return "" unless location
@@ -267,6 +331,14 @@ module ApplicationHelper
 
   def normalize_post_status(post_or_status)
     post_or_status.respond_to?(:status) ? post_or_status.status.to_s : post_or_status.to_s
+  end
+
+  def normalize_trade_status(chat_room_or_status)
+    chat_room_or_status.respond_to?(:trade_status) ? chat_room_or_status.trade_status.to_s : chat_room_or_status.to_s
+  end
+
+  def normalize_report_status(report_or_status)
+    report_or_status.respond_to?(:status) ? report_or_status.status.to_s : report_or_status.to_s
   end
 
   def normalize_product_availability(product_or_sold)
