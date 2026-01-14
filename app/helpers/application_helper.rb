@@ -95,6 +95,44 @@ module ApplicationHelper
     post_type_order.map { |type| [ post_type_label(type), type ] }
   end
 
+  # Product condition display order
+  def product_condition_order
+    %w[new_item like_new good fair poor]
+  end
+
+  # Product condition label (i18n)
+  def product_condition_label(condition)
+    key = condition.to_s
+    I18n.t("products.conditions.#{key}", default: key.humanize)
+  end
+
+  # Product condition icon
+  def product_condition_icon(condition)
+    {
+      "new_item" => "🆕",
+      "like_new" => "✨",
+      "good" => "👍",
+      "fair" => "🔄",
+      "poor" => "⚠️"
+    }.fetch(condition.to_s, "🏷️")
+  end
+
+  # Product condition badge class
+  def product_condition_badge_class(condition)
+    {
+      "new_item" => "bg-green-100 text-green-800",
+      "like_new" => "bg-blue-100 text-blue-800",
+      "good" => "bg-yellow-100 text-yellow-800",
+      "fair" => "bg-orange-100 text-orange-800",
+      "poor" => "bg-red-100 text-red-800"
+    }.fetch(condition.to_s, "bg-gray-100 text-gray-800")
+  end
+
+  # Product condition options for select
+  def product_condition_options
+    product_condition_order.map { |c| [ product_condition_label(c), c ] }
+  end
+
   # Location display helper
   def location_display(location, user = nil)
     return "" unless location
