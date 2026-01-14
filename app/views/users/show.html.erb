@@ -279,7 +279,7 @@
   <!-- Sold Items -->
   <% if @sold_posts.any? %>
     <div class="px-5 mt-6">
-      <h2 class="font-semibold text-gray-900 mb-3">✅ Đã bán</h2>
+      <h2 class="font-semibold text-gray-900 mb-3"><%= post_status_icon("sold") %> <%= post_status_label("sold") %></h2>
       <div class="space-y-2">
         <% @sold_posts.each do |post| %>
           <div class="bg-white rounded-lg p-3 flex items-center gap-3 opacity-75">
@@ -292,9 +292,9 @@
             <% end %>
             <div class="flex-1">
               <h4 class="text-sm font-medium text-gray-900 line-clamp-1"><%= post.title %></h4>
-              <p class="text-xs text-gray-500">Đã bán <%= time_ago_in_words(post.updated_at) %> trước</p>
+              <p class="text-xs text-gray-500"><%= post_status_label("sold") %> <%= time_ago_in_words(post.updated_at) %> trước</p>
             </div>
-            <span class="text-green-600 text-sm font-medium">Đã bán</span>
+            <span class="text-green-600 text-sm font-medium"><%= post_status_label("sold") %></span>
           </div>
         <% end %>
       </div>

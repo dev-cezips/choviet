@@ -133,6 +133,46 @@ module ApplicationHelper
     product_condition_order.map { |c| [ product_condition_label(c), c ] }
   end
 
+  # Post status display order
+  def post_status_order
+    %w[draft active sold expired deleted]
+  end
+
+  # Post status label (i18n) - accepts either post object or status string
+  def post_status_label(post_or_status)
+    status = normalize_post_status(post_or_status)
+    I18n.t("posts.statuses.#{status}", default: status.humanize)
+  end
+
+  # Post status icon
+  def post_status_icon(post_or_status)
+    status = normalize_post_status(post_or_status)
+    {
+      "draft" => "📝",
+      "active" => "🟢",
+      "sold" => "✅",
+      "expired" => "⏰",
+      "deleted" => "🗑️"
+    }.fetch(status, "📋")
+  end
+
+  # Post status badge class
+  def post_status_badge_class(post_or_status)
+    status = normalize_post_status(post_or_status)
+    {
+      "draft" => "bg-yellow-100 text-yellow-800",
+      "active" => "bg-green-100 text-green-800",
+      "sold" => "bg-purple-100 text-purple-800",
+      "expired" => "bg-orange-100 text-orange-800",
+      "deleted" => "bg-red-100 text-red-800"
+    }.fetch(status, "bg-gray-100 text-gray-800")
+  end
+
+  # Post status options for select
+  def post_status_options
+    post_status_order.map { |s| [ post_status_label(s), s ] }
+  end
+
   # Location display helper
   def location_display(location, user = nil)
     return "" unless location
@@ -192,5 +232,11 @@ module ApplicationHelper
     ]
 
     suspicious_patterns.any? { |pattern| content.match?(pattern) }
+  end
+
+  private
+
+  def normalize_post_status(post_or_status)
+    post_or_status.respond_to?(:status) ? post_or_status.status.to_s : post_or_status.to_s
   end
 end

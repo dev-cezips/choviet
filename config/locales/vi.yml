@@ -39,6 +39,7 @@ vi:
     title: "Bài viết"
     new: "Đăng bài mới"
     edit: "Chỉnh sửa bài viết"
+    edit_draft: "Chỉnh sửa bản nháp"
     created: "Đã đăng bài thành công!"
     updated: "Đã cập nhật bài viết!"
     deleted: "Đã xóa bài viết!"

@@ -70,11 +70,11 @@
         <!-- Status -->
         <% if @product.sold? %>
           <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p class="text-red-800 font-medium">Sản phẩm đã được bán</p>
+            <p class="text-red-800 font-medium"><%= t("products.sold", default: "Sold") %></p>
           </div>
         <% else %>
           <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-            <p class="text-green-800 font-medium">Còn hàng</p>
+            <p class="text-green-800 font-medium"><%= t("products.available", default: "Available") %></p>
           </div>
         <% end %>
 

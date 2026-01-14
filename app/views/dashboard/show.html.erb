@@ -75,7 +75,7 @@
                           <%= post_type_icon(post) %>
                           <span><%= time_ago_in_words(post.created_at) %> trước</span>
                           <% if post.status == 'sold' %>
-                            <span class="text-red-500 font-medium">• Đã bán</span>
+                            <span class="text-red-500 font-medium">• <%= post_status_label("sold") %></span>
                           <% end %>
                         </div>
                       </div>
@@ -143,8 +143,8 @@
               <div class="flex items-start gap-3">
                 <!-- Draft icon -->
                 <div class="flex-shrink-0 mt-1">
-                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                    Nháp
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= post_status_badge_class("draft") %>">
+                    <%= post_status_label("draft") %>
                   </span>
                 </div>
                 

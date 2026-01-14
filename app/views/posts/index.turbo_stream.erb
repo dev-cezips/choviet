@@ -77,7 +77,7 @@
                   <%= price_display(post.product.price) %>
                 </span>
                 <% if post.product.sold? %>
-                  <span class="ml-2 text-sm text-gray-500 line-through">Đã bán</span>
+                  <span class="ml-2 text-sm text-gray-500 line-through"><%= post_status_label("sold") %></span>
                 <% end %>
               </div>
             <% end %>
