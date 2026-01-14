@@ -1,8 +1,23 @@
 <% icon = local_assigns[:icon] %>
 <% label = local_assigns[:label] %>
 <% class_name = local_assigns[:class_name].to_s %>
+<% variant = (local_assigns[:variant] || :default).to_sym %>
 
-<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm font-medium <%= class_name %>">
+<%
+  base_classes =
+    case variant
+    when :gradient
+      "inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-bold text-white shadow-lg bg-gradient-to-r from-yellow-400 to-orange-500"
+    when :glass
+      "inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium text-white bg-white/30 backdrop-blur border border-white/40"
+    when :glass_light
+      "inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-white/20 border border-white/30"
+    else
+      "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm font-medium"
+    end
+%>
+
+<span class="<%= [base_classes, class_name].reject(&:blank?).join(' ') %>">
   <% if icon.present? %>
     <span aria-hidden="true"><%= icon %></span>
   <% end %>

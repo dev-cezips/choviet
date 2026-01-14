@@ -1,0 +1,10 @@
+<% count = local_assigns[:count] %>
+<% label = local_assigns[:label] %>
+<% class_name = local_assigns[:class_name].to_s %>
+
+<span class="<%= ["inline-flex items-center px-2 py-1 rounded-full text-xs font-bold", class_name].reject(&:blank?).join(" ") %>">
+  <span><%= count %></span>
+  <% if label.present? %>
+    <span class="ml-1 font-semibold"><%= label %></span>
+  <% end %>
+</span>
