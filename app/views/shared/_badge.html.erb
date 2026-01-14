@@ -1,0 +1,10 @@
+<% icon = local_assigns[:icon] %>
+<% label = local_assigns[:label] %>
+<% class_name = local_assigns[:class_name].to_s %>
+
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm font-medium <%= class_name %>">
+  <% if icon.present? %>
+    <span aria-hidden="true"><%= icon %></span>
+  <% end %>
+  <span><%= label %></span>
+</span>
