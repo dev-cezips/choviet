@@ -130,19 +130,11 @@
             <%= t('all') %>
           <% end %>
           
-          <%= link_to posts_path(type: 'question', q: params[:q]), 
-              class: active_link_class(posts_path(type: 'question'), "px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200") do %>
-            ❓ <%= I18n.t("posts.types.question") %>
-          <% end %>
-          
-          <%= link_to posts_path(type: 'marketplace', q: params[:q]), 
-              class: active_link_class(posts_path(type: 'marketplace'), "px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200") do %>
-            🛍️ <%= I18n.t("posts.types.marketplace") %>
-          <% end %>
-          
-          <%= link_to posts_path(type: 'free_talk', q: params[:q]), 
-              class: active_link_class(posts_path(type: 'free_talk'), "px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200") do %>
-            💬 <%= I18n.t("posts.types.free_talk") %>
+          <% post_type_order.each do |type| %>
+            <%= link_to posts_path(type: type, q: params[:q]), 
+                class: active_link_class(posts_path(type: type, q: params[:q]), "px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200") do %>
+              <%= post_type_icon(type) %> <%= post_type_label(type) %>
+            <% end %>
           <% end %>
         </div>
       </div>
