@@ -133,6 +133,35 @@ module ApplicationHelper
     product_condition_order.map { |c| [ product_condition_label(c), c ] }
   end
 
+  # Product availability label (i18n) - accepts product object or boolean/string
+  def product_availability_label(product_or_sold)
+    sold = normalize_product_availability(product_or_sold)
+    key = sold ? "sold" : "available"
+    I18n.t("products.#{key}", default: key.capitalize)
+  end
+
+  # Product availability icon
+  def product_availability_icon(product_or_sold)
+    sold = normalize_product_availability(product_or_sold)
+    sold ? "✅" : "🟢"
+  end
+
+  # Product availability badge class
+  def product_availability_badge_class(product_or_sold)
+    sold = normalize_product_availability(product_or_sold)
+    sold ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"
+  end
+
+  # Product availability panel classes (container + text)
+  def product_availability_panel_classes(product_or_sold)
+    sold = normalize_product_availability(product_or_sold)
+    if sold
+      { container: "bg-red-50 border-red-200", text: "text-red-800" }
+    else
+      { container: "bg-green-50 border-green-200", text: "text-green-800" }
+    end
+  end
+
   # Post status display order
   def post_status_order
     %w[draft active sold expired deleted]
@@ -238,5 +267,17 @@ module ApplicationHelper
 
   def normalize_post_status(post_or_status)
     post_or_status.respond_to?(:status) ? post_or_status.status.to_s : post_or_status.to_s
+  end
+
+  def normalize_product_availability(product_or_sold)
+    return product_or_sold.sold? if product_or_sold.respond_to?(:sold?)
+
+    # Normalize string input
+    value = product_or_sold.to_s.strip.downcase
+    return true if %w[sold true 1].include?(value)
+    return false if %w[available false 0].include?(value) || value.empty?
+
+    # Fallback: truthy check for other values
+    !!product_or_sold
   end
 end
