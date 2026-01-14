@@ -33,9 +33,10 @@
               </div>
               
               <div class="flex items-center gap-2 text-sm text-gray-600">
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                  <%= product.condition_text %>
-                </span>
+                <%= render "shared/badge",
+                    icon: product_condition_icon(product.condition),
+                    label: product_condition_label(product.condition),
+                    class_name: product_condition_badge_class(product.condition) %>
                 <% if product.sold? %>
                   <span class="text-red-600 font-medium"><%= product_availability_label(product) %></span>
                 <% end %>

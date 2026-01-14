@@ -164,3 +164,9 @@ en:
       marketplace: "Buy and sell with the Vietnamese community"
       qa: "Get answers to all your questions about life"
       connect: "Connect with Vietnamese people near you"
+
+  # Trade statuses (chat rooms)
+  trade_statuses:
+    negotiating: "Negotiating"
+    completed: "Completed"
+    cancelled: "Cancelled"

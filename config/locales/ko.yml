@@ -136,3 +136,9 @@ ko:
       marketplace: "베트남 커뮤니티와 거래"
       qa: "생활 관련 모든 질문 해결"
       connect: "가까운 베트남인과 연결"
+
+  # Trade statuses (chat rooms)
+  trade_statuses:
+    negotiating: "협상 중"
+    completed: "거래 완료"
+    cancelled: "취소됨"
