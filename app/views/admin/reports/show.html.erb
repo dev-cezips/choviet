@@ -41,9 +41,9 @@
             <%= t('admin.reports.details.type') %>
           </dt>
           <dd class="mt-1 text-sm text-gray-900">
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-              <%= @report.category || @report.reason_code %>
-            </span>
+            <%= render "shared/badge",
+                label: @report.category || @report.reason_code,
+                class_name: "bg-red-100 text-red-800" %>
           </dd>
         </div>
         
