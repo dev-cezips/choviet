@@ -155,10 +155,22 @@ module ApplicationHelper
   # Product availability panel classes (container + text)
   def product_availability_panel_classes(product_or_sold)
     sold = normalize_product_availability(product_or_sold)
-    if sold
-      { container: "bg-red-50 border-red-200", text: "text-red-800" }
-    else
+    status_panel_classes(sold ? :danger : :success)
+  end
+
+  # Generic status panel classes for different variants
+  def status_panel_classes(variant)
+    case variant.to_sym
+    when :success
       { container: "bg-green-50 border-green-200", text: "text-green-800" }
+    when :danger
+      { container: "bg-red-50 border-red-200", text: "text-red-800" }
+    when :warning
+      { container: "bg-yellow-50 border-yellow-200", text: "text-yellow-800" }
+    when :info
+      { container: "bg-blue-50 border-blue-200", text: "text-blue-800" }
+    else # :neutral
+      { container: "bg-gray-50 border-gray-200", text: "text-gray-800" }
     end
   end
 
