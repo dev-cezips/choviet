@@ -46,9 +46,9 @@
             
             <!-- Unread Badge -->
             <% if unread_count > 0 %>
-              <div class="bg-blue-500 text-white text-xs rounded-full px-2 py-1 min-w-[1.5rem] text-center">
-                <%= unread_count %>
-              </div>
+              <%= render "shared/counter_badge",
+                  count: unread_count,
+                  class_name: "bg-blue-500 text-white min-w-[1.5rem] text-center" %>
             <% end %>
           </div>
         <% end %>

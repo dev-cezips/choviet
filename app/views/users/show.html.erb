@@ -79,9 +79,10 @@
     
     <!-- Reputation Score -->
     <div class="mt-4 text-center">
-      <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/20 border border-white/30 text-base font-medium">
-        <%= @user.reputation_display %>
-      </span>
+      <%= render "shared/badge",
+          label: @user.reputation_display,
+          variant: :glass_light,
+          class_name: "px-4 py-2 text-base font-medium" %>
     </div>
     
     <!-- Block Button -->
@@ -155,9 +156,10 @@
           <span class="text-2xl">🏅</span>
           Bộ sưu tập danh hiệu
         </h3>
-        <span class="text-xs text-warning font-medium bg-warning/10 px-2 py-1 rounded-full">
-          <%= @user.titles.count %> danh hiệu
-        </span>
+        <%= render "shared/counter_badge",
+            count: @user.titles.count,
+            label: "danh hiệu",
+            class_name: "text-warning bg-warning/10" %>
       </div>
       
       <% if @user.titles.any? %>

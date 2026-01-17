@@ -51,9 +51,9 @@
                   </p>
                   
                   <% if unread_count > 0 %>
-                    <span class="ml-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-                      <%= unread_count %>
-                    </span>
+                    <%= render "shared/counter_badge",
+                        count: unread_count,
+                        class_name: "ml-2 bg-blue-600 text-white" %>
                   <% end %>
                 </div>
               </div>
