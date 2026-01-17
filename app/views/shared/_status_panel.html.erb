@@ -1,0 +1,15 @@
+<% icon = local_assigns[:icon] %>
+<% label = local_assigns[:label] %>
+<% variant = (local_assigns[:variant] || :neutral).to_sym %>
+<% class_name = local_assigns[:class_name].to_s %>
+
+<% panel = status_panel_classes(variant) %>
+
+<div class="<%= [panel[:container], "border rounded-lg p-4", class_name].reject(&:blank?).join(' ') %>">
+  <p class="<%= panel[:text] %> font-medium">
+    <% if icon.present? %>
+      <span aria-hidden="true"><%= icon %></span>
+    <% end %>
+    <%= label %>
+  </p>
+</div>
