@@ -5,9 +5,9 @@
       <%= link_to admin_reports_path, class: "px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" do %>
         <span class="font-medium">Reports</span>
         <% if @stats[:pending_reports] > 0 %>
-          <span class="ml-2 bg-white text-red-600 px-2 py-0.5 rounded-full text-xs font-bold">
-            <%= @stats[:pending_reports] %>
-          </span>
+          <%= render "shared/counter_badge",
+              count: @stats[:pending_reports],
+              class_name: "ml-2 bg-white text-red-600" %>
         <% end %>
       <% end %>
     </div>

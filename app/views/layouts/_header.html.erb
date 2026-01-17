@@ -35,9 +35,9 @@
                 </svg>
                 <% unread_count = current_user.chat_rooms.unread_for(current_user.id).count %>
                 <% if unread_count > 0 %>
-                  <span class="absolute top-0 right-0 -mt-1 -mr-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                    <%= unread_count %>
-                  </span>
+                  <%= render "shared/counter_badge",
+                      count: unread_count,
+                      class_name: "absolute top-0 right-0 -mt-1 -mr-1 bg-red-500 text-white" %>
                 <% end %>
               <% end %>
               
