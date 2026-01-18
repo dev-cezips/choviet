@@ -1,107 +1,106 @@
-<div data-turbo-frame="report_modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-bold text-red-600">
-        <%= t('reports.title', default: '🚨 Báo cáo vi phạm') %>
-      </h2>
-      <button data-action="click->modal#close" class="text-gray-400 hover:text-gray-600">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
-    </div>
-
-    <%= form_with model: [@reportable, @report], local: false do |form| %>
-      <%= render "shared/form_errors", object: @report, class_name: "mb-4" %>
-
-      <div class="mb-4">
-        <p class="text-sm text-gray-600 mb-3">
-          <% if @reportable.is_a?(Post) %>
-            <%= t('reports.reporting_post', default: 'Bạn đang báo cáo bài viết này') %>
-          <% elsif @reportable.is_a?(User) %>
-            <%= t('reports.reporting_user', default: 'Bạn đang báo cáo người dùng này') %>
-          <% elsif @reportable.is_a?(ConversationMessage) %>
-            <%= t('reports.reporting_message', default: 'Bạn đang báo cáo tin nhắn này') %>
-          <% end %>
-        </p>
-        
-        <div class="bg-gray-50 rounded-md p-3">
-          <% if @reportable.is_a?(Post) %>
-            <p class="font-medium text-gray-800"><%= @reportable.title %></p>
-            <p class="text-sm text-gray-600 mt-1">
-              <%= t('reports.by_user', default: 'bởi') %> <%= @reportable.user.display_name %>
-            </p>
-          <% elsif @reportable.is_a?(User) %>
-            <p class="font-medium text-gray-800"><%= @reportable.display_name %></p>
-            <p class="text-sm text-gray-600"><%= @reportable.email %></p>
-          <% elsif @reportable.is_a?(ConversationMessage) %>
-            <p class="font-medium text-gray-800"><%= truncate(@reportable.body, length: 100) %></p>
-            <p class="text-sm text-gray-600 mt-1">
-              <%= t('reports.by_user', default: 'bởi') %> <%= @reportable.user.display_name %>
-            </p>
-          <% end %>
-        </div>
-      </div>
-
-      <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          <%= t('reports.reason', default: 'Lý do báo cáo') %> <span class="text-red-500">*</span>
-        </label>
-        <div class="space-y-2">
-          <% Report.reason_options_for_select(current_user.locale || :vi).each do |option| %>
-            <label class="flex items-start p-3 border rounded-md hover:bg-gray-50 cursor-pointer">
-              <%= form.radio_button :reason_code, option[1], class: "mt-1 mr-3" %>
-              <span class="flex-1"><%= option[0] %></span>
-            </label>
-          <% end %>
-        </div>
-      </div>
-
-      <div class="mb-6">
-        <label for="report_description" class="block text-sm font-medium text-gray-700 mb-2">
-          <%= t('reports.description', default: 'Chi tiết thêm (tùy chọn)') %>
-        </label>
-        <%= form.text_area :description, rows: 3, 
-            class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500",
-            placeholder: t('reports.description_placeholder', default: 'Mô tả thêm về vi phạm...') %>
-      </div>
-
-      <% notice_items = [
-        "• " + t('reports.notice.false_report', default: 'Báo cáo sai có thể ảnh hưởng đến uy tín của bạn'),
-        "• " + t('reports.notice.review', default: 'Chúng tôi sẽ xem xét trong 24h'),
-        "• " + t('reports.notice.auto_hide', default: 'Nội dung có 3 báo cáo sẽ tự động ẩn')
-      ] %>
-      <%= render "shared/alert_panel",
-          variant: :warning,
-          icon: "📢",
-          title: t('reports.notice.title', default: 'Lưu ý:'),
-          items: notice_items,
-          class_name: "mb-6" %>
-
-      <div class="flex gap-3">
-        <%= form.submit t('reports.submit', default: 'Gửi báo cáo'), 
-            class: "flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 font-medium",
-            data: { disable_with: t('reports.submitting', default: 'Đang gửi...') } %>
-        <button type="button" 
-                data-action="click->modal#close" 
-                class="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 font-medium">
-          <%= t('reports.cancel', default: 'Hủy') %>
+<%= turbo_frame_tag "modal" do %>
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+       data-controller="modal-backdrop"
+       data-action="click->modal-backdrop#closeOnBackdrop">
+    <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full" data-modal-backdrop-target="content">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-red-600">
+          <%= t('reports.title', default: '🚨 Báo cáo vi phạm') %>
+        </h2>
+        <button type="button"
+                data-action="click->modal-backdrop#close"
+                class="text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
         </button>
       </div>
-    <% end %>
-  </div>
-</div>
 
-<script>
-  // Close modal on outside click
-  document.addEventListener('turbo:frame-load', () => {
-    const modal = document.querySelector('[data-turbo-frame="report_modal"]');
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.innerHTML = '';
-        }
-      });
-    }
-  });
-</script>
+      <%= form_with model: [@reportable, @report], data: { turbo_frame: "modal" } do |form| %>
+        <%= render "shared/form_errors", object: @report, class_name: "mb-4" %>
+
+        <div class="mb-4">
+          <p class="text-sm text-gray-600 mb-3">
+            <% if @reportable.is_a?(Post) %>
+              <%= t('reports.reporting_post', default: 'Bạn đang báo cáo bài viết này') %>
+            <% elsif @reportable.is_a?(User) %>
+              <%= t('reports.reporting_user', default: 'Bạn đang báo cáo người dùng này') %>
+            <% elsif @reportable.is_a?(ConversationMessage) %>
+              <%= t('reports.reporting_message', default: 'Bạn đang báo cáo tin nhắn này') %>
+            <% elsif @reportable.is_a?(Message) %>
+              <%= t('reports.reporting_message', default: 'Bạn đang báo cáo tin nhắn này') %>
+            <% end %>
+          </p>
+
+          <div class="bg-gray-50 rounded-md p-3">
+            <% if @reportable.is_a?(Post) %>
+              <p class="font-medium text-gray-800"><%= @reportable.title %></p>
+              <p class="text-sm text-gray-600 mt-1">
+                <%= t('reports.by_user', default: 'bởi') %> <%= @reportable.user.display_name %>
+              </p>
+            <% elsif @reportable.is_a?(User) %>
+              <p class="font-medium text-gray-800"><%= @reportable.display_name %></p>
+              <p class="text-sm text-gray-600"><%= @reportable.email %></p>
+            <% elsif @reportable.is_a?(ConversationMessage) %>
+              <p class="font-medium text-gray-800"><%= truncate(@reportable.body, length: 100) %></p>
+              <p class="text-sm text-gray-600 mt-1">
+                <%= t('reports.by_user', default: 'bởi') %> <%= @reportable.user.display_name %>
+              </p>
+            <% elsif @reportable.is_a?(Message) %>
+              <p class="font-medium text-gray-800"><%= truncate(@reportable.content_raw, length: 100) %></p>
+              <p class="text-sm text-gray-600 mt-1">
+                <%= t('reports.by_user', default: 'bởi') %> <%= @reportable.sender.display_name %>
+              </p>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            <%= t('reports.reason', default: 'Lý do báo cáo') %> <span class="text-red-500">*</span>
+          </label>
+          <div class="space-y-2">
+            <% Report.reason_options_for_select(current_user.locale || :vi).each do |option| %>
+              <label class="flex items-start p-3 border rounded-md hover:bg-gray-50 cursor-pointer">
+                <%= form.radio_button :reason_code, option[1], class: "mt-1 mr-3" %>
+                <span class="flex-1"><%= option[0] %></span>
+              </label>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label for="report_description" class="block text-sm font-medium text-gray-700 mb-2">
+            <%= t('reports.description', default: 'Chi tiết thêm (tùy chọn)') %>
+          </label>
+          <%= form.text_area :description, rows: 3,
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500",
+              placeholder: t('reports.description_placeholder', default: 'Mô tả thêm về vi phạm...') %>
+        </div>
+
+        <% notice_items = [
+          "• " + t('reports.notice.false_report', default: 'Báo cáo sai có thể ảnh hưởng đến uy tín của bạn'),
+          "• " + t('reports.notice.review', default: 'Chúng tôi sẽ xem xét trong 24h'),
+          "• " + t('reports.notice.auto_hide', default: 'Nội dung có 3 báo cáo sẽ tự động ẩn')
+        ] %>
+        <%= render "shared/alert_panel",
+            variant: :warning,
+            icon: "📢",
+            title: t('reports.notice.title', default: 'Lưu ý:'),
+            items: notice_items,
+            class_name: "mb-6" %>
+
+        <div class="flex gap-3">
+          <%= form.submit t('reports.submit', default: 'Gửi báo cáo'),
+              class: "flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 font-medium",
+              data: { disable_with: t('reports.submitting', default: 'Đang gửi...') } %>
+          <button type="button"
+                  data-action="click->modal-backdrop#close"
+                  class="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 font-medium">
+            <%= t('reports.cancel', default: 'Hủy') %>
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

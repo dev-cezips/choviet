@@ -77,7 +77,7 @@ class TrustSafetySystemTest < ApplicationSystemTestCase
     click_link "Report" # English text since @user locale is 'en'
 
     # Wait for modal to load and fill report form
-    within "turbo-frame#report_modal" do
+    within "turbo-frame#modal" do
       # Choose spam option - wait for it to be visible
       assert_selector "input[type='radio']", count: 4
       find("label", text: /Spam/).click # Find label containing "Spam" text

@@ -19,12 +19,14 @@ class ReportsController < ApplicationController
         has_description: @report.description.present?
       })
 
+      flash.now[:notice] = I18n.t("reports.created")
+
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
+            turbo_stream.update("modal", ""),
             turbo_stream.update("report_modal", ""),
-            turbo_stream.prepend("flash_messages", partial: "shared/flash",
-              locals: { type: :notice, message: I18n.t("reports.created") })
+            turbo_stream.update("flash", partial: "shared/flash")
           ]
         end
         format.html do
