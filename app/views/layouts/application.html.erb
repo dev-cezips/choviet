@@ -32,20 +32,10 @@
         background-color: #ffffff !important;
         background: #ffffff !important;
       }
-      
-      /* Remove any overlay */
-      .bg-black.bg-opacity-50 {
-        display: none !important;
-      }
-      
+
       /* Ensure main content is white */
       main, .bg-off-white, .bg-gray-50 {
         background-color: #ffffff !important;
-      }
-      
-      /* Remove modal overlay if present */
-      #report_modal:has(.bg-opacity-50) {
-        display: none !important;
       }
     </style>
   </head>
@@ -138,26 +128,5 @@
         <% end %>
       </div>
     <% end %>
-    
-    <!-- Modal close handler -->
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        // Handle modal close
-        document.addEventListener('click', (e) => {
-          if (e.target.matches('[data-action="click->modal#close"]')) {
-            const modalFrame = document.getElementById('report_modal');
-            if (modalFrame) {
-              modalFrame.innerHTML = '';
-            }
-          }
-        });
-        
-        // Clear any existing modal content on page load
-        const modalFrame = document.getElementById('report_modal');
-        if (modalFrame && modalFrame.innerHTML.trim() !== '') {
-          modalFrame.innerHTML = '';
-        }
-      });
-    </script>
   </body>
 </html>

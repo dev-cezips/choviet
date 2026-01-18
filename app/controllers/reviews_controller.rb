@@ -52,6 +52,7 @@ class ReviewsController < ApplicationController
         end
         format.html do
           flash[:success] = flash_message
+          flash[:reward] = flash_message.merge(first_review: first_review)
           redirect_to post_chat_room_path(@post, @chat_room)
         end
       end

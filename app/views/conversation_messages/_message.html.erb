@@ -16,7 +16,7 @@
         <span class="text-xs text-gray-400">•</span>
         <%= link_to new_conversation_message_report_path(message), 
             class: "text-xs text-gray-500 hover:text-red-600 transition",
-            data: { turbo_frame: "report_modal" } do %>
+            data: { turbo_frame: "modal" } do %>
           <% if viewing_user.vietnamese? %>
             Báo cáo
           <% elsif viewing_user.korean? %>
