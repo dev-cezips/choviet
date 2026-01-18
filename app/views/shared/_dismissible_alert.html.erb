@@ -1,0 +1,35 @@
+<% id = local_assigns.fetch(:id) %>
+<% variant = (local_assigns[:variant] || :neutral).to_sym %>
+<% icon = local_assigns[:icon] %>
+<% title = local_assigns[:title] %>
+<% body = local_assigns[:body] %>
+<% items = local_assigns[:items] || [] %>
+<% actions = local_assigns[:actions] %>
+<% class_name = local_assigns[:class_name].to_s %>
+
+<% dismiss_url = local_assigns.fetch(:dismiss_url) %>
+<% dismiss_method = (local_assigns[:dismiss_method] || :post).to_s.upcase %>
+
+<div id="<%= id %>"
+     class="relative <%= class_name %>"
+     data-controller="dismissible-alert"
+     data-dismissible-alert-url-value="<%= dismiss_url %>"
+     data-dismissible-alert-method-value="<%= dismiss_method %>">
+
+  <%= render "shared/alert_panel",
+      variant: variant,
+      icon: icon,
+      title: title,
+      body: body,
+      items: items,
+      actions: actions %>
+
+  <button type="button"
+          class="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+          aria-label="Dismiss"
+          data-action="dismissible-alert#dismiss">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+</div>
