@@ -55,7 +55,9 @@
 
     <!-- Main content wrapper -->
     <div>
-      <%= render "shared/flash" %>
+      <%= turbo_frame_tag "flash" do %>
+        <%= render "shared/flash" %>
+      <% end %>
 
       <!-- Main content -->
       <main>
