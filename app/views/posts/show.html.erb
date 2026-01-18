@@ -78,13 +78,12 @@
 
     <!-- Low Reputation Warning -->
     <% if @post.user.low_reputation? %>
-      <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-lg mb-3 text-sm flex items-start gap-3 mt-4">
-        <span class="text-lg">💡</span>
-        <div>
-          <p class="font-medium mb-1">Lưu ý khi giao dịch</p>
-          <p>Người dùng này đang xây dựng uy tín. Bạn có thể trao đổi thêm để hiểu rõ hơn trước khi quyết định.</p>
-        </div>
-      </div>
+      <%= render "shared/alert_panel",
+          variant: :tip,
+          icon: "💡",
+          title: "Lưu ý khi giao dịch",
+          body: "Người dùng này đang xây dựng uy tín. Bạn có thể trao đổi thêm để hiểu rõ hơn trước khi quyết định.",
+          class_name: "mt-4 mb-3" %>
     <% end %>
     
     <!-- Seller Info -->

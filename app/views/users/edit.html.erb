@@ -2,16 +2,7 @@
   <h1 class="text-xl font-bold mb-6">Chỉnh sửa hồ sơ</h1>
 
   <%= form_with model: @user, url: profile_path, method: :patch, local: true, html: { multipart: true } do |f| %>
-    <% if @user.errors.any? %>
-      <div class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
-        <p class="font-semibold mb-1">Có lỗi xảy ra:</p>
-        <ul class="list-disc list-inside">
-          <% @user.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+    <%= render "shared/form_errors", object: @user, class_name: "mb-4" %>
 
     <div class="bg-white rounded-xl shadow-sm p-6 space-y-6">
       <!-- Avatar Upload -->
