@@ -1,0 +1,39 @@
+<% icon = local_assigns[:icon] %>
+<% title = local_assigns[:title] %>
+<% body = local_assigns[:body] %>
+<% items = local_assigns[:items] || [] %>
+<% actions = local_assigns[:actions] %>
+<% variant = (local_assigns[:variant] || :neutral).to_sym %>
+<% class_name = local_assigns[:class_name].to_s %>
+
+<% panel = alert_panel_classes(variant) %>
+
+<div class="<%= [panel[:container], "border rounded-lg p-4", class_name].reject(&:blank?).join(' ') %>">
+  <div class="flex items-start">
+    <% if icon.present? %>
+      <div class="flex-shrink-0 <%= panel[:icon] %>">
+        <span class="text-lg" aria-hidden="true"><%= icon %></span>
+      </div>
+    <% end %>
+    <div class="<%= icon.present? ? 'ml-3' : '' %> flex-1">
+      <% if title.present? %>
+        <h4 class="text-sm font-semibold <%= panel[:title] %> mb-1"><%= title %></h4>
+      <% end %>
+      <% if body.present? %>
+        <p class="text-sm <%= panel[:text] %>"><%= body %></p>
+      <% end %>
+      <% if items.any? %>
+        <ul class="text-sm <%= panel[:text] %> space-y-1 <%= title.present? || body.present? ? 'mt-2' : '' %>">
+          <% items.each do |item| %>
+            <li><%= item %></li>
+          <% end %>
+        </ul>
+      <% end %>
+      <% if actions.present? %>
+        <div class="mt-3">
+          <%= actions %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -158,6 +158,24 @@ module ApplicationHelper
     status_panel_classes(sold ? :danger : :success)
   end
 
+  # Alert panel classes for multi-line notices with optional actions
+  def alert_panel_classes(variant)
+    case variant.to_sym
+    when :warning
+      { container: "bg-yellow-50 border-yellow-200", title: "text-yellow-800", text: "text-yellow-700", icon: "text-yellow-400" }
+    when :info
+      { container: "bg-blue-50 border-blue-200", title: "text-blue-900", text: "text-blue-800", icon: "text-blue-400" }
+    when :danger
+      { container: "bg-red-50 border-red-200", title: "text-red-800", text: "text-red-700", icon: "text-red-400" }
+    when :success
+      { container: "bg-green-50 border-green-200", title: "text-green-800", text: "text-green-700", icon: "text-green-400" }
+    when :tip
+      { container: "bg-amber-50 border-amber-200", title: "text-amber-800", text: "text-amber-700", icon: "text-amber-400" }
+    else # :neutral
+      { container: "bg-gray-50 border-gray-200", title: "text-gray-800", text: "text-gray-700", icon: "text-gray-400" }
+    end
+  end
+
   # Generic status panel classes for different variants
   def status_panel_classes(variant)
     case variant.to_sym
