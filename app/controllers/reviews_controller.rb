@@ -35,24 +35,32 @@ class ReviewsController < ApplicationController
       first_review = current_user.reviews_given.count == 1
 
       # Create reward flash message
-      flash[:reward] = if first_review
-        {
-          title: "🎉 Chúc mừng đánh giá đầu tiên!",
-          message: "Bạn vừa nhận được +0.5 điểm uy tín. Cộng đồng sẽ tin tưởng bạn hơn!",
-          first_review: true
-        }
+      flash_message = if first_review
+        { icon: "🎉", title: "Chúc mừng đánh giá đầu tiên!", body: "Bạn vừa nhận được +0.5 điểm uy tín. Cộng đồng sẽ tin tưởng bạn hơn!" }
       else
-        {
-          title: "🎉 Cảm ơn bạn đã đánh giá!",
-          message: "Điểm uy tín của bạn đã tăng +0.2. Mỗi đánh giá giúp cộng đồng an toàn hơn!",
-          first_review: false
-        }
+        { icon: "🎉", title: "Cảm ơn bạn đã đánh giá!", body: "Điểm uy tín của bạn đã tăng +0.2. Mỗi đánh giá giúp cộng đồng an toàn hơn!" }
       end
 
-      redirect_to post_chat_room_path(@post, @chat_room)
+      respond_to do |format|
+        format.turbo_stream do
+          flash.now[:success] = flash_message
+          render turbo_stream: [
+            turbo_stream.update("modal", ""),
+            turbo_stream.update("report_modal", ""),
+            turbo_stream.update("flash", partial: "shared/flash")
+          ]
+        end
+        format.html do
+          flash[:success] = flash_message
+          redirect_to post_chat_room_path(@post, @chat_room)
+        end
+      end
     else
       @reviewee = @chat_room.other_user(current_user)
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render :new, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 
