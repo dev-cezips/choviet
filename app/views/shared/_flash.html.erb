@@ -1,10 +1,53 @@
-<div class="<%= type == :notice ? 'bg-green-100 border-l-4 border-green-500 text-green-700' : 'bg-red-100 border-l-4 border-red-500 text-red-700' %> p-4 mb-4">
-  <div class="flex justify-between items-center">
-    <p><%= message %></p>
-    <button data-action="click->flash#close" class="text-gray-400 hover:text-gray-600">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
-    </button>
-  </div>
+<%# shared/_flash.html.erb %>
+<% return if flash.blank? %>
+
+<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 mt-4 space-y-3">
+  <% flash.each do |key, value| %>
+    <% next if value.blank? %>
+
+    <% variant = flash_variant(key) %>
+    <% defaults = flash_defaults(variant) %>
+
+    <% title = defaults[:title] %>
+    <% icon  = defaults[:icon] %>
+
+    <% body  = nil %>
+    <% items = [] %>
+
+    <%# Normalize value shapes %>
+    <% if value.is_a?(Hash) %>
+      <% title = value[:title].presence || value["title"].presence || title %>
+      <% icon  = value[:icon].presence  || value["icon"].presence  || icon  %>
+
+      <% v_items = value[:items] || value["items"] %>
+      <% v_body  = value[:body]  || value["body"]  || value[:message] || value["message"] %>
+
+      <% if v_items.is_a?(Array) %>
+        <% items = v_items.map { |m| m.to_s.strip }.reject(&:blank?) %>
+      <% elsif v_body.present? %>
+        <% body = v_body.to_s %>
+      <% else %>
+        <% body = value.to_s %>
+      <% end %>
+
+    <% elsif value.is_a?(Array) %>
+      <% items = value.map { |m| m.to_s.strip }.reject(&:blank?) %>
+
+    <% else %>
+      <% body = value.to_s %>
+    <% end %>
+
+    <%# Ensure list bullets are consistent when items exist %>
+    <% if items.present? %>
+      <% items = items.map { |m| m.start_with?("•") ? m : "• #{m}" } %>
+    <% end %>
+
+    <%= render "shared/dismissible_alert",
+        id: "flash-#{key}",
+        variant: variant,
+        icon: icon,
+        title: title,
+        body: body,
+        items: items %>
+  <% end %>
 </div>

@@ -9,12 +9,14 @@ export default class extends Controller {
   dismiss() {
     this.element.style.display = "none"
 
-    fetch(this.urlValue, {
-      method: this.methodValue,
-      headers: {
-        "X-CSRF-Token": document.querySelector("meta[name=csrf-token]").content,
-        "Content-Type": "application/json"
-      }
-    })
+    if (this.urlValue) {
+      fetch(this.urlValue, {
+        method: this.methodValue,
+        headers: {
+          "X-CSRF-Token": document.querySelector("meta[name=csrf-token]").content,
+          "Content-Type": "application/json"
+        }
+      })
+    }
   }
 }

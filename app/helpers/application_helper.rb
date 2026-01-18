@@ -357,6 +357,42 @@ module ApplicationHelper
     suspicious_patterns.any? { |pattern| content.match?(pattern) }
   end
 
+  # Flash → variant mapping for unified UI
+  def flash_variant(key)
+    case key.to_s
+    when "notice", "success", "ok"
+      :success
+    when "alert", "warning"
+      :warning
+    when "error", "danger"
+      :danger
+    when "info"
+      :info
+    when "tip"
+      :tip
+    else
+      :neutral
+    end
+  end
+
+  # Flash default labels/icons (Vietnamese)
+  def flash_defaults(variant)
+    case variant.to_sym
+    when :success
+      { icon: "✅", title: "Thành công" }
+    when :warning
+      { icon: "⚠️", title: "Cảnh báo" }
+    when :danger
+      { icon: "⛔", title: "Lỗi" }
+    when :info
+      { icon: "ℹ️", title: "Thông tin" }
+    when :tip
+      { icon: "💡", title: "Gợi ý" }
+    else
+      { icon: "🔔", title: "Thông báo" }
+    end
+  end
+
   private
 
   def normalize_post_status(post_or_status)
