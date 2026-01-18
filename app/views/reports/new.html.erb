@@ -74,16 +74,17 @@
             placeholder: t('reports.description_placeholder', default: 'Mô tả thêm về vi phạm...') %>
       </div>
 
-      <div class="text-sm text-gray-600 mb-6 bg-yellow-50 p-3 rounded-md">
-        <p class="font-medium mb-1">
-          <%= t('reports.notice.title', default: '📢 Lưu ý:') %>
-        </p>
-        <ul class="space-y-1">
-          <li>• <%= t('reports.notice.false_report', default: 'Báo cáo sai có thể ảnh hưởng đến uy tín của bạn') %></li>
-          <li>• <%= t('reports.notice.review', default: 'Chúng tôi sẽ xem xét trong 24h') %></li>
-          <li>• <%= t('reports.notice.auto_hide', default: 'Nội dung có 3 báo cáo sẽ tự động ẩn') %></li>
-        </ul>
-      </div>
+      <% notice_items = [
+        "• " + t('reports.notice.false_report', default: 'Báo cáo sai có thể ảnh hưởng đến uy tín của bạn'),
+        "• " + t('reports.notice.review', default: 'Chúng tôi sẽ xem xét trong 24h'),
+        "• " + t('reports.notice.auto_hide', default: 'Nội dung có 3 báo cáo sẽ tự động ẩn')
+      ] %>
+      <%= render "shared/alert_panel",
+          variant: :warning,
+          icon: "📢",
+          title: t('reports.notice.title', default: 'Lưu ý:'),
+          items: notice_items,
+          class_name: "mb-6" %>
 
       <div class="flex gap-3">
         <%= form.submit t('reports.submit', default: 'Gửi báo cáo'), 
