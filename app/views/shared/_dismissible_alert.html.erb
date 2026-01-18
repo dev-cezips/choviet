@@ -7,7 +7,7 @@
 <% actions = local_assigns[:actions] %>
 <% class_name = local_assigns[:class_name].to_s %>
 
-<% dismiss_url = local_assigns.fetch(:dismiss_url) %>
+<% dismiss_url = local_assigns[:dismiss_url] %>
 <% dismiss_method = (local_assigns[:dismiss_method] || :post).to_s.upcase %>
 
 <div id="<%= id %>"
