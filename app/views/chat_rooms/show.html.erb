@@ -35,39 +35,20 @@
     
     <!-- Review Reminder Banner (24h after completion, dismissible) -->
     <% if @show_review_reminder %>
-      <div id="review-reminder" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-3 flex items-start gap-3">
-        <span class="text-2xl">🙂</span>
-        <div class="flex-1">
-          <p class="font-medium text-blue-900 mb-1">Giao dịch này thế nào?</p>
-          <p class="text-sm text-blue-700">30 giây để đánh giá sẽ giúp cộng đồng tin cậy hơn!</p>
-          <div class="mt-2">
-            <%= link_to new_post_chat_room_review_path(@post, @chat_room), 
-                class: "inline-flex items-center gap-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors" do %>
-              <span>📝</span>
-              <span>Đánh giá ngay</span>
-            <% end %>
-          </div>
-        </div>
-        <button onclick="dismissReviewReminder()" class="text-blue-600 hover:text-blue-800">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-      
-      <script>
-        function dismissReviewReminder() {
-          document.getElementById('review-reminder').style.display = 'none';
-          // Store dismissal in session via AJAX
-          fetch('<%= dismiss_review_reminder_post_chat_room_path(@post, @chat_room) %>', {
-            method: 'POST',
-            headers: {
-              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
-              'Content-Type': 'application/json'
-            }
-          });
-        }
-      </script>
+      <% review_link = link_to(new_post_chat_room_review_path(@post, @chat_room),
+          class: "inline-flex items-center gap-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors") do %>
+        <span>📝</span>
+        <span>Đánh giá ngay</span>
+      <% end %>
+      <%= render "shared/dismissible_alert",
+          id: "review-reminder",
+          variant: :info,
+          icon: "🙂",
+          title: "Giao dịch này thế nào?",
+          body: "30 giây để đánh giá sẽ giúp cộng đồng tin cậy hơn!",
+          actions: review_link,
+          dismiss_url: dismiss_review_reminder_post_chat_room_path(@post, @chat_room),
+          class_name: "mb-3" %>
     <% end %>
     
     <!-- Low Reputation Notice -->
