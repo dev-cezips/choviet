@@ -106,9 +106,9 @@
       </div>
     </footer>
     
-    <!-- Modal frame for reports and other modals -->
-    <%= turbo_frame_tag "report_modal" do %>
-    <% end %>
+    <!-- Modal frames (modal = new standard, report_modal = legacy compat) -->
+    <%= turbo_frame_tag "modal" %>
+    <%= turbo_frame_tag "report_modal" %>
     
     <%= render "shared/rate_limit_notice" if defined?(request) %>
     
