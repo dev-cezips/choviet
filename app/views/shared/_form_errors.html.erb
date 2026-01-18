@@ -1,0 +1,11 @@
+<% object = local_assigns[:object] %>
+<% return if object.blank? || object.errors.blank? || object.errors.empty? %>
+
+<% messages = object.errors.full_messages.map { |m| "• #{m}" } %>
+
+<%= render "shared/alert_panel",
+    variant: :danger,
+    icon: "⛔",
+    title: t("errors.form.title", default: "Có lỗi xảy ra:"),
+    items: messages,
+    class_name: local_assigns[:class_name].to_s %>

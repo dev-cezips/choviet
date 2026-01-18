@@ -15,16 +15,7 @@
     </div>
     
     <%= form_with(model: [@post, @chat_room, @review], local: true) do |form| %>
-      <% if @review.errors.any? %>
-        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
-          <p class="text-sm font-medium text-red-800">Vui lòng kiểm tra lại:</p>
-          <ul class="mt-2 list-disc list-inside text-sm text-red-700">
-            <% @review.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
+      <%= render "shared/form_errors", object: @review, class_name: "mb-4" %>
       
       <!-- Star Rating -->
       <div class="mb-6">

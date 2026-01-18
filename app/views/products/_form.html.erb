@@ -1,14 +1,5 @@
 <%= form_with model: product, local: true, html: { multipart: true } do |f| %>
-  <% if product.errors.any? %>
-    <div class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
-      <p class="font-semibold mb-1">Có lỗi xảy ra:</p>
-      <ul class="list-disc list-inside">
-        <% product.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render "shared/form_errors", object: product, class_name: "mb-4" %>
 
   <div class="space-y-6">
     <!-- Product Name -->

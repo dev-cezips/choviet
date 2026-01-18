@@ -12,15 +12,7 @@
     </div>
 
     <%= form_with model: [@reportable, @report], local: false do |form| %>
-      <% if @report.errors.any? %>
-        <div class="bg-red-50 border border-red-200 rounded-md p-3 mb-4">
-          <p class="text-sm text-red-600">
-            <% @report.errors.full_messages.each do |message| %>
-              <%= message %>
-            <% end %>
-          </p>
-        </div>
-      <% end %>
+      <%= render "shared/form_errors", object: @report, class_name: "mb-4" %>
 
       <div class="mb-4">
         <p class="text-sm text-gray-600 mb-3">
