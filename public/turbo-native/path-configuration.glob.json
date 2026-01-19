@@ -1,0 +1,55 @@
+{
+  "settings": {
+    "screenshots_enabled": true
+  },
+  "rules": [
+    {
+      "patterns": [
+        "/",
+        "/posts"
+      ],
+      "properties": {
+        "context": "default"
+      }
+    },
+    {
+      "patterns": [
+        "/chat_rooms",
+        "/chat_rooms/*"
+      ],
+      "properties": {
+        "context": "default"
+      }
+    },
+    {
+      "patterns": [
+        "/me"
+      ],
+      "properties": {
+        "context": "default"
+      }
+    },
+    {
+      "patterns": [
+        "/messages/*/reports/new",
+        "/conversation_messages/*/reports/new",
+        "/posts/*/reports/new",
+        "/posts/*/chat_rooms/*/reviews/new"
+      ],
+      "properties": {
+        "presentation": "modal"
+      }
+    },
+    {
+      "patterns": [
+        "/users/sign_in",
+        "/users/sign_up",
+        "/users/password/new",
+        "/users/password/edit"
+      ],
+      "properties": {
+        "presentation": "replace"
+      }
+    }
+  ]
+}
