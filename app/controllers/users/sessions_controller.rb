@@ -13,7 +13,7 @@ class Users::SessionsController < Devise::SessionsController
 
   # This is used by Devise to redirect after sign in
   def after_sign_in_path_for(resource)
-    stored_location_for(resource) || marketplace_path
+    stored_location_for(resource) || posts_path
   end
 
   # This is used by Devise to redirect after sign out
