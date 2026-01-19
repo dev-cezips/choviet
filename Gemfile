@@ -39,7 +39,7 @@ gem "geocoder", "~> 1.8"
 gem "redis", "~> 5.0"
 
 # Background jobs for translations
-gem "sidekiq", "~> 7.1"
+gem "sidekiq", "~> 8.1"
 
 # Vietnamese language support
 gem "rails-i18n", "~> 8.0"
