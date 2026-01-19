@@ -1,0 +1,52 @@
+{
+  "settings": {
+    "screenshots_enabled": true
+  },
+  "rules": [
+    {
+      "patterns": [
+        "^/posts$",
+        "^/$"
+      ],
+      "properties": {
+        "context": "default",
+        "tab_id": "home"
+      }
+    },
+    {
+      "patterns": [
+        "^/chat_rooms"
+      ],
+      "properties": {
+        "context": "default",
+        "tab_id": "messages"
+      }
+    },
+    {
+      "patterns": [
+        "^/me$"
+      ],
+      "properties": {
+        "context": "default",
+        "tab_id": "profile"
+      }
+    },
+    {
+      "patterns": [
+        ".*/reports/new$",
+        ".*/reviews/new$"
+      ],
+      "properties": {
+        "context": "modal"
+      }
+    },
+    {
+      "patterns": [
+        ".*"
+      ],
+      "properties": {
+        "context": "default"
+      }
+    }
+  ]
+}

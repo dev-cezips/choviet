@@ -53,6 +53,9 @@ Rails.application.routes.draw do
     resources :reports, only: [ :new, :create ]
   end
 
+  # /me - stable URL for current user profile (Turbo Native deep link)
+  get "me", to: "users#me", as: :me
+
   resources :users, only: [ :show ] do
     resources :reports, only: [ :new, :create ]
     member do

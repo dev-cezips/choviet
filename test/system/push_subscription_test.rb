@@ -26,7 +26,7 @@ class PushSubscriptionTest < ApplicationSystemTestCase
     click_button "Save"
 
     # Wait for redirect to user profile page
-    assert_current_path user_path(@user)
+    assert_current_path me_path
     assert_text "Profile updated successfully!" # English success message
 
     # Verify the change was saved

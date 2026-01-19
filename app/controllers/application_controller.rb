@@ -76,8 +76,8 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     # If user was trying to access a specific page before login, go there
-    # Otherwise, go to marketplace listing page
-    stored_location_for(resource) || marketplace_path
+    # Otherwise, go to posts feed (stable for Turbo Native tabs)
+    stored_location_for(resource) || posts_path
   end
 
   protected
