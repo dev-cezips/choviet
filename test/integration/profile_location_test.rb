@@ -57,7 +57,7 @@ class ProfileLocationTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_redirected_to user_path(@user)
+    assert_redirected_to me_path
     follow_redirect!
     assert_response :success
 
@@ -92,7 +92,7 @@ class ProfileLocationTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_redirected_to user_path(@user)
+    assert_redirected_to me_path
     @user.reload
     assert_equal "seoul", @user.location_code
     assert_in_delta 37.5665, @user.latitude, 0.0001
@@ -110,7 +110,7 @@ class ProfileLocationTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_redirected_to user_path(@user)
+    assert_redirected_to me_path
     @user.reload
     assert_equal "seoul", @user.location_code, "Should auto-detect Seoul from coordinates"
     assert_in_delta 37.5665, @user.latitude, 0.0001
@@ -174,7 +174,7 @@ class ProfileLocationTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_redirected_to user_path(@user)
+    assert_redirected_to me_path
     @user.reload
     assert_equal "New Name", @user.name
     assert_equal "seoul", @user.location_code

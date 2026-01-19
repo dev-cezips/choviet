@@ -35,7 +35,7 @@ class UsersController < ApplicationController
     end
 
     if @user.update(attrs)
-      redirect_to user_path(@user), notice: I18n.t("users.updated")
+      redirect_to me_path, notice: I18n.t("users.updated")
     else
       render :edit, status: :unprocessable_entity
     end
