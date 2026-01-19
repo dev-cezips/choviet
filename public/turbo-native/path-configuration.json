@@ -9,8 +9,7 @@
         "^/posts$"
       ],
       "properties": {
-        "context": "default",
-        "tab_id": "home"
+        "context": "default"
       }
     },
     {
@@ -19,8 +18,7 @@
         "^/chat_rooms/\\d+$"
       ],
       "properties": {
-        "context": "default",
-        "tab_id": "messages"
+        "context": "default"
       }
     },
     {
@@ -28,8 +26,7 @@
         "^/me$"
       ],
       "properties": {
-        "context": "default",
-        "tab_id": "profile"
+        "context": "default"
       }
     },
     {
@@ -40,7 +37,7 @@
         "^/posts/\\d+/chat_rooms/\\d+/reviews/new$"
       ],
       "properties": {
-        "presentation": "modal"
+        "context": "modal"
       }
     },
     {
