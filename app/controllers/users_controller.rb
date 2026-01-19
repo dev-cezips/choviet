@@ -4,23 +4,15 @@ class UsersController < ApplicationController
   before_action :set_current_user, only: [ :edit, :update ]
   before_action :check_favorites_permission, only: [ :favorites ]
 
+  # /me - stable URL for current user (Turbo Native tab)
+  def me
+    authenticate_user!
+    @user = current_user
+    show_profile
+  end
+
   def show
-    # 판매 중인 상품
-    @selling_posts = @user.posts.where(status: "active").order(created_at: :desc)
-
-    # 판매 완료된 상품
-    @sold_posts = @user.posts.where(status: "sold").order(created_at: :desc).limit(5)
-
-    # 통계
-    @total_posts = @user.posts.count
-    @total_sold = @user.posts.where(status: "sold").count
-    @member_since_days = (Date.current - @user.created_at.to_date).to_i
-
-    # 매너 온도 (일단 기본값 36.5로 시작)
-    @manner_temp = @user.reputation_score || 36.5
-
-    # 받은 좋아요 수
-    @received_likes = @user.posts.joins(:likes).count
+    show_profile
   end
 
   def edit
@@ -96,6 +88,27 @@ class UsersController < ApplicationController
 
   def set_current_user
     @user = current_user
+  end
+
+  def show_profile
+    # 판매 중인 상품
+    @selling_posts = @user.posts.where(status: "active").order(created_at: :desc)
+
+    # 판매 완료된 상품
+    @sold_posts = @user.posts.where(status: "sold").order(created_at: :desc).limit(5)
+
+    # 통계
+    @total_posts = @user.posts.count
+    @total_sold = @user.posts.where(status: "sold").count
+    @member_since_days = (Date.current - @user.created_at.to_date).to_i
+
+    # 매너 온도 (일단 기본값 36.5로 시작)
+    @manner_temp = @user.reputation_score || 36.5
+
+    # 받은 좋아요 수
+    @received_likes = @user.posts.joins(:likes).count
+
+    render :show
   end
 
   def user_params
