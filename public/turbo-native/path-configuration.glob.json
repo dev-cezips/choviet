@@ -37,7 +37,7 @@
         "/posts/*/chat_rooms/*/reviews/new"
       ],
       "properties": {
-        "presentation": "modal"
+        "context": "modal"
       }
     },
     {

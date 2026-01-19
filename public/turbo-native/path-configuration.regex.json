@@ -37,7 +37,7 @@
         "^/posts/\\d+/chat_rooms/\\d+/reviews/new$"
       ],
       "properties": {
-        "presentation": "modal"
+        "context": "modal"
       }
     },
     {
