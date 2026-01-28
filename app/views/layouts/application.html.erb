@@ -40,8 +40,10 @@
     </style>
   </head>
 
-  <body class="font-vietnam" style="padding-top: 120px !important; background-color: #ffffff !important;">
-    <%= render "layouts/header" %>
+  <body class="font-vietnam <%= 'turbo-native' if turbo_native_app? %>" style="<%= turbo_native_app? ? '' : 'padding-top: 120px !important;' %> background-color: #ffffff !important;">
+    <% unless turbo_native_app? %>
+      <%= render "layouts/header" %>
+    <% end %>
 
     <!-- Main content wrapper -->
     <div>

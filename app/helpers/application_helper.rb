@@ -393,6 +393,11 @@ module ApplicationHelper
     end
   end
 
+  # Detect Turbo Native app (iOS/Android)
+  def turbo_native_app?
+    request.user_agent.to_s.include?("Turbo Native")
+  end
+
   private
 
   def normalize_post_status(post_or_status)
