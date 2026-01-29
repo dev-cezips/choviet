@@ -41,7 +41,7 @@
     </style>
   </head>
 
-  <body class="font-vietnam" style="<%= turbo_native_app? ? '' : 'padding-top: 120px !important;' %> background-color: #ffffff !important;">
+  <body class="font-vietnam" style="<%= turbo_native_app? ? 'padding-top: env(safe-area-inset-top, 0px);' : 'padding-top: 120px !important;' %> background-color: #ffffff !important;">
     <% unless turbo_native_app? %>
       <%= render "layouts/header" %>
     <% end %>
