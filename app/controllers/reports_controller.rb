@@ -19,6 +19,17 @@ class ReportsController < ApplicationController
         has_description: @report.description.present?
       })
 
+      # Turbo Native: redirect to the reportable item
+      if turbo_native_app?
+        location = case @reportable
+        when Post then post_path(@reportable)
+        when User then user_path(@reportable)
+        else root_path
+        end
+        redirect_to location, notice: I18n.t("reports.created")
+        return
+      end
+
       flash.now[:notice] = I18n.t("reports.created")
 
       respond_to do |format|
@@ -34,9 +45,15 @@ class ReportsController < ApplicationController
         end
       end
     else
+      # Turbo Native: render HTML (not turbo_stream)
+      if turbo_native_app?
+        render :new, status: :unprocessable_entity, formats: [:html]
+        return
+      end
+
       respond_to do |format|
         format.turbo_stream do
-          render :new, status: :unprocessable_entity
+          render :new, status: :unprocessable_entity, formats: [:html]
         end
         format.html do
           render :new, status: :unprocessable_entity

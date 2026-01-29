@@ -37,10 +37,11 @@
       main, .bg-off-white, .bg-gray-50 {
         background-color: #ffffff !important;
       }
+
     </style>
   </head>
 
-  <body class="font-vietnam <%= 'turbo-native' if turbo_native_app? %>" style="<%= turbo_native_app? ? '' : 'padding-top: 120px !important;' %> background-color: #ffffff !important;">
+  <body class="font-vietnam" style="<%= turbo_native_app? ? '' : 'padding-top: 120px !important;' %> background-color: #ffffff !important;">
     <% unless turbo_native_app? %>
       <%= render "layouts/header" %>
     <% end %>
@@ -106,8 +107,8 @@
     
     <%= render "shared/rate_limit_notice" if defined?(request) %>
     
-    <!-- Floating Write Button -->
-    <% if user_signed_in? %>
+    <!-- Floating Write Button (hidden on report pages and in Turbo Native) -->
+    <% if user_signed_in? && !turbo_native_app? && !controller_name.in?(['reports']) %>
       <div class="fixed bottom-6 right-6 z-40 md:hidden">
         <%= link_to new_post_path, class: "group flex items-center justify-center w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-200 hover:scale-110" do %>
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

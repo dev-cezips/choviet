@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
 
   # Include helpers
   helper MoneyHelper
+  helper_method :turbo_native_app?
 
   before_action :set_locale
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -78,6 +79,11 @@ class ApplicationController < ActionController::Base
     # If user was trying to access a specific page before login, go there
     # Otherwise, go to posts feed (stable for Turbo Native tabs)
     stored_location_for(resource) || posts_path
+  end
+
+  # Detect Turbo Native app (iOS/Android)
+  def turbo_native_app?
+    request.user_agent.to_s.include?("Turbo Native")
   end
 
   protected
