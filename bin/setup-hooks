@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# Setup git hooks for Turbo Native testing
+#
+
+HOOKS_DIR=".git/hooks"
+
+echo "🔧 Setting up git hooks..."
+
+# Create pre-push hook
+cat > "$HOOKS_DIR/pre-push" << 'EOF'
+#!/bin/bash
+#
+# Pre-push hook: Run Turbo Native endpoint checks before pushing
+# Skip with: git push --no-verify
+#
+
+echo "🔍 Running Turbo Native pre-push checks..."
+
+# Check if server is running
+if ! curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/posts | grep -q "200\|302"; then
+    echo "⚠️  Rails server not running, skipping Turbo Native checks"
+    exit 0
+fi
+
+# Run quick endpoint checks only (no screenshots)
+endpoints=(
+    "/posts"
+    "/turbo-native/path-configuration.json"
+    "/.well-known/apple-app-site-association"
+)
+
+all_ok=true
+for endpoint in "${endpoints[@]}"; do
+    status=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000$endpoint")
+    if [ "$status" = "200" ] || [ "$status" = "302" ]; then
+        echo "  ✅ $endpoint"
+    else
+        echo "  ❌ $endpoint ($status)"
+        all_ok=false
+    fi
+done
+
+if [ "$all_ok" = false ]; then
+    echo ""
+    echo "❌ Turbo Native endpoint check failed!"
+    echo "   Fix the issues or push with: git push --no-verify"
+    exit 1
+fi
+
+echo "✅ All Turbo Native endpoints OK"
+exit 0
+EOF
+
+chmod +x "$HOOKS_DIR/pre-push"
+
+echo "✅ Pre-push hook installed"
+echo ""
+echo "Hook behavior:"
+echo "  - Checks Turbo Native endpoints before each push"
+echo "  - Skips if Rails server is not running"
+echo "  - Bypass with: git push --no-verify"
+echo ""
+echo "To run full tests with screenshots:"
+echo "  bin/turbo-native-test"

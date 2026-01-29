@@ -159,3 +159,112 @@ jobs:
           else
             echo "bin/rubocop not found; skipping."
           fi
+
+  turbo_native_check:
+    name: Turbo Native Endpoints
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install OS deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sqlite3 libsqlite3-dev imagemagick
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install JS dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build CSS assets
+        run: bin/rails tailwindcss:build
+
+      - name: Prepare DB
+        run: bin/rails db:create db:schema:load
+
+      - name: Start server
+        run: |
+          bin/rails server -d -p 3000
+          sleep 5
+
+      - name: Check Turbo Native endpoints
+        run: |
+          echo "🔍 Checking Turbo Native endpoints..."
+
+          # Check AASA (Apple App Site Association)
+          echo -n "  /.well-known/apple-app-site-association: "
+          AASA_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/.well-known/apple-app-site-association)
+          if [ "$AASA_STATUS" = "200" ]; then
+            echo "✅ $AASA_STATUS"
+          else
+            echo "❌ $AASA_STATUS"
+            exit 1
+          fi
+
+          # Verify AASA content type
+          AASA_CT=$(curl -s -I http://localhost:3000/.well-known/apple-app-site-association | grep -i "content-type" | tr -d '\r')
+          echo "  Content-Type: $AASA_CT"
+
+          # Check path configuration
+          echo -n "  /turbo-native/path-configuration.json: "
+          PATH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/turbo-native/path-configuration.json)
+          if [ "$PATH_STATUS" = "200" ]; then
+            echo "✅ $PATH_STATUS"
+          else
+            echo "❌ $PATH_STATUS"
+            exit 1
+          fi
+
+          # Check main pages
+          for endpoint in "/posts" "/posts/1"; do
+            echo -n "  $endpoint: "
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000$endpoint")
+            if [ "$STATUS" = "200" ] || [ "$STATUS" = "302" ]; then
+              echo "✅ $STATUS"
+            else
+              echo "❌ $STATUS"
+              exit 1
+            fi
+          done
+
+          echo ""
+          echo "✅ All Turbo Native endpoints OK"
+
+      - name: Validate AASA JSON structure
+        run: |
+          echo "🔍 Validating AASA JSON..."
+          AASA=$(curl -s http://localhost:3000/.well-known/apple-app-site-association)
+
+          # Check required fields
+          if echo "$AASA" | ruby -rjson -e 'j=JSON.parse(STDIN.read); exit(j.dig("applinks","details")&.any? ? 0 : 1)'; then
+            echo "✅ AASA structure valid"
+          else
+            echo "❌ AASA structure invalid"
+            echo "$AASA"
+            exit 1
+          fi
+
+      - name: Validate Path Configuration
+        run: |
+          echo "🔍 Validating Path Configuration..."
+          PC=$(curl -s http://localhost:3000/turbo-native/path-configuration.json)
+
+          if echo "$PC" | ruby -rjson -e 'j=JSON.parse(STDIN.read); exit(j["rules"]&.any? ? 0 : 1)'; then
+            echo "✅ Path configuration valid"
+          else
+            echo "❌ Path configuration invalid"
+            echo "$PC"
+            exit 1
+          fi

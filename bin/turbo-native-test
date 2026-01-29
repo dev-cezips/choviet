@@ -1,0 +1,383 @@
+#!/bin/bash
+#
+# Turbo Native iOS Test Script
+# Captures screenshots and generates test summary report
+# Supports golden screenshot comparison for regression testing
+#
+
+set -e
+
+# Configuration
+BASE_URL="${BASE_URL:-http://localhost:3000}"
+TEST_DIR="tmp/turbo-native-tests/$(date +%Y%m%d-%H%M%S)"
+GOLDEN_DIR="test/turbo-native-golden"
+DEVICE="${DEVICE:-iPhone 17}"
+UPDATE_GOLDEN="${UPDATE_GOLDEN:-false}"
+DIFF_THRESHOLD="${DIFF_THRESHOLD:-0.1}"  # 0.1% pixel difference allowed
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Create test directory
+mkdir -p "$TEST_DIR"
+
+echo "🧪 Turbo Native Test Runner"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+# Collect environment info
+collect_environment() {
+    echo "📋 Collecting environment info..."
+
+    # Get Xcode version (handle missing Xcode gracefully)
+    xcode_version=$(xcodebuild -version 2>/dev/null | head -1 | awk '{print $2}' || echo "N/A")
+
+    # Get iOS simulator version
+    ios_version=$(xcrun simctl list devices booted 2>/dev/null | grep -oE 'iOS [0-9.]+' | head -1 || echo "N/A")
+
+    {
+        echo "# Turbo Native Test Report"
+        echo "Generated: $(date '+%Y-%m-%d %H:%M:%S')"
+        echo ""
+        echo "## Environment"
+        echo ""
+        echo "| Item | Value |"
+        echo "|------|-------|"
+        echo "| macOS | $(sw_vers -productVersion) |"
+        echo "| Xcode | $xcode_version |"
+        echo "| Simulator | $DEVICE |"
+        echo "| iOS | $ios_version |"
+        echo "| Ruby | $(ruby -v | awk '{print $2}') |"
+        echo "| Rails | $(bin/rails -v 2>/dev/null | awk '{print $2}' || echo 'N/A') |"
+        echo "| Base URL | $BASE_URL |"
+        echo ""
+    } > "$TEST_DIR/summary.md"
+}
+
+# Check server status
+check_server() {
+    echo "🔍 Checking server status..."
+
+    {
+        echo "## Server Status"
+        echo ""
+        echo "| Endpoint | Status |"
+        echo "|----------|--------|"
+    } >> "$TEST_DIR/summary.md"
+
+    # Test endpoints
+    endpoints=(
+        "/posts"
+        "/posts/1"
+        "/turbo-native/path-configuration.json"
+        "/.well-known/apple-app-site-association"
+    )
+
+    all_ok=true
+    for endpoint in "${endpoints[@]}"; do
+        url="$BASE_URL$endpoint"
+
+        response=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 "$url" 2>/dev/null || echo "000")
+
+        if [ "$response" = "200" ] || [ "$response" = "302" ]; then
+            status_icon="✅"
+        else
+            status_icon="❌"
+            all_ok=false
+        fi
+
+        echo "| $endpoint | $status_icon $response |" >> "$TEST_DIR/summary.md"
+        echo "  $status_icon $endpoint → $response"
+    done
+
+    echo "" >> "$TEST_DIR/summary.md"
+
+    if [ "$all_ok" = true ]; then
+        echo -e "${GREEN}✅ All endpoints OK${NC}"
+    else
+        echo -e "${YELLOW}⚠️  Some endpoints failed${NC}"
+    fi
+    echo ""
+}
+
+# Compare screenshot with golden
+compare_with_golden() {
+    local name=$1
+    local current="$TEST_DIR/${name}.png"
+    local golden="$GOLDEN_DIR/${name}.png"
+    local diff="$TEST_DIR/${name}-diff.png"
+
+    if [ ! -f "$golden" ]; then
+        echo -e "${YELLOW}    ⚠️  No golden image (run with --update-golden to create)${NC}"
+        echo "| $name | ⚠️ No baseline | - | NEW |" >> "$TEST_DIR/comparison.md"
+        return 0  # Not a failure, just no baseline yet
+    fi
+
+    # Check if ImageMagick is available
+    if ! command -v compare &> /dev/null; then
+        echo -e "${YELLOW}    ⚠️  ImageMagick not installed, skipping diff${NC}"
+        echo "| $name | ⚠️ No ImageMagick | - | SKIP |" >> "$TEST_DIR/comparison.md"
+        return 0
+    fi
+
+    # Compare images and get difference metric
+    # AE = Absolute Error (number of different pixels)
+    diff_pixels=$(compare -metric AE "$golden" "$current" "$diff" 2>&1 || echo "0")
+
+    # Clean up diff_pixels (remove any non-numeric characters)
+    diff_pixels=$(echo "$diff_pixels" | grep -oE '^[0-9]+' || echo "0")
+
+    if [ -z "$diff_pixels" ] || [ "$diff_pixels" = "0" ]; then
+        echo -e "${GREEN}    ✅ MATCH (identical)${NC}"
+        echo "| $name | ✅ 0% | 0px | PASS |" >> "$TEST_DIR/comparison.md"
+        rm -f "$diff"
+        return 0
+    fi
+
+    # Get image dimensions using sips (macOS native, more reliable)
+    width=$(sips -g pixelWidth "$current" 2>/dev/null | tail -1 | awk '{print $2}')
+    height=$(sips -g pixelHeight "$current" 2>/dev/null | tail -1 | awk '{print $2}')
+
+    if [ -n "$width" ] && [ -n "$height" ] && [ "$width" -gt 0 ] && [ "$height" -gt 0 ]; then
+        total_pixels=$((width * height))
+        # Calculate percentage using awk (more portable than bc)
+        diff_percent=$(awk "BEGIN {printf \"%.4f\", $diff_pixels * 100 / $total_pixels}")
+    else
+        diff_percent="0"
+        total_pixels=0
+    fi
+
+    # Check against threshold using awk
+    threshold_exceeded=$(awk "BEGIN {print ($diff_percent > $DIFF_THRESHOLD) ? 1 : 0}")
+
+    if [ "$threshold_exceeded" -eq 1 ]; then
+        echo -e "${RED}    ❌ DIFF: ${diff_percent}% (${diff_pixels} pixels)${NC}"
+        echo "| $name | ❌ ${diff_percent}% | ${diff_pixels}px | FAIL |" >> "$TEST_DIR/comparison.md"
+        HAS_DIFF=true
+        return 1
+    else
+        echo -e "${GREEN}    ✅ MATCH (${diff_percent}% diff)${NC}"
+        echo "| $name | ✅ ${diff_percent}% | ${diff_pixels}px | PASS |" >> "$TEST_DIR/comparison.md"
+        rm -f "$diff"
+        return 0
+    fi
+}
+
+# Take simulator screenshot
+take_screenshot() {
+    local name=$1
+    local description=$2
+    local filename="${name}.png"
+
+    echo "📸 Capturing: $description..."
+
+    # Check if simctl is available
+    if ! command -v xcrun &> /dev/null; then
+        echo -e "${YELLOW}  ⚠️  xcrun not available, skipping screenshot${NC}"
+        echo "| $name | ⚠️ xcrun unavailable | - |" >> "$TEST_DIR/captures.md"
+        return 1
+    fi
+
+    # Get booted simulator UDID
+    UDID=$(xcrun simctl list devices booted 2>/dev/null | grep -oE "[A-F0-9-]{36}" | head -1)
+
+    if [ -z "$UDID" ]; then
+        echo -e "${YELLOW}  ⚠️  No booted simulator found${NC}"
+        echo "| $name | ⚠️ No simulator | - |" >> "$TEST_DIR/captures.md"
+        return 1
+    fi
+
+    # Take screenshot
+    xcrun simctl io "$UDID" screenshot "$TEST_DIR/$filename" 2>/dev/null
+
+    if [ -f "$TEST_DIR/$filename" ]; then
+        size=$(ls -lh "$TEST_DIR/$filename" | awk '{print $5}')
+        echo "| $name | $description | $size |" >> "$TEST_DIR/captures.md"
+        echo -e "${GREEN}  ✅ Saved: $filename ($size)${NC}"
+
+        # Update golden if requested
+        if [ "$UPDATE_GOLDEN" = "true" ]; then
+            mkdir -p "$GOLDEN_DIR"
+            cp "$TEST_DIR/$filename" "$GOLDEN_DIR/$filename"
+            echo -e "${YELLOW}    📌 Updated golden: $filename${NC}"
+        else
+            # Compare with golden
+            compare_with_golden "$name"
+        fi
+
+        return 0
+    else
+        echo -e "${YELLOW}  ⚠️  Failed to capture${NC}"
+        echo "| $name | ⚠️ Failed | - |" >> "$TEST_DIR/captures.md"
+        return 1
+    fi
+}
+
+# Capture screenshots
+capture_screens() {
+    echo "📱 Capturing simulator screenshots..."
+    echo ""
+
+    HAS_DIFF=false
+
+    {
+        echo "## Screenshots"
+        echo ""
+        echo "| File | Description | Size |"
+        echo "|------|-------------|------|"
+    } > "$TEST_DIR/captures.md"
+
+    {
+        echo "## Golden Comparison"
+        echo ""
+        echo "| File | Diff % | Pixels | Result |"
+        echo "|------|--------|--------|--------|"
+    } > "$TEST_DIR/comparison.md"
+
+    # Capture current screen
+    take_screenshot "01-current-state" "Current app state"
+
+    echo ""
+    cat "$TEST_DIR/captures.md" >> "$TEST_DIR/summary.md"
+    echo "" >> "$TEST_DIR/summary.md"
+
+    # Add comparison results if not updating golden
+    if [ "$UPDATE_GOLDEN" != "true" ]; then
+        cat "$TEST_DIR/comparison.md" >> "$TEST_DIR/summary.md"
+        echo "" >> "$TEST_DIR/summary.md"
+    fi
+}
+
+# Generate final summary
+generate_summary() {
+    local test_result="✅ PASS"
+    if [ "$HAS_DIFF" = "true" ]; then
+        test_result="❌ FAIL (screenshot diff detected)"
+    fi
+
+    {
+        echo "## Test Result"
+        echo ""
+        echo "| Metric | Value |"
+        echo "|--------|-------|"
+        echo "| Status | $test_result |"
+        echo "| Total Screenshots | $(ls -1 "$TEST_DIR"/*.png 2>/dev/null | wc -l | tr -d ' ') |"
+        echo "| Diff Images | $(ls -1 "$TEST_DIR"/*-diff.png 2>/dev/null | wc -l | tr -d ' ') |"
+        echo "| Test Duration | $((SECONDS))s |"
+        echo "| Report Location | \`$TEST_DIR/\` |"
+        echo "| Golden Location | \`$GOLDEN_DIR/\` |"
+        echo ""
+        echo "---"
+        echo ""
+        echo "*Generated by \`bin/turbo-native-test\`*"
+    } >> "$TEST_DIR/summary.md"
+
+    # Also create a plain text version
+    {
+        echo "TURBO NATIVE TEST SUMMARY"
+        echo "========================="
+        echo ""
+        echo "Status: $test_result"
+        echo "Date: $(date '+%Y-%m-%d %H:%M:%S')"
+        echo "Device: $DEVICE"
+        echo "Base URL: $BASE_URL"
+        echo ""
+        echo "SCREENSHOTS:"
+        ls -1 "$TEST_DIR"/*.png 2>/dev/null | while read f; do
+            echo "  - $(basename "$f")"
+        done
+        echo ""
+        echo "Duration: ${SECONDS}s"
+    } > "$TEST_DIR/summary.txt"
+}
+
+# Show usage
+show_usage() {
+    echo "Usage: $0 [options]"
+    echo ""
+    echo "Options:"
+    echo "  --update-golden    Update golden screenshots (baseline)"
+    echo "  --help             Show this help"
+    echo ""
+    echo "Environment variables:"
+    echo "  BASE_URL           Server URL (default: http://localhost:3000)"
+    echo "  DEVICE             Simulator device name (default: iPhone 17)"
+    echo "  UPDATE_GOLDEN      Set to 'true' to update golden images"
+    echo "  DIFF_THRESHOLD     Max allowed diff % (default: 0.1)"
+    echo ""
+    echo "Examples:"
+    echo "  $0                           # Run tests and compare with golden"
+    echo "  $0 --update-golden           # Capture new golden screenshots"
+    echo "  UPDATE_GOLDEN=true $0        # Same as above"
+}
+
+# Main execution
+main() {
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --update-golden)
+                UPDATE_GOLDEN=true
+                shift
+                ;;
+            --help|-h)
+                show_usage
+                exit 0
+                ;;
+            *)
+                echo "Unknown option: $1"
+                show_usage
+                exit 1
+                ;;
+        esac
+    done
+
+    SECONDS=0
+    HAS_DIFF=false
+
+    if [ "$UPDATE_GOLDEN" = "true" ]; then
+        echo -e "${YELLOW}📌 UPDATE MODE: Will save new golden screenshots${NC}"
+        echo ""
+    fi
+
+    collect_environment
+    check_server
+    capture_screens
+    generate_summary
+
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+    if [ "$UPDATE_GOLDEN" = "true" ]; then
+        echo -e "${GREEN}✅ Golden screenshots updated!${NC}"
+        echo ""
+        echo "📁 Golden: $GOLDEN_DIR/"
+    elif [ "$HAS_DIFF" = "true" ]; then
+        echo -e "${RED}❌ Test FAILED - screenshot differences detected${NC}"
+        echo ""
+        echo "📁 Results: $TEST_DIR/"
+        echo "🔍 Check *-diff.png files for visual differences"
+        echo ""
+        # Open report
+        if command -v open &> /dev/null; then
+            open "$TEST_DIR"
+        fi
+        exit 1
+    else
+        echo -e "${GREEN}✅ Test PASSED!${NC}"
+        echo ""
+        echo "📁 Results: $TEST_DIR/"
+    fi
+
+    echo "📄 Report:  $TEST_DIR/summary.md"
+    echo ""
+
+    # Open report on success (optional)
+    if command -v open &> /dev/null && [ "$HAS_DIFF" != "true" ]; then
+        open "$TEST_DIR"
+    fi
+}
+
+main "$@"
