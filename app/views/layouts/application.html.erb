@@ -107,9 +107,9 @@
     
     <%= render "shared/rate_limit_notice" if defined?(request) %>
     
-    <!-- Floating Write Button (hidden on report pages and in Turbo Native) -->
-    <% if user_signed_in? && !turbo_native_app? && !controller_name.in?(['reports']) %>
-      <div class="fixed bottom-6 right-6 z-40 md:hidden">
+    <!-- Floating Write Button -->
+    <% if user_signed_in? && !controller_name.in?(['reports']) %>
+      <div class="fixed bottom-6 right-6 z-40 <%= 'md:hidden' unless turbo_native_app? %>" style="<%= 'padding-bottom: env(safe-area-inset-bottom, 0px);' if turbo_native_app? %>">
         <%= link_to new_post_path, class: "group flex items-center justify-center w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-200 hover:scale-110" do %>
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
