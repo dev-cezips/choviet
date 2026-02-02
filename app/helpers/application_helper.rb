@@ -296,6 +296,33 @@ module ApplicationHelper
     }.fetch(status, "bg-gray-100 text-gray-800")
   end
 
+  # Inquiry status display order
+  def inquiry_status_order
+    %w[pending read replied converted]
+  end
+
+  # Inquiry status label (i18n)
+  def inquiry_status_label(inquiry_or_status)
+    status = normalize_inquiry_status(inquiry_or_status)
+    I18n.t("inquiries.dashboard.status.#{status}", default: status.humanize)
+  end
+
+  # Inquiry status badge class (alias for view compatibility)
+  def status_badge_class(status)
+    inquiry_status_badge_class(status)
+  end
+
+  # Inquiry status badge class
+  def inquiry_status_badge_class(inquiry_or_status)
+    status = normalize_inquiry_status(inquiry_or_status)
+    {
+      "pending" => "bg-orange-100 text-orange-800",
+      "read" => "bg-blue-100 text-blue-800",
+      "replied" => "bg-green-100 text-green-800",
+      "converted" => "bg-purple-100 text-purple-800"
+    }.fetch(status, "bg-gray-100 text-gray-800")
+  end
+
   # Location display helper
   def location_display(location, user = nil)
     return "" unless location
@@ -422,5 +449,9 @@ module ApplicationHelper
 
     # Fallback: truthy check for other values
     !!product_or_sold
+  end
+
+  def normalize_inquiry_status(inquiry_or_status)
+    inquiry_or_status.respond_to?(:status) ? inquiry_or_status.status.to_s : inquiry_or_status.to_s
   end
 end

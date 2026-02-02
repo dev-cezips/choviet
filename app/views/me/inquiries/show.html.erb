@@ -1,0 +1,140 @@
+<% content_for :title, t('inquiries.dashboard.detail.title') %>
+
+<div class="max-w-2xl mx-auto px-4 py-6">
+  <!-- 뒤로가기 -->
+  <div class="mb-4">
+    <%= link_to me_inquiries_path, class: "inline-flex items-center gap-1 text-gray-500 hover:text-gray-700" do %>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      <span><%= t('inquiries.dashboard.back_to_list') %></span>
+    <% end %>
+  </div>
+
+  <!-- 문의 카드 -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <!-- 헤더 -->
+    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+            <span class="text-green-600 font-semibold"><%= @inquiry.sender_name.first.upcase %></span>
+          </div>
+          <div>
+            <h2 class="font-semibold text-gray-900"><%= @inquiry.sender_name %></h2>
+            <p class="text-xs text-gray-500"><%= l(@inquiry.created_at, format: :long) %></p>
+          </div>
+        </div>
+        <span class="px-3 py-1 rounded-full text-sm <%= inquiry_status_badge_class(@inquiry.status) %>">
+          <%= t("inquiries.dashboard.status.#{@inquiry.status}") %>
+        </span>
+      </div>
+    </div>
+
+    <!-- 게시글 정보 (있는 경우) -->
+    <% if @inquiry.post %>
+      <%= link_to post_path(@inquiry.post), class: "block px-6 py-3 bg-gray-50 border-b border-gray-100 hover:bg-gray-100 transition-colors" do %>
+        <div class="flex items-center gap-2 text-sm">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <span class="text-gray-600"><%= t('inquiries.dashboard.detail.about_post') %>:</span>
+          <span class="text-gray-900 font-medium truncate"><%= @inquiry.post.title %></span>
+          <svg class="w-4 h-4 text-gray-400 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      <% end %>
+    <% end %>
+
+    <!-- 메시지 본문 -->
+    <div class="px-6 py-5">
+      <p class="text-gray-800 whitespace-pre-wrap leading-relaxed"><%= @inquiry.message %></p>
+    </div>
+
+    <!-- 연락처 정보 -->
+    <div class="px-6 py-4 bg-green-50 border-t border-green-100">
+      <h3 class="text-sm font-medium text-green-800 mb-3"><%= t('inquiries.dashboard.detail.contact_info') %></h3>
+      <div class="flex flex-wrap gap-3">
+        <div class="flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-green-200">
+          <% case @inquiry.contact_method %>
+          <% when "kakao" %>
+            <svg class="w-5 h-5 text-yellow-500" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 3C6.48 3 2 6.58 2 11c0 2.82 1.86 5.29 4.64 6.71-.14.52-.92 3.34-1.05 3.84-.14.57.21.56.44.4.18-.12 2.88-1.95 4.05-2.74.64.09 1.29.14 1.95.14 5.52 0 10-3.58 10-8S17.52 3 12 3z"/>
+            </svg>
+          <% when "email" %>
+            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+          <% when "phone" %>
+            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+            </svg>
+          <% end %>
+          <span class="text-sm text-gray-600"><%= t("inquiries.contact_methods.#{@inquiry.contact_method}") %></span>
+        </div>
+        <div class="flex-1 flex items-center px-3 py-2 bg-white rounded-lg border border-green-200">
+          <span class="font-medium text-gray-900 select-all"><%= @inquiry.contact_value %></span>
+          <button type="button"
+                  onclick="navigator.clipboard.writeText('<%= j @inquiry.contact_value %>')"
+                  class="ml-auto p-1 text-gray-400 hover:text-green-600 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 액션 버튼 -->
+    <div class="px-6 py-4 border-t border-gray-100 flex gap-3">
+      <% unless @inquiry.replied? || @inquiry.converted? %>
+        <%= button_to me_inquiry_path(@inquiry, inquiry: { status: 'replied' }),
+            method: :patch,
+            class: "flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span><%= t('inquiries.dashboard.detail.mark_replied') %></span>
+        <% end %>
+      <% end %>
+
+      <% if @inquiry.replied? && !@inquiry.converted? %>
+        <%= button_to me_inquiry_path(@inquiry, inquiry: { status: 'converted' }),
+            method: :patch,
+            class: "flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span><%= t('inquiries.dashboard.detail.mark_converted') %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- 타임라인 -->
+  <div class="mt-6 px-4">
+    <h3 class="text-sm font-medium text-gray-500 mb-3"><%= t('inquiries.dashboard.detail.timeline') %></h3>
+    <div class="space-y-3">
+      <div class="flex items-center gap-3 text-sm">
+        <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+        <span class="text-gray-600"><%= t('inquiries.dashboard.detail.received') %></span>
+        <span class="text-gray-400"><%= l(@inquiry.created_at, format: :short) %></span>
+      </div>
+      <% if @inquiry.read_at %>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="w-2 h-2 bg-blue-400 rounded-full"></span>
+          <span class="text-gray-600"><%= t('inquiries.dashboard.detail.read') %></span>
+          <span class="text-gray-400"><%= l(@inquiry.read_at, format: :short) %></span>
+        </div>
+      <% end %>
+      <% if @inquiry.replied_at %>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+          <span class="text-gray-600"><%= t('inquiries.dashboard.detail.replied') %></span>
+          <span class="text-gray-400"><%= l(@inquiry.replied_at, format: :short) %></span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -276,3 +276,38 @@ vi:
       notice: "Liên hệ của bạn sẽ được gửi trực tiếp đến người đăng bài."
       submit: "Gửi liên hệ"
       trust_notice: "Chợ Việt chỉ nhận những liên hệ nghiêm túc để đảm bảo chất lượng kết nối."
+    dashboard:
+      title: "Liên hệ nhận được"
+      subtitle: "Xem các liên hệ từ bài viết của bạn"
+      ago: "trước"
+      back_to_list: "Quay lại"
+      marked_replied: "Đã đánh dấu đã trả lời"
+      marked_converted: "Đã đánh dấu hoàn tất"
+      invalid_status: "Trạng thái không hợp lệ"
+      filter:
+        all: "Tất cả"
+        pending: "Chưa đọc"
+        read: "Đã đọc"
+        replied: "Đã trả lời"
+      status:
+        pending: "Chưa đọc"
+        read: "Đã đọc"
+        replied: "Đã trả lời"
+        converted: "Hoàn tất"
+      empty:
+        title: "Chưa có liên hệ nào"
+        description: "Đăng bài viết để nhận liên hệ"
+      detail:
+        title: "Chi tiết liên hệ"
+        about_post: "Bài viết"
+        contact_info: "Thông tin liên lạc"
+        mark_replied: "Đã trả lời"
+        mark_converted: "Hoàn tất"
+        timeline: "Lịch sử"
+        received: "Nhận liên hệ"
+        read: "Đã đọc"
+        replied: "Đã trả lời"
+    contact_methods:
+      email: "Email"
+      kakao: "KakaoTalk"
+      phone: "Số điện thoại"

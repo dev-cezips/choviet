@@ -169,3 +169,38 @@ ko:
       notice: "문의 내용이 게시글 작성자에게 직접 전달됩니다."
       submit: "문의 전송하기"
       trust_notice: "쪼 비엣의 문의는 실제 연결로 이어질 수 있는 진지한 요청만 받습니다."
+    dashboard:
+      title: "받은 문의"
+      subtitle: "내 게시글에 온 문의를 확인하세요"
+      ago: "전"
+      back_to_list: "목록으로"
+      marked_replied: "답변 완료로 표시했습니다"
+      marked_converted: "거래 완료로 표시했습니다"
+      invalid_status: "잘못된 상태입니다"
+      filter:
+        all: "전체"
+        pending: "새 문의"
+        read: "읽음"
+        replied: "답변함"
+      status:
+        pending: "새 문의"
+        read: "읽음"
+        replied: "답변함"
+        converted: "거래 완료"
+      empty:
+        title: "아직 받은 문의가 없습니다"
+        description: "게시글을 올리면 문의가 들어올 거예요"
+      detail:
+        title: "문의 상세"
+        about_post: "문의 게시글"
+        contact_info: "연락처 정보"
+        mark_replied: "답변 완료"
+        mark_converted: "거래 완료"
+        timeline: "히스토리"
+        received: "문의 접수"
+        read: "확인함"
+        replied: "답변함"
+    contact_methods:
+      email: "이메일"
+      kakao: "카카오톡"
+      phone: "전화번호"

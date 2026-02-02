@@ -56,6 +56,11 @@ Rails.application.routes.draw do
   # /me - stable URL for current user profile (Turbo Native deep link)
   get "me", to: "users#me", as: :me
 
+  # /me namespace for current user resources
+  namespace :me do
+    resources :inquiries, only: [ :index, :show, :update ]
+  end
+
   resources :users, only: [ :show ] do
     resources :reports, only: [ :new, :create ]
     resources :inquiries, only: [ :new, :create ]
