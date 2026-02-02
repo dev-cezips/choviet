@@ -42,7 +42,21 @@
   </head>
 
   <body class="font-vietnam" style="<%= turbo_native_app? ? 'padding-top: env(safe-area-inset-top, 0px);' : 'padding-top: 120px !important;' %> background-color: #ffffff !important;">
-    <% unless turbo_native_app? %>
+    <% if turbo_native_app? %>
+      <!-- Turbo Native: Minimal header with profile access -->
+      <div class="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+        <%= link_to posts_path, class: "text-lg font-bold text-gray-900" do %>
+          Cho Viet
+        <% end %>
+        <% if user_signed_in? %>
+          <%= link_to me_path, class: "p-2 text-gray-600 hover:text-gray-900" do %>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
       <%= render "layouts/header" %>
     <% end %>
 
