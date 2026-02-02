@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_27_103000) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_02_173147) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -148,6 +148,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_27_103000) do
     t.index ["post_id"], name: "index_favorites_on_post_id"
     t.index ["user_id", "post_id"], name: "index_favorites_on_user_id_and_post_id", unique: true
     t.index ["user_id"], name: "index_favorites_on_user_id"
+  end
+
+  create_table "inquiries", force: :cascade do |t|
+    t.integer "sender_id", null: false
+    t.integer "recipient_id", null: false
+    t.integer "post_id"
+    t.string "sender_name", null: false
+    t.string "contact_method", null: false
+    t.string "contact_value", null: false
+    t.text "message", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "read_at"
+    t.datetime "replied_at"
+    t.string "source", default: "organic", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_inquiries_on_post_id"
+    t.index ["recipient_id", "status"], name: "index_inquiries_on_recipient_id_and_status"
+    t.index ["recipient_id"], name: "index_inquiries_on_recipient_id"
+    t.index ["sender_id"], name: "index_inquiries_on_sender_id"
   end
 
   create_table "likes", force: :cascade do |t|
@@ -407,6 +427,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_27_103000) do
   add_foreign_key "conversations", "users", column: "user_b_id"
   add_foreign_key "favorites", "posts"
   add_foreign_key "favorites", "users"
+  add_foreign_key "inquiries", "posts"
+  add_foreign_key "inquiries", "users", column: "recipient_id"
+  add_foreign_key "inquiries", "users", column: "sender_id"
   add_foreign_key "likes", "posts"
   add_foreign_key "likes", "users"
   add_foreign_key "locations", "locations", column: "parent_id"

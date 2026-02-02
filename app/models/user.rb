@@ -58,6 +58,10 @@ class User < ApplicationRecord
   has_many :conversations, through: :conversation_participants
   has_many :conversation_messages
 
+  # Inquiries (문의하기 - 수익화 핵심)
+  has_many :sent_inquiries, class_name: "Inquiry", foreign_key: "sender_id", dependent: :destroy
+  has_many :received_inquiries, class_name: "Inquiry", foreign_key: "recipient_id", dependent: :destroy
+
   # All chat rooms for the user
   def chat_rooms
     ChatRoom.where("buyer_id = ? OR seller_id = ?", id, id)

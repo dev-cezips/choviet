@@ -1,0 +1,23 @@
+<% content_for :title, t('inquiries.title') %>
+
+<div class="max-w-lg mx-auto px-4 py-8">
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <h1 class="text-xl font-bold text-gray-900 mb-2">
+      💬 <%= t('inquiries.title') %>
+    </h1>
+
+    <% if @post.present? %>
+      <p class="text-sm text-gray-600 mb-4">
+        <%= t('inquiries.about_post', title: @post.title) %>
+      </p>
+    <% else %>
+      <p class="text-sm text-gray-600 mb-4">
+        <%= t('inquiries.to_user', name: @recipient.display_name) %>
+      </p>
+    <% end %>
+
+    <%= turbo_frame_tag "inquiry_form" do %>
+      <%= render "form", inquiry: @inquiry, recipient: @recipient, post: @post %>
+    <% end %>
+  </div>
+</div>

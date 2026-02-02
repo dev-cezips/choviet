@@ -1,0 +1,106 @@
+<%= form_with model: [recipient, inquiry],
+              id: "inquiry_form_element",
+              class: "space-y-4",
+              data: {
+                controller: "inquiry-form",
+                inquiry_form_post_id_value: post&.id,
+                inquiry_form_recipient_id_value: recipient.id
+              } do |f| %>
+
+  <% if inquiry.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
+      <ul class="text-sm text-red-600 space-y-1">
+        <% inquiry.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- 이름 -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      <%= t('inquiries.form.name') %> <span class="text-red-500">*</span>
+    </label>
+    <%= f.text_field :sender_name,
+                     class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500",
+                     placeholder: t('inquiries.form.name_placeholder'),
+                     value: inquiry.sender_name || current_user&.display_name,
+                     data: { inquiry_form_target: "name" } %>
+  </div>
+
+  <!-- 연락 방법 -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      <%= t('inquiries.form.contact_method') %> <span class="text-red-500">*</span>
+    </label>
+    <div class="flex gap-4">
+      <label class="flex items-center">
+        <%= f.radio_button :contact_method, "kakao",
+                           class: "mr-2",
+                           checked: inquiry.contact_method == "kakao" || inquiry.contact_method.nil?,
+                           data: { inquiry_form_target: "contactMethod" } %>
+        <span class="text-sm">카카오톡</span>
+      </label>
+      <label class="flex items-center">
+        <%= f.radio_button :contact_method, "email",
+                           class: "mr-2",
+                           data: { inquiry_form_target: "contactMethod" } %>
+        <span class="text-sm">이메일</span>
+      </label>
+      <label class="flex items-center">
+        <%= f.radio_button :contact_method, "phone",
+                           class: "mr-2",
+                           data: { inquiry_form_target: "contactMethod" } %>
+        <span class="text-sm">전화번호</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- 연락처 -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      <%= t('inquiries.form.contact_value') %> <span class="text-red-500">*</span>
+    </label>
+    <%= f.text_field :contact_value,
+                     class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500",
+                     placeholder: t('inquiries.form.contact_value_placeholder'),
+                     value: inquiry.contact_value || current_user&.email,
+                     data: { inquiry_form_target: "contactValue" } %>
+  </div>
+
+  <!-- 문의 내용 -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      <%= t('inquiries.form.message') %> <span class="text-red-500">*</span>
+    </label>
+    <%= f.text_area :message,
+                    rows: 4,
+                    class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500",
+                    placeholder: t('inquiries.form.message_placeholder'),
+                    data: { inquiry_form_target: "message" } %>
+  </div>
+
+  <!-- 안내 문구 -->
+  <div class="bg-blue-50 border border-blue-200 rounded-md p-3">
+    <p class="text-xs text-blue-700">
+      ℹ️ <%= t('inquiries.form.notice') %>
+    </p>
+  </div>
+
+  <!-- Hidden fields for localStorage restoration -->
+  <% if post.present? %>
+    <%= hidden_field_tag :post_id, post.id %>
+  <% end %>
+
+  <!-- 전송 버튼 -->
+  <div class="pt-2">
+    <%= f.submit t('inquiries.form.submit'),
+                 class: "w-full bg-blue-600 text-white py-3 px-4 rounded-md font-medium hover:bg-blue-700 transition-colors",
+                 data: { inquiry_form_target: "submitButton" } %>
+  </div>
+
+  <p class="text-xs text-gray-500 text-center">
+    <%= t('inquiries.form.trust_notice') %>
+  </p>
+<% end %>
