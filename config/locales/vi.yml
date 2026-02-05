@@ -2,6 +2,7 @@ vi:
   # Application name
   app_name: "Chợ Việt"
   tagline: "Cộng đồng người Việt tại Hàn Quốc"
+  tagline_detail: "Việc làm · Nhà ở · Mua bán · Thông tin - kết nối trong một nơi"
   all: "Tất cả"
   
   # Navigation
@@ -105,6 +106,13 @@ vi:
     saved_posts: "Bài đã lưu"
     settings: "Cài đặt"
     verification_badge: "Đã xác minh"
+    activity:
+      title: "Hoạt động của bạn"
+      inquiries_this_week: "Liên hệ tuần này"
+      replied: "Đã trả lời"
+      pending_notice:
+        one: "%{count} liên hệ đang chờ phản hồi"
+        other: "%{count} liên hệ đang chờ phản hồi"
   
   # Features/Benefits
   features:
@@ -294,6 +302,7 @@ vi:
         read: "Đã đọc"
         replied: "Đã trả lời"
         converted: "Hoàn tất"
+      response_hint: "Phản hồi nhanh giúp tăng uy tín và được nhiều người tin tưởng hơn"
       empty:
         title: "Chưa có liên hệ nào"
         description: "Đăng bài viết để nhận liên hệ"

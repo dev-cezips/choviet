@@ -28,6 +28,9 @@
 #       enabled: "ON"
 
 en:
+  app_name: "Chợ Việt"
+  tagline: "Vietnamese Community in Korea"
+  tagline_detail: "Jobs · Housing · Marketplace · Info - all in one place"
   hello: "Hello world"
   reports:
     created: "Report submitted successfully. We'll review it within 24 hours."
@@ -52,6 +55,13 @@ en:
     destroyed: "You have unblocked this user"
   users:
     updated: "Profile updated successfully!"
+    activity:
+      title: "Your Activity"
+      inquiries_this_week: "Inquiries this week"
+      replied: "Replied"
+      pending_notice:
+        one: "%{count} inquiry waiting for your response"
+        other: "%{count} inquiries waiting for your response"
   
   # Application basics
   app_name: "Cho Viet"
@@ -170,3 +180,8 @@ en:
     negotiating: "Negotiating"
     completed: "Completed"
     cancelled: "Cancelled"
+
+  # Inquiries
+  inquiries:
+    dashboard:
+      response_hint: "Quick responses build trust and lead to more successful connections"

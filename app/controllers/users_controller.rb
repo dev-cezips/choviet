@@ -108,6 +108,14 @@ class UsersController < ApplicationController
     # 받은 좋아요 수
     @received_likes = @user.posts.joins(:likes).count
 
+    # 문의 통계 (본인 프로필에서만)
+    if current_user == @user
+      week_ago = 1.week.ago
+      @inquiries_this_week = @user.received_inquiries.where("created_at >= ?", week_ago).count
+      @inquiries_replied = @user.received_inquiries.where(status: ["replied", "converted"]).count
+      @inquiries_pending = @user.received_inquiries.pending.count
+    end
+
     render :show
   end
 

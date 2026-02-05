@@ -2,6 +2,7 @@ ko:
   # Application name
   app_name: "쪼 비엣"
   tagline: "한국의 베트남 커뮤니티"
+  tagline_detail: "일자리 · 집 · 중고거래 · 정보를 한 곳에서"
   all: "전체"
   
   # Navigation
@@ -143,6 +144,16 @@ ko:
     completed: "거래 완료"
     cancelled: "취소됨"
 
+  # User activity
+  users:
+    activity:
+      title: "나의 활동"
+      inquiries_this_week: "이번 주 받은 문의"
+      replied: "답변 완료"
+      pending_notice:
+        one: "%{count}건의 문의가 답변을 기다리고 있어요"
+        other: "%{count}건의 문의가 답변을 기다리고 있어요"
+
   # Inquiries (문의하기)
   inquiries:
     title: "문의하기"
@@ -187,6 +198,7 @@ ko:
         read: "읽음"
         replied: "답변함"
         converted: "거래 완료"
+      response_hint: "빠른 답변은 신뢰도를 높이고 더 많은 거래로 이어집니다"
       empty:
         title: "아직 받은 문의가 없습니다"
         description: "게시글을 올리면 문의가 들어올 거예요"
