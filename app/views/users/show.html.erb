@@ -367,6 +367,11 @@
           <span class="text-xl">✏️</span>
           Chỉnh sửa hồ sơ
         <% end %>
+
+        <%= button_to destroy_user_session_path, method: :delete, class: "w-full bg-red-600 text-white py-3 px-4 rounded-button font-medium hover:bg-red-700 transition-colors flex items-center justify-center gap-2 shadow-sm" do %>
+          <span class="text-xl">🚪</span>
+          <%= t('nav.sign_out') %>
+        <% end %>
       </div>
     <% else %>
       <div class="px-5 mt-6 space-y-3">
