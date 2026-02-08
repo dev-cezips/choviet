@@ -90,13 +90,14 @@
       <label class="block text-sm font-medium text-gray-700 mb-2">Hình ảnh</label>
       
       <!-- Current Images (for edit) -->
-      <% if post.persisted? && post.images.attached? && post.images.any? %>
+      <% persisted_images = post.persisted? ? post.images.select { |img| img.persisted? && img.blob&.persisted? } : [] %>
+      <% if persisted_images.any? %>
         <div class="mb-4">
-          <p class="text-sm text-gray-600 mb-2">Ảnh hiện tại: (<%= post.images.count %> ảnh)</p>
+          <p class="text-sm text-gray-600 mb-2">Ảnh hiện tại: (<%= persisted_images.count %> ảnh)</p>
           <div class="grid grid-cols-3 gap-2">
-            <% post.images.each_with_index do |image, index| %>
+            <% persisted_images.each_with_index do |image, index| %>
               <div class="relative group" id="image_<%= image.id %>">
-                <%= image_tag rails_blob_url(image, disposition: "inline"),
+                <%= image_tag url_for(image),
                     class: "w-full h-24 object-cover rounded",
                     loading: "eager",
                     alt: "Ảnh #{index + 1}" %>
