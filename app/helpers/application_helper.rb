@@ -340,10 +340,9 @@ module ApplicationHelper
 
     price = price.to_i  # Convert to integer
 
-    # Vietnamese Dong format: 250.000 ₫
-    # Use period as thousands separator (Vietnamese style)
-    formatted = number_with_delimiter(price, delimiter: ".")
-    "#{formatted} ₫"
+    # Korean Won format: 250,000 ₩
+    formatted = number_with_delimiter(price, delimiter: ",")
+    "#{formatted} ₩"
   end
 
   # Active link class helper
