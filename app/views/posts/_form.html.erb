@@ -65,10 +65,10 @@
                 },
                 class: "w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-16 #{post.marketplace? && product_form.object.errors[:price].any? ? 'border-red-500 bg-red-50' : 'border-gray-300'}" %>
             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <span class="text-gray-500">₩</span>
+              <span class="text-gray-500">₫</span>
             </div>
           </div>
-          <p class="mt-1 text-sm text-gray-500">Nhập giá bằng Won Hàn Quốc</p>
+          <p class="mt-1 text-sm text-gray-500">Nhập giá bằng Đồng Việt Nam</p>
         </div>
 
         <!-- Condition -->
@@ -92,17 +92,32 @@
       <!-- Current Images (for edit) -->
       <% if post.persisted? && post.images.attached? && post.images.any? %>
         <div class="mb-4">
-          <p class="text-sm text-gray-600 mb-2">Ảnh hiện tại:</p>
+          <p class="text-sm text-gray-600 mb-2">Ảnh hiện tại: (<%= post.images.count %> ảnh)</p>
           <div class="grid grid-cols-3 gap-2">
-            <% post.images.each do |image| %>
-              <div class="relative group">
-                <%= image_tag url_for(image), class: "w-full h-24 object-cover rounded" %>
-                <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
-                  <span class="text-white text-xs">Xóa để thay đổi</span>
+            <% post.images.each_with_index do |image, index| %>
+              <div class="relative group" id="image_<%= image.id %>">
+                <%= image_tag rails_blob_url(image, disposition: "inline"),
+                    class: "w-full h-24 object-cover rounded",
+                    loading: "eager",
+                    alt: "Ảnh #{index + 1}" %>
+                <!-- Delete button -->
+                <%= button_to post_destroy_image_path(post, image_id: image.id),
+                    method: :delete,
+                    class: "absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-colors",
+                    data: { turbo_confirm: "Xóa ảnh này?" },
+                    form: { data: { turbo_frame: "_top" } } do %>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                <% end %>
+                <!-- Image number badge -->
+                <div class="absolute bottom-1 left-1 bg-black bg-opacity-60 text-white text-xs px-1.5 py-0.5 rounded">
+                  <%= index + 1 %>
                 </div>
               </div>
             <% end %>
           </div>
+          <p class="text-xs text-gray-500 mt-2">Nhấn nút ❌ để xóa ảnh</p>
         </div>
       <% end %>
       

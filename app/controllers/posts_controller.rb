@@ -159,6 +159,19 @@ class PostsController < ApplicationController
     end
   end
 
+  # DELETE /posts/:post_id/images/:image_id
+  def destroy_image
+    @post = current_user.posts.find(params[:post_id])
+    @image = @post.images.find(params[:image_id])
+    @image.purge
+
+    respond_to do |format|
+      format.html { redirect_to edit_post_path(@post), notice: "Ảnh đã được xóa!", status: :see_other }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("image_#{params[:image_id]}") }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_post

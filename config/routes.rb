@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   resources :posts do
     resource :like, only: [ :create, :destroy ]
     resource :favorite, only: [ :create, :destroy ]
+    # Individual image deletion
+    delete "images/:image_id", to: "posts#destroy_image", as: :destroy_image
     resources :chat_rooms, only: [ :create, :show ] do
       member do
         patch :update_status
