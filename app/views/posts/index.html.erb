@@ -1,5 +1,10 @@
 <!-- DEBUG: Current locale = <%= I18n.locale %> -->
 
+<!-- Identity Banner -->
+<div class="bg-gradient-to-r from-primary to-red-500 text-white px-4 py-3 text-center">
+  <p class="text-sm font-medium"><%= t('tagline_detail') %></p>
+</div>
+
 <!-- Search and Filters -->
 <%= render "posts/search_filters", url: @search_url %>
 
