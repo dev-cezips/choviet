@@ -20,7 +20,7 @@
             <%= image_tag image,
                 class: "w-full h-full object-cover cursor-zoom-in",
                 alt: "Image #{index + 1}",
-                loading: index == 0 ? "eager" : "lazy",
+                loading: "eager",
                 "data-action": "click->lightbox#open",
                 "data-src": url_for(image),
                 onerror: "this.style.display='none'; this.nextElementSibling.style.display='flex';" %>
