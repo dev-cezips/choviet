@@ -153,40 +153,30 @@
       <% end %>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex gap-4 md:hidden shadow-lg">
-      <div id="post_likes_<%= @post.id %>" class="flex-shrink-0">
-        <%= render partial: 'posts/like_button_detail', locals: { post: @post } %>
-      </div>
-      
-      <% if @post.user != current_user %>
-        <% if user_signed_in? && current_user.no_reviews? %>
-          <div class="flex flex-col items-center gap-2">
-            <button disabled class="flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 text-gray-400 rounded-lg font-medium cursor-not-allowed w-full min-h-[44px]">
-              <span class="text-xl">💬</span>
-              <span>Chat</span>
-            </button>
-            <p class="text-xs text-orange-600 text-center">
-              ⚠️ Cần có ít nhất 1 đánh giá để bắt đầu giao dịch
-            </p>
-          </div>
-        <% else %>
-          <%= button_to post_chat_rooms_path(@post), method: :post,
-              class: "flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-600 rounded-lg font-medium hover:bg-gray-200 transition-colors min-h-[44px]" do %>
-            <span class="text-xl">💬</span>
-            <span>Chat</span>
-          <% end %>
-        <% end %>
-      <% end %>
-      
+    <!-- Action Buttons (Mobile) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 md:hidden shadow-lg safe-area-bottom">
       <% if @post.user == current_user %>
-        <%= link_to "Chỉnh sửa", edit_post_path(@post), 
-            class: "flex-1 bg-gray-100 text-gray-700 rounded-lg py-3 font-medium text-center min-h-[44px] flex items-center justify-center" %>
+        <div class="flex gap-3">
+          <div id="post_likes_<%= @post.id %>" class="flex-shrink-0">
+            <%= render partial: 'posts/like_button_detail', locals: { post: @post } %>
+          </div>
+          <%= link_to "Chỉnh sửa", edit_post_path(@post),
+              class: "flex-1 bg-gray-100 text-gray-700 rounded-lg py-3 font-medium text-center min-h-[44px] flex items-center justify-center" %>
+        </div>
       <% else %>
-        <%= button_to post_chat_rooms_path(@post), method: :post,
-            class: "flex-1 bg-zalo-blue text-white rounded-lg py-3 font-bold text-center min-h-[44px]" do %>
-          Nhắn tin với người bán
-        <% end %>
+        <div class="flex gap-3">
+          <div id="post_likes_<%= @post.id %>" class="flex-shrink-0">
+            <%= render partial: 'posts/like_button_detail', locals: { post: @post } %>
+          </div>
+          <%# 문의하기 버튼 - Primary CTA %>
+          <%= link_to new_user_inquiry_path(@post.user, post_id: @post.id),
+              class: "flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white rounded-lg font-bold min-h-[44px] hover:bg-green-700 transition-colors" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            <span>Liên hệ người bán</span>
+          <% end %>
+        </div>
       <% end %>
     </div>
 
@@ -196,37 +186,21 @@
         <div id="post_likes_desktop_<%= @post.id %>" class="flex-shrink-0">
           <%= render partial: 'posts/like_button_detail', locals: { post: @post } %>
         </div>
-        
-        <% if @post.user != current_user %>
-          <% if user_signed_in? && current_user.no_reviews? %>
-            <div class="flex flex-col items-center gap-2">
-              <button disabled class="flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 text-gray-400 rounded-lg font-medium cursor-not-allowed w-full min-h-[44px]">
-                <span class="text-xl">💬</span>
-                <span>Chat</span>
-              </button>
-              <p class="text-xs text-orange-600 text-center">
-                ⚠️ Cần có ít nhất 1 đánh giá để bắt đầu giao dịch
-              </p>
-            </div>
-          <% else %>
-            <%= button_to post_chat_rooms_path(@post), method: :post,
-                class: "flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-600 rounded-lg font-medium hover:bg-gray-200 transition-colors min-h-[44px]" do %>
-              <span class="text-xl">💬</span>
-              <span>Chat</span>
-            <% end %>
-          <% end %>
-        <% end %>
-        
+
         <% if @post.user == current_user %>
-          <%= link_to "Chỉnh sửa", edit_post_path(@post), 
+          <%= link_to "Chỉnh sửa", edit_post_path(@post),
               class: "flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg py-3 font-medium text-center transition" %>
-          <%= button_to "Xóa bài", @post, method: :delete, 
+          <%= button_to "Xóa bài", @post, method: :delete,
               data: { turbo_confirm: "Bạn chắc chắn muốn xóa?" },
               class: "px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition cursor-pointer" %>
         <% else %>
-          <%= button_to post_chat_rooms_path(@post), method: :post,
-              class: "flex-1 bg-zalo-blue hover:bg-blue-700 text-white rounded-lg py-3 font-bold text-center transition" do %>
-            Nhắn tin với người bán
+          <%# 문의하기 버튼 - Primary CTA %>
+          <%= link_to new_user_inquiry_path(@post.user, post_id: @post.id),
+              class: "flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition-colors min-h-[44px]" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            <span>Liên hệ người bán</span>
           <% end %>
         <% end %>
       </div>
