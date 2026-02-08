@@ -9,6 +9,10 @@ export default class extends Controller {
   }
 
   connect() {
+    console.log("[ImageSlider] Connected, slides:", this.slideTargets.length)
+    this.slideTargets.forEach((slide, i) => {
+      console.log(`[ImageSlider] Slide ${i}:`, slide.querySelector('img')?.src)
+    })
     this.showSlide(this.indexValue)
     if (this.autoplayValue && this.slideTargets.length > 1) {
       this.startAutoplay()
@@ -51,10 +55,12 @@ export default class extends Controller {
 
   // 슬라이드 표시 업데이트
   showSlide(index) {
+    console.log(`[ImageSlider] showSlide(${index}), total: ${this.slideTargets.length}`)
     // 모든 슬라이드 숨기기/보이기 (hidden 클래스 방식)
     this.slideTargets.forEach((slide, i) => {
       if (i === index) {
         slide.classList.remove("hidden")
+        console.log(`[ImageSlider] Showing slide ${i}`)
       } else {
         slide.classList.add("hidden")
       }
