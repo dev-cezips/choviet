@@ -13,7 +13,7 @@
       
       <%# 이미지들 %>
       <% images.each_with_index do |image, index| %>
-        <div class="absolute inset-0 flex items-center justify-center transition-opacity duration-300 <%= index == 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' %>"
+        <div class="absolute inset-0 flex items-center justify-center <%= index == 0 ? '' : 'hidden' %>"
              data-image-slider-target="slide">
           <%# 이미지 컨테이너 with fallback %>
           <div class="relative w-full h-full">

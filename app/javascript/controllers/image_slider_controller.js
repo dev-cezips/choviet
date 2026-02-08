@@ -51,14 +51,12 @@ export default class extends Controller {
 
   // 슬라이드 표시 업데이트
   showSlide(index) {
-    // 모든 슬라이드 숨기기/보이기 (opacity + z-index 방식)
+    // 모든 슬라이드 숨기기/보이기 (hidden 클래스 방식)
     this.slideTargets.forEach((slide, i) => {
       if (i === index) {
-        slide.classList.remove("opacity-0", "z-0")
-        slide.classList.add("opacity-100", "z-10")
+        slide.classList.remove("hidden")
       } else {
-        slide.classList.remove("opacity-100", "z-10")
-        slide.classList.add("opacity-0", "z-0")
+        slide.classList.add("hidden")
       }
     })
 
