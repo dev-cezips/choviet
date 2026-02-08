@@ -13,9 +13,9 @@
       
       <%# 이미지들 %>
       <% images.each_with_index do |image, index| %>
-        <div class="absolute inset-0 flex items-center justify-center <%= 'hidden' unless index == 0 %>"
+        <div class="absolute inset-0 flex items-center justify-center transition-opacity duration-300 <%= index == 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' %>"
              data-image-slider-target="slide">
-          <%= image_tag image, 
+          <%= image_tag image,
               class: "w-full h-full object-cover cursor-zoom-in",
               alt: "Image #{index + 1}",
               loading: index == 0 ? "eager" : "lazy",
