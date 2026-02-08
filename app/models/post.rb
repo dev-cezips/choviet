@@ -103,9 +103,10 @@ class Post < ApplicationRecord
   validates :title, presence: true, length: { minimum: 5, maximum: 100 }
   validates :content, presence: true, length: { minimum: 10 }
   validates :post_type, presence: true
-  validates :images, limit: { max: 10 },
-                     content_type: [ "image/png", "image/jpg", "image/jpeg", "image/gif" ],
-                     size: { less_than: 5.megabytes }
+  validates :images, limit: { max: 10, message: "Tối đa 10 ảnh" },
+                     content_type: { in: [ "image/png", "image/jpg", "image/jpeg", "image/gif", "image/heic", "image/heif" ],
+                                    message: "Chỉ hỗ trợ PNG, JPG, GIF, HEIC" },
+                     size: { less_than: 10.megabytes, message: "Mỗi ảnh tối đa 10MB" }
 
   # Validate product attributes for marketplace posts
   validate :product_required_for_marketplace
