@@ -11,16 +11,16 @@
     <%# 이미지 영역 - 모든 절대 위치 요소의 부모 %>
     <div class="relative h-80 md:h-96 overflow-hidden">
       
-      <%# 이미지들 %>
+      <%# 이미지들 - 슬라이더용 리사이즈 버전 사용, 클릭 시 원본 표시 %>
       <% images.each_with_index do |image, index| %>
         <div class="absolute inset-0 flex items-center justify-center <%= index == 0 ? '' : 'hidden' %>"
              data-image-slider-target="slide">
           <%# 이미지 컨테이너 with fallback %>
           <div class="relative w-full h-full">
-            <%= image_tag image,
+            <%= image_tag image.variant(resize_to_limit: [800, 800], saver: { quality: 80 }),
                 class: "w-full h-full object-cover cursor-zoom-in",
                 alt: "Image #{index + 1}",
-                loading: "eager",
+                loading: index == 0 ? "eager" : "lazy",
                 "data-action": "click->lightbox#open",
                 "data-src": url_for(image),
                 onerror: "this.style.display='none'; this.nextElementSibling.style.display='flex';" %>

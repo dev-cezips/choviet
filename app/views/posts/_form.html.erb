@@ -97,9 +97,9 @@
           <div class="grid grid-cols-3 gap-2">
             <% persisted_images.each_with_index do |image, index| %>
               <div class="relative group" id="image_<%= image.id %>">
-                <%= image_tag url_for(image),
+                <%= image_tag image.variant(resize_to_fill: [200, 200], saver: { quality: 75 }),
                     class: "w-full h-24 object-cover rounded",
-                    loading: "eager",
+                    loading: "lazy",
                     alt: "Ảnh #{index + 1}" %>
                 <!-- Delete button -->
                 <%= button_to post_destroy_image_path(post, image_id: image.id),

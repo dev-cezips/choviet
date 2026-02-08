@@ -53,7 +53,7 @@
               <!-- Thumbnail -->
               <div class="flex-shrink-0">
                 <% if post.images.attached? && post.images.any? %>
-                  <%= image_tag post.images.first, class: "w-24 h-24 rounded-lg object-cover" %>
+                  <%= image_tag post.images.first.variant(resize_to_fill: [200, 200], saver: { quality: 75 }), class: "w-24 h-24 rounded-lg object-cover", loading: "lazy" %>
                 <% else %>
                   <div class="w-24 h-24 rounded-lg bg-gray-100 flex items-center justify-center">
                     <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
