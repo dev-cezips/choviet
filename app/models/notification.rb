@@ -42,6 +42,12 @@ class Notification < ApplicationRecord
       else
         "게시글에 새 메시지가 도착했습니다"
       end
+    when "post_liked"
+      if recipient.vietnamese?
+        "#{actor.display_name} thích bài đăng của bạn"
+      else
+        "#{actor.display_name}님이 게시글을 좋아합니다"
+      end
     else
       title
     end
@@ -49,7 +55,7 @@ class Notification < ApplicationRecord
 
   def localized_body
     case kind
-    when "dm_message", "chat_message"
+    when "dm_message", "chat_message", "post_liked"
       body.truncate(80)
     else
       body

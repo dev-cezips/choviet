@@ -106,6 +106,15 @@ class PushDeliveryJob < ApplicationJob
           host: ENV.fetch("DEFAULT_URL_HOST", "localhost:3000")
         )
       )
+    when "post_liked"
+      data.merge(
+        type: "post_liked",
+        post_id: notification.notifiable.post_id,
+        url: Rails.application.routes.url_helpers.post_url(
+          notification.notifiable.post,
+          host: ENV.fetch("DEFAULT_URL_HOST", "localhost:3000")
+        )
+      )
     else
       data
     end
