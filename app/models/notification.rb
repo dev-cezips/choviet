@@ -8,7 +8,8 @@ class Notification < ApplicationRecord
     post_liked: 1,        # Someone liked your post (future)
     post_commented: 2,    # Someone commented on your post (future)
     review_received: 3,   # Someone left you a review (future)
-    system_alert: 4       # System notifications (future)
+    system_alert: 4,      # System notifications (future)
+    chat_message: 5       # Message in chat room (post inquiry)
   }
 
   enum :status, {
@@ -35,6 +36,12 @@ class Notification < ApplicationRecord
       else
         "#{actor.display_name}님의 새 메시지"
       end
+    when "chat_message"
+      if recipient.vietnamese?
+        "Tin nhắn mới về bài đăng của bạn"
+      else
+        "게시글에 새 메시지가 도착했습니다"
+      end
     else
       title
     end
@@ -42,7 +49,7 @@ class Notification < ApplicationRecord
 
   def localized_body
     case kind
-    when "dm_message"
+    when "dm_message", "chat_message"
       body.truncate(80)
     else
       body

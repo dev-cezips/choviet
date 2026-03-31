@@ -97,6 +97,15 @@ class PushDeliveryJob < ApplicationJob
           host: ENV.fetch("DEFAULT_URL_HOST", "localhost:3000")
         )
       )
+    when "chat_message"
+      data.merge(
+        type: "chat_message",
+        chat_room_id: notification.notifiable.chat_room_id,
+        url: Rails.application.routes.url_helpers.chat_room_url(
+          notification.notifiable.chat_room,
+          host: ENV.fetch("DEFAULT_URL_HOST", "localhost:3000")
+        )
+      )
     else
       data
     end

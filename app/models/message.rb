@@ -12,6 +12,7 @@ class Message < ApplicationRecord
   # Callbacks
   before_validation :set_src_lang
   after_create :check_for_suspicious_content, unless: :system_message?
+  after_create_commit :enqueue_chat_notification, unless: :system_message?
 
   # Turbo Stream broadcast with sender_id for echo bug prevention
   after_create_commit do
@@ -77,5 +78,47 @@ class Message < ApplicationRecord
       src_lang: "vi",
       system_message: true
     )
+  end
+
+  def enqueue_chat_notification
+    # Get the recipient (the other user in chat_room)
+    recipient = sender_id == chat_room.buyer_id ? chat_room.seller : chat_room.buyer
+    return unless recipient
+
+    # Skip if users have blocked each other
+    return if Block.blocked?(sender, recipient)
+
+    # Spam prevention: 1 push per chat_room per 10 seconds
+    cache_key = "push:chat:#{chat_room.id}:#{recipient.id}"
+
+    # Atomic: only writes if key does NOT exist
+    written = Rails.cache.write(cache_key, true, expires_in: 10.seconds, unless_exist: true)
+
+    unless written
+      Rails.logger.info "[Message] Skipping notification due to rate limit"
+      return
+    end
+
+    # Create notification record
+    notification = Notification.create!(
+      recipient: recipient,
+      actor: sender,
+      notifiable: self,
+      kind: :chat_message,
+      title: "#{sender.display_name}",
+      body: content_raw.truncate(80),
+      data: {
+        chat_room_id: chat_room.id,
+        post_id: chat_room.post_id,
+        message_id: id,
+        sender_name: sender.display_name
+      }
+    )
+
+    # Enqueue push delivery
+    PushDeliveryJob.perform_later(notification.id)
+  rescue => e
+    Rails.logger.error "[Message] Failed to create notification: #{e.message}"
+    # Don't fail the message creation if notification fails
   end
 end
