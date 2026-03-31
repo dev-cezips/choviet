@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!, except: [ :index, :show ]
-  before_action :set_post, only: %i[ show edit update destroy ]
+  before_action :set_post, only: %i[ show edit update destroy mark_sold ]
 
   # GET /posts or /posts.json
   def index
@@ -156,6 +156,24 @@ class PostsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to posts_path, notice: "Post was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
+    end
+  end
+
+  # PATCH /posts/:id/mark_sold
+  def mark_sold
+    unless @post.user == current_user
+      return redirect_to @post, alert: "권한이 없습니다."
+    end
+
+    unless @post.marketplace?
+      return redirect_to @post, alert: "중고거래 게시글만 거래완료 처리할 수 있습니다."
+    end
+
+    @post.sold_out!
+
+    respond_to do |format|
+      format.html { redirect_to @post, notice: "거래가 완료되었습니다! 🎉" }
+      format.turbo_stream
     end
   end
 

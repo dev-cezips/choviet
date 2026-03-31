@@ -18,6 +18,10 @@ Rails.application.routes.draw do
     resource :favorite, only: [ :create, :destroy ]
     # Individual image deletion
     delete "images/:image_id", to: "posts#destroy_image", as: :destroy_image
+    # Mark as sold (거래완료)
+    member do
+      patch :mark_sold
+    end
     resources :chat_rooms, only: [ :create, :show ] do
       member do
         patch :update_status
