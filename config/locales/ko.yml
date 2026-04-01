@@ -82,6 +82,13 @@ ko:
     created: "게시글이 성공적으로 작성되었습니다!"
     updated: "게시글이 업데이트되었습니다!"
     deleted: "게시글이 삭제되었습니다!"
+    mark_sold:
+      button: "거래완료"
+      confirm: "거래완료 처리하시겠습니까?"
+      success: "거래가 완료되었습니다! 🎉"
+      sold_notice: "거래가 완료된 상품입니다"
+      not_authorized: "권한이 없습니다."
+      marketplace_only: "중고거래 게시글만 거래완료 처리할 수 있습니다."
     types:
       question: "질문"
       marketplace: "중고거래"

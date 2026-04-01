@@ -119,6 +119,13 @@ en:
     created: "Post created successfully!"
     updated: "Post updated successfully!"
     deleted: "Post deleted successfully!"
+    mark_sold:
+      button: "Mark as Sold"
+      confirm: "Are you sure you want to mark this as sold?"
+      success: "Transaction completed! 🎉"
+      sold_notice: "This item has been sold"
+      not_authorized: "You are not authorized."
+      marketplace_only: "Only marketplace posts can be marked as sold."
     types:
       question: "Q&A"
       marketplace: "Buy/Sell"

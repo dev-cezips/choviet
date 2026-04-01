@@ -162,16 +162,16 @@ class PostsController < ApplicationController
   # PATCH /posts/:id/mark_sold
   def mark_sold
     unless @post.user == current_user
-      return redirect_to @post, alert: "권한이 없습니다."
+      return redirect_to @post, alert: t("posts.mark_sold.not_authorized")
     end
 
     unless @post.marketplace?
-      return redirect_to @post, alert: "중고거래 게시글만 거래완료 처리할 수 있습니다."
+      return redirect_to @post, alert: t("posts.mark_sold.marketplace_only")
     end
 
     @post.sold_out!
 
-    redirect_to @post, notice: "거래가 완료되었습니다! 🎉"
+    redirect_to @post, notice: t("posts.mark_sold.success")
   end
 
   # DELETE /posts/:post_id/images/:image_id

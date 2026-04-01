@@ -44,6 +44,13 @@ vi:
     created: "Đã đăng bài thành công!"
     updated: "Đã cập nhật bài viết!"
     deleted: "Đã xóa bài viết!"
+    mark_sold:
+      button: "Đã bán"
+      confirm: "Bạn có chắc muốn đánh dấu đã bán?"
+      success: "Giao dịch đã hoàn tất! 🎉"
+      sold_notice: "Sản phẩm này đã được bán"
+      not_authorized: "Bạn không có quyền thực hiện."
+      marketplace_only: "Chỉ có thể đánh dấu đã bán cho bài đăng mua bán."
     types:
       question: "Hỏi đáp"
       marketplace: "Mua bán"
