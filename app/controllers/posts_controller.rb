@@ -171,10 +171,7 @@ class PostsController < ApplicationController
 
     @post.sold_out!
 
-    respond_to do |format|
-      format.html { redirect_to @post, notice: "거래가 완료되었습니다! 🎉" }
-      format.turbo_stream
-    end
+    redirect_to @post, notice: "거래가 완료되었습니다! 🎉"
   end
 
   # DELETE /posts/:post_id/images/:image_id
