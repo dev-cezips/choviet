@@ -63,19 +63,12 @@
             </div>
           </div>
 
-          <!-- Remember me & Forgot password -->
-          <div class="flex items-center justify-between">
-            <% if devise_mapping.rememberable? %>
-              <div class="flex items-center">
-                <%= f.check_box :remember_me, 
-                    class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
-                <%= f.label :remember_me, class: "ml-2 block text-sm text-gray-900" do %>
-                  Ghi nhớ đăng nhập
-                <% end %>
-              </div>
-            <% end %>
-            
-            <%= link_to "Quên mật khẩu?", new_password_path(resource_name), 
+          <!-- Remember me (always on) & Forgot password -->
+          <div class="flex items-center justify-end">
+            <%# 당근마켓처럼 항상 로그인 유지 - 체크박스 숨기고 항상 true %>
+            <%= f.hidden_field :remember_me, value: "1" %>
+
+            <%= link_to "Quên mật khẩu?", new_password_path(resource_name),
                 class: "text-sm text-blue-600 hover:text-blue-700" %>
           </div>
 
