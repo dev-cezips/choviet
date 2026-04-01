@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [ :show, :listings, :favorites ]
-  before_action :authenticate_user!, only: [ :edit, :update ]
+  before_action :authenticate_user!, only: [ :edit, :update, :logout_all_devices ]
   before_action :set_current_user, only: [ :edit, :update ]
   before_action :check_favorites_permission, only: [ :favorites ]
 
@@ -39,6 +39,22 @@ class UsersController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  # DELETE /logout_all_devices
+  # Invalidates all remember tokens, logging out from all devices
+  def logout_all_devices
+    # Reset remember token - invalidates all other sessions
+    current_user.forget_me!
+    current_user.remember_me!  # Create new token for current session
+
+    notice = case current_user.locale
+    when "vi" then "Đã đăng xuất khỏi tất cả thiết bị khác"
+    when "ko" then "다른 모든 기기에서 로그아웃 되었습니다"
+    else "Logged out from all other devices"
+    end
+
+    redirect_to edit_profile_path, notice: notice
   end
 
   def listings

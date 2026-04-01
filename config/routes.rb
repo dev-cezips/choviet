@@ -99,6 +99,9 @@ Rails.application.routes.draw do
     patch :update, action: :update
   end
 
+  # Security actions
+  delete "logout_all_devices", to: "users#logout_all_devices", as: :logout_all_devices
+
   resources :communities do
     member do
       post :join
