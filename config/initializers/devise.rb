@@ -284,7 +284,9 @@ Devise.setup do |config|
   end
 
   # Apple Sign In
+  # Load monkey-patch to skip nonce verification (session cookie issue with cross-origin POST)
   if Rails.application.credentials.dig(:apple, :client_id).present?
+    require_relative "../../lib/omniauth/strategies/apple_no_nonce"
     config.omniauth :apple,
       Rails.application.credentials.dig(:apple, :client_id),
       "",
@@ -292,8 +294,7 @@ Devise.setup do |config|
       team_id: Rails.application.credentials.dig(:apple, :team_id),
       key_id: Rails.application.credentials.dig(:apple, :key_id),
       pem: Rails.application.credentials.dig(:apple, :private_key),
-      provider_ignores_state: true,
-      verify_nonce: false
+      provider_ignores_state: true
   end
 
   # ==> Warden configuration
