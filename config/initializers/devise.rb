@@ -292,7 +292,8 @@ Devise.setup do |config|
       team_id: Rails.application.credentials.dig(:apple, :team_id),
       key_id: Rails.application.credentials.dig(:apple, :key_id),
       pem: Rails.application.credentials.dig(:apple, :private_key),
-      provider_ignores_state: true
+      provider_ignores_state: true,
+      verify_nonce: false
   end
 
   # ==> Warden configuration
