@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_02_173147) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_02_190254) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -398,6 +398,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_02_173147) do
     t.boolean "notification_push_enabled", default: true, null: false
     t.boolean "notification_dm_enabled", default: true, null: false
     t.boolean "notification_email_enabled", default: true, null: false
+    t.string "provider"
+    t.string "uid"
+    t.boolean "onboarding_completed", default: false, null: false
     t.index ["admin"], name: "index_users_on_admin"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["exp"], name: "index_users_on_exp"
@@ -405,6 +408,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_02_173147) do
     t.index ["level"], name: "index_users_on_level"
     t.index ["location_id"], name: "index_users_on_location_id"
     t.index ["notification_push_enabled"], name: "index_users_on_notification_push_enabled"
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["rating"], name: "index_users_on_rating"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["trades_count"], name: "index_users_on_trades_count"

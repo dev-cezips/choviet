@@ -100,6 +100,13 @@ end
 
 gem "devise", "~> 4.9"
 
+# OAuth / Social Login
+gem "omniauth", "~> 2.1"
+gem "omniauth-rails_csrf_protection", "~> 1.0"
+gem "omniauth-google-oauth2", "~> 1.1"
+gem "omniauth-apple", "~> 1.3"
+# gem "omniauth-kakao" # OmniAuth 2.x와 호환 안됨 - 별도 구현 필요
+
 gem "jsbundling-rails", "~> 1.3"
 
 # Error tracking

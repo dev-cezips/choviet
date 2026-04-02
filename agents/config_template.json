@@ -1,0 +1,9 @@
+{
+  "choviet_api_url": "https://choviet.chat/api/v1/featured_posts/random",
+  "choviet_api_key": "YOUR_CHOVIET_API_KEY",
+
+  "facebook_page_id": "YOUR_FACEBOOK_PAGE_ID",
+  "facebook_access_token": "YOUR_PAGE_ACCESS_TOKEN",
+
+  "anthropic_api_key": "YOUR_ANTHROPIC_API_KEY_OR_USE_ENV"
+}

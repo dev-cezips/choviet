@@ -274,6 +274,26 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
 
+  # Google OAuth2
+  if Rails.application.credentials.dig(:google, :client_id).present?
+    config.omniauth :google_oauth2,
+      Rails.application.credentials.dig(:google, :client_id),
+      Rails.application.credentials.dig(:google, :client_secret),
+      scope: "email,profile",
+      prompt: "select_account"
+  end
+
+  # Apple Sign In
+  if Rails.application.credentials.dig(:apple, :client_id).present?
+    config.omniauth :apple,
+      Rails.application.credentials.dig(:apple, :client_id),
+      "",
+      scope: "email name",
+      team_id: Rails.application.credentials.dig(:apple, :team_id),
+      key_id: Rails.application.credentials.dig(:apple, :key_id),
+      pem: Rails.application.credentials.dig(:apple, :private_key)
+  end
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

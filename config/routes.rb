@@ -1,11 +1,17 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
     registrations: "users/registrations",
-    sessions: "users/sessions"
+    sessions: "users/sessions",
+    omniauth_callbacks: "users/omniauth_callbacks"
   }
 
   # Root route - posts index as the main feed
   root "posts#index"
+
+  # Onboarding flow
+  resource :onboarding, only: [ :show, :update ], controller: "onboarding" do
+    post :skip
+  end
 
   # Feed routes
   get "feed", to: "posts#feed"
@@ -88,6 +94,13 @@ Rails.application.routes.draw do
       resources :push_endpoints, only: [ :create ] do
         collection do
           delete :destroy
+        end
+      end
+
+      # Featured posts API for external agents (Facebook, etc.)
+      resources :featured_posts, only: [ :index ] do
+        collection do
+          get :random
         end
       end
     end

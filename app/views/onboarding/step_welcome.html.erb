@@ -1,0 +1,81 @@
+<div class="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <!-- Progress indicator -->
+    <div class="flex justify-center mb-8">
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-blue-600"></div>
+        <div class="w-8 h-1 bg-blue-600 rounded"></div>
+        <div class="w-3 h-3 rounded-full bg-blue-600"></div>
+        <div class="w-8 h-1 bg-blue-600 rounded"></div>
+        <div class="w-3 h-3 rounded-full bg-blue-600"></div>
+      </div>
+    </div>
+
+    <!-- Welcome message -->
+    <div class="text-center mb-8">
+      <span class="text-6xl mb-4 block">🎉</span>
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">
+        <%= t('onboarding.welcome.title', default: 'Chao mung den Cho Viet!') %>
+      </h1>
+      <p class="text-gray-600">
+        <%= t('onboarding.welcome.subtitle', default: 'Ban da san sang!') %>
+      </p>
+    </div>
+
+    <!-- Features introduction -->
+    <div class="bg-white shadow-lg rounded-xl p-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-4 text-center">
+        <%= t('onboarding.welcome.features_title', default: 'Nhung gi ban co the lam:') %>
+      </h2>
+
+      <div class="space-y-4">
+        <!-- Buy & Sell -->
+        <div class="flex items-start p-3 bg-blue-50 rounded-lg">
+          <span class="text-2xl mr-3">🛒</span>
+          <div>
+            <div class="font-medium text-gray-900"><%= t('onboarding.features.marketplace', default: 'Mua ban do cu') %></div>
+            <div class="text-sm text-gray-600"><%= t('onboarding.features.marketplace_desc', default: 'Giao dich an toan voi cong dong') %></div>
+          </div>
+        </div>
+
+        <!-- Community -->
+        <div class="flex items-start p-3 bg-green-50 rounded-lg">
+          <span class="text-2xl mr-3">💬</span>
+          <div>
+            <div class="font-medium text-gray-900"><%= t('onboarding.features.community', default: 'Ket noi cong dong') %></div>
+            <div class="text-sm text-gray-600"><%= t('onboarding.features.community_desc', default: 'Hoi dap, chia se thong tin') %></div>
+          </div>
+        </div>
+
+        <!-- Local Info -->
+        <div class="flex items-start p-3 bg-yellow-50 rounded-lg">
+          <span class="text-2xl mr-3">📍</span>
+          <div>
+            <div class="font-medium text-gray-900"><%= t('onboarding.features.local', default: 'Thong tin dia phuong') %></div>
+            <div class="text-sm text-gray-600"><%= t('onboarding.features.local_desc', default: 'Tin tuc, su kien tai khu vuc cua ban') %></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust badge -->
+      <div class="mt-6 p-4 bg-gray-50 rounded-lg text-center">
+        <div class="flex items-center justify-center mb-2">
+          <span class="text-xl mr-2">🌱</span>
+          <span class="font-medium text-gray-900"><%= t('onboarding.welcome.new_member', default: 'Thanh vien moi') %></span>
+        </div>
+        <p class="text-sm text-gray-600">
+          <%= t('onboarding.welcome.trust_message', default: 'Xay dung uy tin qua moi giao dich thanh cong!') %>
+        </p>
+      </div>
+
+      <!-- Start button -->
+      <%= form_with url: onboarding_path(step: 3), method: :patch, local: true do %>
+        <div class="mt-6">
+          <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+            <%= t('onboarding.welcome.start', default: 'Bat dau kham pha!') %> 🚀
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

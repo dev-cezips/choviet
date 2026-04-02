@@ -1,0 +1,93 @@
+<div class="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <!-- Progress indicator -->
+    <div class="flex justify-center mb-8">
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-blue-600"></div>
+        <div class="w-8 h-1 bg-gray-300 rounded"></div>
+        <div class="w-3 h-3 rounded-full bg-gray-300"></div>
+        <div class="w-8 h-1 bg-gray-300 rounded"></div>
+        <div class="w-3 h-3 rounded-full bg-gray-300"></div>
+      </div>
+    </div>
+
+    <!-- Welcome message -->
+    <div class="text-center mb-8">
+      <span class="text-6xl mb-4 block">🌏</span>
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">
+        Chon ngon ngu / 언어 선택
+      </h1>
+      <p class="text-gray-600">
+        Select your preferred language
+      </p>
+    </div>
+
+    <!-- Language options -->
+    <div class="bg-white shadow-lg rounded-xl p-6 space-y-4">
+      <%= form_with url: onboarding_path(step: 1), method: :patch, local: true do %>
+        <div class="space-y-3">
+          <label class="block cursor-pointer">
+            <input type="radio" name="locale" value="vi" class="peer hidden" <%= 'checked' if current_user.locale == 'vi' %>>
+            <div class="flex items-center p-4 border-2 rounded-lg peer-checked:border-blue-500 peer-checked:bg-blue-50 hover:border-gray-400 transition-all">
+              <span class="text-3xl mr-4">🇻🇳</span>
+              <div class="flex-1">
+                <div class="font-medium text-gray-900">Tieng Viet</div>
+                <div class="text-sm text-gray-500">Vietnamese</div>
+              </div>
+              <div class="peer-checked:block hidden">
+                <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </label>
+
+          <label class="block cursor-pointer">
+            <input type="radio" name="locale" value="ko" class="peer hidden" <%= 'checked' if current_user.locale == 'ko' %>>
+            <div class="flex items-center p-4 border-2 rounded-lg peer-checked:border-blue-500 peer-checked:bg-blue-50 hover:border-gray-400 transition-all">
+              <span class="text-3xl mr-4">🇰🇷</span>
+              <div class="flex-1">
+                <div class="font-medium text-gray-900">한국어</div>
+                <div class="text-sm text-gray-500">Korean</div>
+              </div>
+              <div class="peer-checked:block hidden">
+                <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </label>
+
+          <label class="block cursor-pointer">
+            <input type="radio" name="locale" value="en" class="peer hidden" <%= 'checked' if current_user.locale == 'en' %>>
+            <div class="flex items-center p-4 border-2 rounded-lg peer-checked:border-blue-500 peer-checked:bg-blue-50 hover:border-gray-400 transition-all">
+              <span class="text-3xl mr-4">🇺🇸</span>
+              <div class="flex-1">
+                <div class="font-medium text-gray-900">English</div>
+                <div class="text-sm text-gray-500">English</div>
+              </div>
+              <div class="peer-checked:block hidden">
+                <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="mt-6">
+          <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+            Tiep tuc / 계속 / Continue
+          </button>
+        </div>
+      <% end %>
+
+      <!-- Skip option -->
+      <div class="mt-4 text-center">
+        <%= link_to skip_onboarding_path, method: :post, class: "text-sm text-gray-500 hover:text-gray-700" do %>
+          Bo qua / 건너뛰기 / Skip
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

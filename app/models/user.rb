@@ -4,7 +4,28 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :omniauthable, omniauth_providers: [ :google_oauth2, :apple ]
+
+  # OmniAuth - find or create user from OAuth data
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0, 20]
+      user.name = auth.info.name
+
+      # Set avatar from OAuth if available
+      if auth.info.image.present?
+        # For now, just store the URL - can download and attach later
+        # user.remote_avatar_url = auth.info.image
+      end
+    end
+  end
+
+  # Allow users to update without password (for OAuth users)
+  def password_required?
+    provider.blank? && super
+  end
 
   # Geocoding
   geocoded_by :latitude_longitude
@@ -303,6 +324,14 @@ class User < ApplicationRecord
 
   def korean?
     locale == "ko"
+  end
+
+  def onboarding_completed?
+    onboarding_completed == true
+  end
+
+  def needs_onboarding?
+    !onboarding_completed?
   end
 
   def display_name
