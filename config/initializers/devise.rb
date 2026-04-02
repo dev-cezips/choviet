@@ -284,9 +284,22 @@ Devise.setup do |config|
   end
 
   # Apple Sign In
-  # Load monkey-patch to skip nonce verification (session cookie issue with cross-origin POST)
   if Rails.application.credentials.dig(:apple, :client_id).present?
-    require Rails.root.join("lib/omniauth/strategies/apple_no_nonce")
+    # Inline monkey-patch to skip nonce verification
+    # Apple's cross-origin POST callback doesn't preserve session cookies
+    # due to SameSite cookie restrictions, causing nonce validation to fail
+    require "omniauth-apple"
+
+    module AppleNonceSkip
+      private
+
+      def verify_nonce!(id_token)
+        true
+      end
+    end
+
+    OmniAuth::Strategies::Apple.prepend(AppleNonceSkip)
+
     config.omniauth :apple,
       Rails.application.credentials.dig(:apple, :client_id),
       "",
