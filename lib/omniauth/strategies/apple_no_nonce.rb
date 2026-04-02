@@ -2,20 +2,19 @@
 
 require "omniauth-apple"
 
-# Monkey-patch Apple strategy to skip nonce verification
+# Module to skip nonce verification for Apple Sign In
 # Apple's cross-origin POST callback doesn't preserve session cookies
 # due to SameSite cookie restrictions, causing nonce validation to fail
-module OmniAuth
-  module Strategies
-    class Apple
-      private
+module AppleNonceSkip
+  private
 
-      # Override to skip nonce verification
-      def verify_nonce!(id_token)
-        # Skip nonce verification - session cookies not preserved
-        # in cross-origin POST from Apple
-        true
-      end
-    end
+  # Override to skip nonce verification
+  def verify_nonce!(id_token)
+    # Skip nonce verification - session cookies not preserved
+    # in cross-origin POST from Apple
+    true
   end
 end
+
+# Prepend to ensure proper method override
+OmniAuth::Strategies::Apple.prepend(AppleNonceSkip)
