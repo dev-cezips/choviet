@@ -46,7 +46,8 @@ RUN apt-get update -qq && \
 COPY Gemfile Gemfile.lock ./
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    gem uninstall tapioca -ax 2>/dev/null || true && \
+    rm -rf "${BUNDLE_PATH}"/ruby/*/gems/tapioca-* && \
+    rm -rf "${BUNDLE_PATH}"/ruby/*/specifications/tapioca-* && \
     bundle exec bootsnap precompile --gemfile
 
 # Copy application code
