@@ -6,6 +6,10 @@ if [ -z "${LD_PRELOAD+x}" ]; then
     export LD_PRELOAD
 fi
 
+# Remove tapioca if present (development gem not needed in production, causes errors)
+rm -rf /usr/local/bundle/ruby/*/gems/tapioca-* 2>/dev/null || true
+rm -rf /usr/local/bundle/ruby/*/specifications/tapioca-* 2>/dev/null || true
+
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
