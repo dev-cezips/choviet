@@ -69,15 +69,13 @@ FROM base
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 
-# Remove tapioca and sorbet from bundle (development gems that cause production errors)
-RUN echo "=== Before cleanup ===" && \
-    ls -la /usr/local/bundle/ruby/3.4.0/gems/ | grep -E "tapioca|sorbet" || echo "No tapioca/sorbet found" && \
-    rm -rf /usr/local/bundle/ruby/3.4.0/gems/tapioca-* && \
+# Remove tapioca, sorbet, and their bootsnap caches (development gems that cause production errors)
+RUN rm -rf /usr/local/bundle/ruby/3.4.0/gems/tapioca-* && \
     rm -rf /usr/local/bundle/ruby/3.4.0/specifications/tapioca-* && \
     rm -rf /usr/local/bundle/ruby/3.4.0/gems/sorbet-* && \
     rm -rf /usr/local/bundle/ruby/3.4.0/specifications/sorbet-* && \
-    echo "=== After cleanup ===" && \
-    ls -la /usr/local/bundle/ruby/3.4.0/gems/ | grep -E "tapioca|sorbet" || echo "No tapioca/sorbet found"
+    rm -rf /rails/tmp/cache/bootsnap* && \
+    rm -rf /usr/local/bundle/ruby/3.4.0/cache/bootsnap*
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
