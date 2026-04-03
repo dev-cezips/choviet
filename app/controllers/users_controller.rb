@@ -118,8 +118,8 @@ class UsersController < ApplicationController
     @total_sold = @user.posts.where(status: "sold").count
     @member_since_days = (Date.current - @user.created_at.to_date).to_i
 
-    # 매너 온도 (일단 기본값 36.5로 시작)
-    @manner_temp = @user.reputation_score || 36.5
+    # 신뢰 기록 점수 (0-5 scale)
+    @trust_score = @user.calculate_reputation_score
 
     # 받은 좋아요 수
     @received_likes = @user.posts.joins(:likes).count
