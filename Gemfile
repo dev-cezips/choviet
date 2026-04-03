@@ -116,5 +116,12 @@ gem "sentry-rails"
 # Push notifications
 gem "jwt" # For Google Service Account authentication
 
+# Development-only type checking tools
+# These somehow get loaded in Docker builds but aren't needed in production
+group :development do
+  gem "tapioca", require: false
+  gem "sorbet-static-and-runtime", require: false
+end
+
 # Required for tapioca (installed as dependency)
 gem "git"
