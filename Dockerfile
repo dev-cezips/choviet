@@ -43,9 +43,8 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
-# Cache bust: 2026-04-03-v2
 COPY Gemfile Gemfile.lock ./
-RUN bundle install && \
+RUN echo "Bundle install v3" && bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     rm -rf "${BUNDLE_PATH}"/ruby/*/gems/tapioca-* && \
     rm -rf "${BUNDLE_PATH}"/ruby/*/specifications/tapioca-* && \
