@@ -68,10 +68,9 @@ ko:
       privacy: "개인정보 처리방침"
       terms: "이용약관"
     contact:
-      title: "문의"
-      email: "이메일: support@choviet.com"
-      kakao: "카카오톡: @choviet"
-    copyright: "&copy; %{year} 쪼 비엣. All rights reserved."
+      title: "운영"
+      operator: "늦깎이연구소"
+    copyright: "&copy; 2025 by 늦깎이연구소"
   
   # Posts
   posts:

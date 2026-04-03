@@ -105,10 +105,9 @@ en:
       privacy: "Privacy Policy"
       terms: "Terms of Service"
     contact:
-      title: "Contact"
-      email: "Email: support@choviet.com"
-      kakao: "KakaoTalk: @choviet"
-    copyright: "&copy; %{year} Cho Viet. All rights reserved."
+      title: "Operated by"
+      operator: "Latebloomers Lab"
+    copyright: "&copy; 2025 by 늦깎이연구소"
   
   # Posts
   posts:

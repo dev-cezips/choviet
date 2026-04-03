@@ -239,10 +239,9 @@ vi:
       privacy: "Chính sách bảo mật"
       terms: "Điều khoản sử dụng"
     contact:
-      title: "Liên hệ"
-      email: "Email: support@choviet.com"
-      kakao: "KakaoTalk: @choviet"
-    copyright: "&copy; %{year} Chợ Việt. Bảo lưu mọi quyền."
+      title: "Vận hành"
+      operator: "Latebloomers Lab"
+    copyright: "&copy; 2025 by 늦깎이연구소"
   
   # Floating action button
   fab:
