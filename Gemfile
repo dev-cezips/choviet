@@ -115,3 +115,6 @@ gem "sentry-rails"
 
 # Push notifications
 gem "jwt" # For Google Service Account authentication
+
+# Required for tapioca (installed as dependency)
+gem "git"
