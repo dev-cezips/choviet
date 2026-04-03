@@ -44,8 +44,7 @@ RUN apt-get update -qq && \
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
-RUN echo "=== Gemfile.lock tapioca version ===" && grep -A2 "tapioca" Gemfile.lock && echo "=== End ===" && \
-    bundle install && \
+RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     rm -rf "${BUNDLE_PATH}"/ruby/*/gems/tapioca-* && \
     rm -rf "${BUNDLE_PATH}"/ruby/*/specifications/tapioca-* && \
