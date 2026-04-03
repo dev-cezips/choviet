@@ -5,7 +5,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :omniauthable, omniauth_providers: [ :google_oauth2, :apple ]
+         :omniauthable, omniauth_providers: [ :google_oauth2, :apple, :kakao ]
 
   # OmniAuth - find or create user from OAuth data
   def self.from_omniauth(auth)
@@ -147,16 +147,112 @@ class User < ApplicationRecord
     report_count >= (TRUST_POLICY[:auto_warning_reports] rescue 3)
   end
 
-  # First trade helper
+  # First trade helpers
   def first_trade?
     # Check if user has any completed trades (as buyer or seller)
     completed_trades_count == 0
+  end
+
+  def completed_first_sale?
+    first_sale_at.present?
+  end
+
+  def completed_first_purchase?
+    first_purchase_at.present?
+  end
+
+  def just_completed_first_sale?
+    # Recently completed first sale (within last hour)
+    first_sale_at.present? && first_sale_at > 1.hour.ago
+  end
+
+  def just_completed_first_purchase?
+    # Recently completed first purchase (within last hour)
+    first_purchase_at.present? && first_purchase_at > 1.hour.ago
+  end
+
+  def should_prompt_story_after_first_trade?
+    # Prompt if completed first trade but no story yet
+    (completed_first_sale? || completed_first_purchase?) && story.blank?
   end
 
   def completed_trades_count
     # Count completed trades where user is either buyer or seller
     ChatRoom.where("(buyer_id = :user_id OR seller_id = :user_id) AND trade_status = :status",
                    user_id: id, status: ChatRoom.trade_statuses[:completed]).count
+  end
+
+  def sales_count
+    ChatRoom.where(seller_id: id, trade_status: :completed).count
+  end
+
+  def purchases_count
+    ChatRoom.where(buyer_id: id, trade_status: :completed).count
+  end
+
+  # Growth stats for profile display
+  def growth_stats
+    trades = completed_trades_count
+    reviews = reviews_received.count
+    days = (Date.current - created_at.to_date).to_i
+
+    {
+      trades: trades,
+      sales: sales_count,
+      purchases: purchases_count,
+      reviews_received: reviews,
+      reviews_given: reviews_given.count,
+      member_days: days,
+      member_months: (days / 30.0).floor,
+      next_milestone: next_trade_milestone(trades),
+      current_milestone: current_trade_milestone(trades),
+      growth_message: growth_message(trades, reviews, days)
+    }
+  end
+
+  def next_trade_milestone(trades)
+    milestones = [1, 5, 10, 25, 50, 100, 250, 500, 1000]
+    milestones.find { |m| m > trades } || nil
+  end
+
+  def current_trade_milestone(trades)
+    milestones = [1000, 500, 250, 100, 50, 25, 10, 5, 1]
+    milestones.find { |m| trades >= m } || 0
+  end
+
+  def growth_message(trades, reviews, days)
+    if trades == 0
+      "🌱 Đang bắt đầu hành trình"
+    elsif trades < 5
+      "🌿 Những bước đầu tiên"
+    elsif trades < 10
+      "🌳 Đang phát triển"
+    elsif trades < 25
+      "⭐ Thành viên tích cực"
+    elsif trades < 50
+      "🌟 Người bán có uy tín"
+    elsif trades < 100
+      "💫 Người bán chuyên nghiệp"
+    else
+      "👑 Trụ cột cộng đồng"
+    end
+  end
+
+  def milestone_just_reached?
+    trades = completed_trades_count
+    [1, 5, 10, 25, 50, 100].include?(trades)
+  end
+
+  def milestone_title(milestone)
+    case milestone
+    when 1 then "Giao dịch đầu tiên"
+    when 5 then "5 giao dịch"
+    when 10 then "10 giao dịch"
+    when 25 then "25 giao dịch"
+    when 50 then "50 giao dịch"
+    when 100 then "100 giao dịch"
+    else "#{milestone} giao dịch"
+    end
   end
 
   # Trust summary - returns a single line description of user's trust level based on context

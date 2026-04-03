@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   # Marketplace shortcut
   get "marketplace", to: "posts#index", defaults: { type: "marketplace" }
 
+  # Stories feed (사람을 발견하는 공간)
+  get "stories", to: "stories#index", as: :stories
+
   resources :posts do
     resource :like, only: [ :create, :destroy ]
     resource :favorite, only: [ :create, :destroy ]

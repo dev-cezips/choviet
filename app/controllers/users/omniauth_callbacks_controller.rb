@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  skip_before_action :verify_authenticity_token, only: [ :google_oauth2, :apple, :failure ]
+  skip_before_action :verify_authenticity_token, only: [ :google_oauth2, :apple, :kakao, :failure ]
 
   def google_oauth2
     handle_auth("Google")
@@ -9,6 +9,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def apple
     handle_auth("Apple")
+  end
+
+  def kakao
+    handle_auth("Kakao")
   end
 
   def failure

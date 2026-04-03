@@ -41,6 +41,22 @@ behavior_titles = [
 # Seller Titles
 seller_titles = [
   {
+    key: 'first_sale',
+    name_vi: 'Bán Hàng Đầu Tiên',
+    description: 'Hoàn thành giao dịch bán hàng đầu tiên! 🎉',
+    category: 'seller',
+    icon: '🎊',
+    color: 'green'
+  },
+  {
+    key: 'first_purchase',
+    name_vi: 'Mua Hàng Đầu Tiên',
+    description: 'Hoàn thành giao dịch mua hàng đầu tiên! 🎉',
+    category: 'seller',
+    icon: '🛒',
+    color: 'blue'
+  },
+  {
     key: 'cute_seller',
     name_vi: 'Người Bán Dễ Thương',
     description: 'Nhận nhiều lời khen "Thân thiện", "Tốt bụng"',
@@ -71,6 +87,38 @@ seller_titles = [
     category: 'seller',
     icon: '💯',
     color: 'green'
+  },
+  {
+    key: 'milestone_10',
+    name_vi: '10 Giao Dịch',
+    description: 'Hoàn thành 10 giao dịch thành công!',
+    category: 'seller',
+    icon: '🔟',
+    color: 'blue'
+  },
+  {
+    key: 'milestone_25',
+    name_vi: '25 Giao Dịch',
+    description: 'Hoàn thành 25 giao dịch thành công!',
+    category: 'seller',
+    icon: '⭐',
+    color: 'purple'
+  },
+  {
+    key: 'milestone_50',
+    name_vi: '50 Giao Dịch',
+    description: 'Hoàn thành 50 giao dịch - Người bán chuyên nghiệp!',
+    category: 'seller',
+    icon: '🌟',
+    color: 'gold'
+  },
+  {
+    key: 'milestone_100',
+    name_vi: '100 Giao Dịch',
+    description: 'Hoàn thành 100 giao dịch - Trụ cột cộng đồng!',
+    category: 'seller',
+    icon: '👑',
+    color: 'gold'
   }
 ]
 

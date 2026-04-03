@@ -5,6 +5,9 @@
   <p class="text-sm font-medium"><%= t('tagline_detail') %></p>
 </div>
 
+<!-- Tab Navigation -->
+<%= render "shared/feed_tabs", active_tab: :marketplace %>
+
 <!-- Search and Filters -->
 <%= render "posts/search_filters", url: @search_url %>
 

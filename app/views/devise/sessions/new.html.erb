@@ -119,6 +119,17 @@
                   </svg>
                   Apple
                 <% end %>
+              <% elsif provider == :kakao %>
+                <%= button_to user_kakao_omniauth_authorize_path,
+                    method: :post,
+                    data: { turbo: false },
+                    class: "w-full inline-flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-gray-900 hover:opacity-90 transition-all",
+                    style: "background-color: #FEE500;" do %>
+                  <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3C6.48 3 2 6.58 2 11c0 2.9 1.9 5.45 4.77 6.91-.21.8-.77 2.9-.88 3.35-.14.55.2.54.42.4.17-.12 2.72-1.85 3.83-2.6.6.09 1.22.14 1.86.14 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/>
+                  </svg>
+                  Kakao
+                <% end %>
               <% end %>
             <% end %>
           <% end %>

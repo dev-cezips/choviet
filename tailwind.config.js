@@ -89,6 +89,8 @@ module.exports = {
       animation: {
         'level-up': 'levelUp 0.6s ease-out',
         'badge-bounce': 'badgeBounce 1s ease-in-out infinite',
+        'pulse-once': 'pulseOnce 2s ease-in-out',
+        'celebrate': 'celebrate 0.8s ease-out',
       },
       keyframes: {
         levelUp: {
@@ -99,6 +101,15 @@ module.exports = {
         badgeBounce: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-4px)' },
+        },
+        pulseOnce: {
+          '0%, 100%': { boxShadow: '0 0 0 0 rgba(34, 197, 94, 0.4)' },
+          '50%': { boxShadow: '0 0 0 10px rgba(34, 197, 94, 0)' },
+        },
+        celebrate: {
+          '0%': { transform: 'scale(0.8)', opacity: '0' },
+          '50%': { transform: 'scale(1.05)' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
         },
       }
     }

@@ -124,6 +124,12 @@ class UsersController < ApplicationController
     # 받은 좋아요 수
     @received_likes = @user.posts.joins(:likes).count
 
+    # 성장 기록 통계
+    @total_trades = @user.completed_trades_count
+    @reviews_received = @user.reviews_received.count
+    @reviews_given = @user.reviews_given.count
+    @growth_stats = @user.growth_stats
+
     # 문의 통계 (본인 프로필에서만)
     if current_user == @user
       week_ago = 1.week.ago
@@ -136,7 +142,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :bio, :phone, :location_code, :avatar, :locale,
+    params.require(:user).permit(:name, :bio, :story, :phone, :location_code, :avatar, :locale,
                                   :latitude, :longitude, :notification_push_enabled,
                                   :notification_dm_enabled, :notification_email_enabled)
   end

@@ -5,8 +5,13 @@ class Rack::Attack
 
   # Safelist development and test environments
   safelist("allow-localhost") do |req|
-    req.ip == "127.0.0.1" || req.ip == "::1"
-  end if Rails.env.development? || Rails.env.test?
+    (req.ip == "127.0.0.1" || req.ip == "::1") if Rails.env.development? || Rails.env.test?
+  end
+
+  # Safelist OAuth callbacks (Google, Apple, Kakao)
+  safelist("allow-oauth") do |req|
+    req.path.start_with?("/users/auth/")
+  end
 
   # Track logged in users by user ID, anonymous by IP
   def self.track_identifier(req)

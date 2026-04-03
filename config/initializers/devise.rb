@@ -310,6 +310,16 @@ Devise.setup do |config|
       provider_ignores_state: true
   end
 
+  # Kakao Login
+  if Rails.application.credentials.dig(:kakao, :client_id).present?
+    require Rails.root.join("lib/omniauth/strategies/kakao")
+
+    config.omniauth :kakao,
+      Rails.application.credentials.dig(:kakao, :client_id),
+      Rails.application.credentials.dig(:kakao, :client_secret),
+      scope: "profile_nickname,account_email"
+  end
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

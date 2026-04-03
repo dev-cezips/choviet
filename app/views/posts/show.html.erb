@@ -131,7 +131,23 @@
           <p class="text-xs text-gray-500 mt-1"><%= @post.user.trust_hint(context: :post) %></p>
         <% end %>
       </div>
-      
+
+      <!-- Seller Story -->
+      <% if @post.user.story.present? %>
+        <div class="mt-4 bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg p-3 border border-amber-200">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lg">📖</span>
+            <span class="text-sm font-medium text-gray-700">Câu chuyện người bán</span>
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed line-clamp-3"><%= @post.user.story %></p>
+          <% if @post.user.story.length > 150 %>
+            <%= link_to user_path(@post.user), class: "text-xs text-primary hover:underline mt-1 inline-block" do %>
+              Xem thêm →
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
       <!-- 문의하기 Button (Chat) - Hide if sold -->
       <% if @post.user != current_user && user_signed_in? && !@post.sold? %>
         <div class="mt-3">

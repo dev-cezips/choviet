@@ -1,0 +1,147 @@
+<!-- Identity Banner -->
+<div class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-3 text-center">
+  <p class="text-sm font-medium">📖 Câu chuyện của cộng đồng · 물건이 아니라 사람을 발견하세요</p>
+</div>
+
+<!-- Tab Navigation -->
+<%= render "shared/feed_tabs", active_tab: :stories %>
+
+<div class="max-w-screen-lg mx-auto px-4 py-4">
+  <% if @users_with_stories.empty? %>
+    <!-- Empty State -->
+    <div class="text-center py-12">
+      <div class="text-6xl mb-4">📖</div>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">Chưa có câu chuyện nào</h3>
+      <p class="text-gray-500 mb-4">Hãy là người đầu tiên chia sẻ câu chuyện của bạn!</p>
+      <% if user_signed_in? %>
+        <%= link_to edit_profile_path,
+            class: "bg-amber-500 text-white px-4 py-2 rounded-button font-medium hover:bg-amber-600 transition-colors shadow-sm" do %>
+          ✏️ Viết câu chuyện của tôi
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="space-y-6">
+      <% @users_with_stories.each do |user| %>
+        <article class="bg-white rounded-xl shadow-card overflow-hidden">
+          <!-- User Header -->
+          <%= link_to user_path(user), class: "block p-4 hover:bg-gray-50 transition-colors" do %>
+            <div class="flex items-start gap-4">
+              <!-- Avatar -->
+              <div class="flex-shrink-0">
+                <% if user.avatar.attached? %>
+                  <%= image_tag user.avatar.variant(resize_to_fill: [80, 80]), class: "w-16 h-16 rounded-full object-cover border-2 border-amber-200" %>
+                <% elsif user.avatar_url.present? %>
+                  <%= image_tag user.avatar_url, class: "w-16 h-16 rounded-full object-cover border-2 border-amber-200" %>
+                <% else %>
+                  <div class="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xl font-bold border-2 border-amber-200">
+                    <%= user.display_name.first.upcase %>
+                  </div>
+                <% end %>
+              </div>
+
+              <!-- User Info -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <h3 class="font-bold text-gray-900"><%= user.display_name %></h3>
+                  <% if user.primary_title %>
+                    <span class="text-xs px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full">
+                      <%= user.primary_title.display_icon %> <%= user.primary_title.name_vi %>
+                    </span>
+                  <% end %>
+                </div>
+
+                <!-- Growth Stats -->
+                <div class="flex items-center gap-3 text-xs text-gray-500 mb-2">
+                  <% stats = user.growth_stats %>
+                  <span><%= stats[:growth_message] %></span>
+                  <% if stats[:trades] > 0 %>
+                    <span>•</span>
+                    <span><%= stats[:trades] %> giao dịch</span>
+                  <% end %>
+                  <% if stats[:member_months] > 0 %>
+                    <span>•</span>
+                    <span><%= stats[:member_months] %> tháng</span>
+                  <% end %>
+                </div>
+
+                <!-- Story Preview -->
+                <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg p-3 border border-amber-100">
+                  <p class="text-sm text-gray-700 leading-relaxed line-clamp-3">
+                    <%= user.story %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- Recent Products -->
+          <% recent_posts = user.posts.where(status: "active").order(created_at: :desc).limit(3) %>
+          <% if recent_posts.any? %>
+            <div class="px-4 pb-4">
+              <p class="text-xs text-gray-500 mb-2 flex items-center gap-1">
+                <span>🛍️</span>
+                <span>Đang bán</span>
+              </p>
+              <div class="flex gap-2 overflow-x-auto scrollbar-hide">
+                <% recent_posts.each do |post| %>
+                  <%= link_to post_path(post), class: "flex-shrink-0 w-20" do %>
+                    <div class="aspect-square rounded-lg overflow-hidden bg-gray-100 mb-1">
+                      <% if post.images.attached? && post.images.any? %>
+                        <%= image_tag post.images.first.variant(resize_to_fill: [160, 160]), class: "w-full h-full object-cover" %>
+                      <% else %>
+                        <div class="w-full h-full flex items-center justify-center text-gray-400">
+                          <span class="text-2xl">📦</span>
+                        </div>
+                      <% end %>
+                    </div>
+                    <% if post.marketplace? && post.product %>
+                      <p class="text-xs font-bold text-soft-coral text-center truncate">
+                        <%= price_display(post.product.price) %>
+                      </p>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </article>
+      <% end %>
+    </div>
+
+    <!-- Pagination -->
+    <% if @users_with_stories.total_pages > 1 %>
+      <div class="py-6">
+        <div class="flex justify-center">
+          <%= paginate @users_with_stories %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
+  <!-- CTA for users without story -->
+  <% if user_signed_in? && current_user.story.blank? %>
+    <div class="mt-6 bg-gradient-to-r from-amber-100 to-orange-100 rounded-xl p-4 border border-amber-200">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">✨</span>
+        <div class="flex-1">
+          <p class="font-medium text-amber-900">Câu chuyện của bạn đâu?</p>
+          <p class="text-sm text-amber-700">"저도 떨렸는데 됐어요" - Chia sẻ để truyền cảm hứng</p>
+        </div>
+        <%= link_to edit_profile_path, class: "px-4 py-2 bg-amber-500 text-white text-sm font-medium rounded-lg hover:bg-amber-600 transition-colors shadow-sm" do %>
+          Viết ngay
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+</style>
