@@ -69,6 +69,12 @@ FROM base
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 
+# Remove tapioca from bundle (development gem that causes production errors)
+RUN rm -rf /usr/local/bundle/ruby/3.4.0/gems/tapioca-* && \
+    rm -rf /usr/local/bundle/ruby/3.4.0/specifications/tapioca-* && \
+    rm -rf /usr/local/bundle/ruby/3.4.0/gems/git-* && \
+    rm -rf /usr/local/bundle/ruby/3.4.0/specifications/git-*
+
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
