@@ -1,229 +1,181 @@
 ---
-title: "[혼자서 앱 만들기 #6] 구글 로그인, 생각보다 쉬웠다"
+title: "[혼자서 앱 만들기 #6] 40대에 OAuth를 구현하다"
 category: Choviet
 tags: OAuth, 소셜로그인, Google, 온보딩, Rails, Devise, 늦깎이, 앱개발
-excerpt: 50대 비전공자가 구글 소셜 로그인과 온보딩 플로우를 하루 만에 구현한 이야기
+excerpt: 그런 건 전공자들이나 하는 거 아니야? 3개월 전의 나에게 보여주고 싶은 코드가 생겼다.
 ---
 
-## 왜 소셜 로그인이 필요했나
+"OAuth? 그거 어려운 거 아니야?"
 
-Chợ Việt을 만들면서 가장 많이 받은 피드백이 있다.
+3개월 전, 누군가 나에게 소셜 로그인을 직접 구현하겠다고 했다면 이렇게 대답했을 것이다.
 
-> "회원가입이 귀찮아요"
+**"그런 건 전공자들이나 하는 거지."**
 
-맞는 말이다. 이메일 입력하고, 비밀번호 만들고, 또 확인하고... 2026년에 이런 과정을 거치는 게 오히려 이상하다. 당근마켓도, 번개장터도 전부 소셜 로그인을 지원한다.
+40대 중반, 비전공자, 코딩 경력 1년 미만. 나의 스펙이다. OAuth 스펙 문서? 토큰 관리? 콜백 URL? 용어만 들어도 머리가 아팠다.
 
-베트남 커뮤니티 앱이라면 더욱 그렇다. 한국에 온 지 얼마 안 된 분들이 복잡한 회원가입 절차를 거치면서까지 앱을 쓸까?
+그런데 오늘, 나는 이 글을 쓰고 있다.
 
-**진입 장벽을 낮춰야 했다.**
-
-그리고 또 하나. 신규 가입자가 앱에 들어왔을 때 "이게 뭐하는 앱이지?" 하고 이탈하는 경우가 많았다. 언어 설정도, 지역 설정도 나중에 프로필에서 해야 했다.
-
-**첫 경험을 안내해야 했다.**
-
-![로그인 페이지에 추가된 Google 버튼](01-login-page.png)
-*로그인 페이지 - Google 로그인 버튼이 추가됐다*
+**구글 로그인을 직접 구현했다.**
 
 ---
 
-## 구글 로그인 구현하기
+## 포기할 뻔한 순간
 
-### Devise + OmniAuth 조합
+Chợ Việt을 만들면서 피드백을 받았다.
 
-Rails에서 인증은 Devise가 표준이다. 여기에 OmniAuth를 붙이면 소셜 로그인이 가능해진다.
+> "회원가입이 너무 귀찮아요."
+
+당연한 말이다. 2026년에 이메일 입력하고, 비밀번호 만들고, 확인까지... 누가 이 과정을 거치면서 앱을 쓰겠나.
+
+당근마켓도, 번개장터도 전부 소셜 로그인을 지원한다.
+
+**"나도 해야 하는데..."**
+
+문제는 내가 '해야 한다'고 생각만 했다는 것이다. OAuth 문서를 열었다가 닫고, 유튜브 강의를 틀었다가 끄고. 한 달을 그렇게 보냈다.
+
+솔직히 말하면, **무서웠다**.
+
+내가 할 수 있는 영역이 아니라고 생각했다. 인증이라는 건 보안과 직결되고, 실수하면 사용자 정보가 유출될 수도 있다. 그런 무거운 걸 내가?
+
+---
+
+## 일단 시작했다
+
+어느 날 아침, 이런 생각이 들었다.
+
+> "안 해보고 못한다고 하는 건 비겁한 거 아닌가?"
+
+노트북을 열었다. 구글에 검색했다.
+
+**"Rails Google OAuth 구현"**
+
+그리고 깨달았다. **세상에는 나 같은 사람을 위한 도구가 이미 있다는 것을.**
 
 ```ruby
 # Gemfile
-gem "omniauth", "~> 2.1"
-gem "omniauth-rails_csrf_protection", "~> 1.0"
-gem "omniauth-google-oauth2", "~> 1.2"
-gem "omniauth-apple", "~> 1.4"
+gem "devise"           # 인증의 90%를 처리해줌
+gem "omniauth"         # 소셜 로그인의 공통 인터페이스
+gem "omniauth-google-oauth2"  # 구글 전용 어댑터
 ```
 
-처음엔 카카오 로그인도 넣으려 했는데, `omniauth-kakao` 젬이 OmniAuth 2.x와 호환이 안 됐다. 일단 구글과 애플만 먼저 구현하기로 했다.
+세 줄이었다. 이 세 줄이 내가 두려워했던 것의 대부분을 해결해줬다.
 
-### Google Cloud Console 설정
+---
 
-의외로 시간이 걸린 건 코드가 아니라 Google Cloud Console 설정이었다.
+## 삽질의 기록
 
-1. 프로젝트 생성
-2. OAuth 동의 화면 설정
-3. **웹 애플리케이션** 타입으로 클라이언트 ID 생성
-4. 리디렉션 URI 등록
+물론 순탄하지만은 않았다.
 
-처음에 "데스크톱" 타입으로 만들어서 에러가 났다. **반드시 "웹 애플리케이션"**으로 만들어야 한다.
+### 삽질 1: "왜 콜백이 안 오지?"
+
+Google Cloud Console에서 클라이언트를 만들 때, 나는 "데스크톱 앱"을 선택했다. 웹 앱인데 왜 데스크톱을 선택했냐고? 그냥 제일 위에 있어서...
+
+**2시간을 헤맸다.**
+
+교훈: **"웹 애플리케이션"을 선택해야 한다.**
+
+### 삽질 2: "리디렉션 URI가 뭐야?"
 
 ```
 http://localhost:3000/users/auth/google_oauth2/callback
-http://localhost:3004/users/auth/google_oauth2/callback
 https://choviet.chat/users/auth/google_oauth2/callback
 ```
 
-개발 환경 포트가 3000일 수도 있고 3004일 수도 있어서 둘 다 등록했다.
+이걸 Google Console에 등록해야 한다는 걸 몰랐다. 로컬에서 되는데 배포하면 안 되고, 배포해서 되는데 로컬에서 안 되고.
 
-### User 모델 수정
+**또 2시간.**
+
+교훈: **개발 환경과 운영 환경 URI를 둘 다 등록해야 한다.**
+
+### 삽질 3: "비밀번호가 왜 필요하지?"
+
+소셜 로그인 유저는 비밀번호가 없다. 그런데 Devise가 "비밀번호를 입력하세요"라고 에러를 뱉었다.
 
 ```ruby
-class User < ApplicationRecord
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         :omniauthable, omniauth_providers: [:google_oauth2, :apple]
-
-  def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      user.email = auth.info.email
-      user.password = Devise.friendly_token[0, 20]
-      user.name = auth.info.name
-    end
-  end
-
-  def password_required?
-    provider.blank? && super
-  end
+def password_required?
+  provider.blank? && super
 end
 ```
 
-`from_omniauth` 메서드가 핵심이다. OAuth로 받아온 정보로 유저를 찾거나 생성한다. `password_required?`를 오버라이드해서 소셜 로그인 유저는 비밀번호 없이도 가입할 수 있게 했다.
+이 세 줄을 찾는 데 **1시간**.
 
-### 콜백 컨트롤러
-
-```ruby
-class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  def google_oauth2
-    handle_auth("Google")
-  end
-
-  private
-
-  def handle_auth(kind)
-    @user = User.from_omniauth(request.env["omniauth.auth"])
-
-    if @user.persisted?
-      sign_in @user, event: :authentication
-
-      if @user.needs_onboarding?
-        redirect_to onboarding_path
-      else
-        redirect_to root_path
-      end
-    else
-      redirect_to new_user_registration_url
-    end
-  end
-end
-```
-
-신규 가입자는 온보딩으로, 기존 유저는 메인 피드로 보낸다.
+교훈: **에러 메시지를 그대로 검색하면 답이 나온다.**
 
 ---
 
-## 온보딩 플로우 만들기
+## 결국 완성했다
 
-### 3단계 설계
+![로그인 페이지에 추가된 Google 버튼](01-login-page.png)
+*로그인 페이지 - Google 버튼이 생겼다*
 
-1. **언어 선택** - 베트남어, 한국어, 영어
-2. **지역 선택** - 서울, 경기, 인천, 부산 등
-3. **환영 & 기능 소개** - 앱이 뭘 할 수 있는지 안내
+버튼을 눌렀다. 구글 로그인 창이 떴다. 계정을 선택했다.
+
+**앱에 로그인됐다.**
+
+그 순간, 나는 모니터 앞에서 혼자 웃었다.
+
+"내가 이걸 만들었네."
+
+---
+
+## 온보딩도 만들었다
+
+김에 온보딩 플로우도 추가했다.
 
 ![온보딩 1단계: 언어 선택](03-onboarding-language.png)
-*온보딩 첫 화면 - 베트남어, 한국어, 영어 중 선택*
+*첫 화면 - 베트남어, 한국어, 영어 중 선택*
 
-```ruby
-class OnboardingController < ApplicationController
-  before_action :authenticate_user!
+신규 가입자가 들어오면:
+1. 언어를 선택하고
+2. 지역을 선택하고
+3. 앱 소개를 보고 시작한다
 
-  def show
-    @step = determine_current_step
-    render_step(@step)
-  end
+**첫 경험이 달라졌다.**
 
-  def update
-    case params[:step].to_i
-    when 1
-      current_user.update(locale: params[:locale])
-      redirect_to onboarding_path(step: 2)
-    when 2
-      current_user.update(location_code: params[:location_code])
-      redirect_to onboarding_path(step: 3)
-    when 3
-      current_user.update(onboarding_completed: true)
-      redirect_to root_path
-    end
-  end
-end
-```
-
-### UI는 심플하게
-
-```erb
-<!-- 언어 선택 -->
-<label class="block cursor-pointer">
-  <input type="radio" name="locale" value="vi" class="peer hidden">
-  <div class="flex items-center p-4 border-2 rounded-lg
-              peer-checked:border-blue-500 peer-checked:bg-blue-50">
-    <span class="text-3xl mr-4">🇻🇳</span>
-    <div>Tiếng Việt</div>
-  </div>
-</label>
-```
-
-Tailwind CSS의 `peer` 기능을 활용했다. 라디오 버튼을 숨기고, 선택되면 카드 전체가 하이라이트된다.
+"이게 뭐하는 앱이지?" 하고 이탈하던 사용자들이 이제는 자연스럽게 설정을 마치고 피드를 본다.
 
 ---
 
-## 배포하고 확인하기
+## 무엇이 달라졌나
 
-```bash
-git add -A
-git commit -m "feat: add social login (Google OAuth) and onboarding flow"
-git push origin main
-kamal deploy
-```
+### 기술적으로
 
-Kamal 덕분에 배포는 2분이면 끝난다.
+- OAuth 2.0의 흐름을 이해하게 됐다
+- Devise와 OmniAuth 조합 패턴을 익혔다
+- 콜백, 리다이렉션, 토큰 교환이 뭔지 안다
 
-```bash
-kamal app exec -i --reuse "bin/rails db:migrate"
-```
+### 마음속으로
 
-프로덕션 DB 마이그레이션도 한 줄이면 된다.
+**"나도 할 수 있구나"**라는 작은 확신이 생겼다.
 
-**https://choviet.chat** 에서 구글 로그인이 잘 작동하는 걸 확인했다.
+3개월 전에는 OAuth 문서만 보면 브라우저를 닫았다. 지금은 새로운 API를 보면 "일단 해볼까?"라는 생각이 먼저 든다.
+
+이게 성장이 아니면 뭘까.
 
 ---
 
-## 무엇을 얻었나
+## 당신에게
 
-### 기술적 성장
+이 글을 읽는 당신은 어떤 것 앞에서 멈춰 서 있는가?
 
-- **OmniAuth 2.x** 사용법을 익혔다
-- **Google Cloud Console** OAuth 설정 경험
-- **Devise**와 **OmniAuth** 통합 패턴 이해
-- **온보딩 플로우** 설계 및 구현
+- "그건 내 영역이 아니야"
+- "나이가 너무 많아"
+- "전공자가 아니라서"
 
-### 제품적 성장
+나도 그랬다. 그리고 그 핑계들이 전부 **거짓말**이었다는 걸 알게 됐다.
 
-- 회원가입 진입장벽 대폭 낮춤
-- 신규 유저 첫 경험 개선
-- 언어/지역 설정을 자연스럽게 유도
+할 수 없는 게 아니라, **아직 안 해본 것**뿐이었다.
 
-### 깨달은 것
+당신도 할 수 있다.
 
-처음엔 "소셜 로그인은 복잡하겠지"라고 생각했다. OAuth 스펙 문서를 봐야 하나, 토큰 관리는 어떻게 하나...
-
-막상 해보니 **Devise + OmniAuth 조합이 대부분을 처리**해준다. 내가 할 건 Google Cloud Console 설정하고, 콜백 컨트롤러 만드는 것뿐이었다.
-
-> "어려워 보이는 것도 일단 시작하면 길이 보인다."
-
-늦깎이 개발의 핵심은 **완벽하게 이해하고 시작하는 게 아니라, 일단 해보면서 배우는 것**이다.
+일단 시작해보라.
 
 ---
 
-## 다음 할 일
+## 다음 이야기
 
-- [ ] Apple Sign In 구현 (인증서 설정 필요)
-- [ ] 카카오 로그인 (별도 구현 필요)
-- [ ] 프로덕션에서 실제 유저 테스트
+- [ ] Apple 로그인 구현기
+- [ ] 카카오 로그인 - 공식 gem이 없으면? 직접 만든다
 
 ---
 

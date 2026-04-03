@@ -65,6 +65,7 @@ ko:
       description: "베트남인을 위한 온라인 커뮤니티"
     links:
       title: "정보"
+      multicultural_centers: "다문화센터 안내"
       privacy: "개인정보 처리방침"
       terms: "이용약관"
     contact:
@@ -222,3 +223,47 @@ ko:
       email: "이메일"
       kakao: "카카오톡"
       phone: "전화번호"
+
+  # Multicultural Centers
+  multicultural_centers:
+    title: "다문화가족지원센터 안내"
+    description: "한국 생활에 필요한 다양한 지원을 받을 수 있는 다문화가족지원센터 정보입니다."
+    emergency:
+      title: "긴급상담전화"
+      available_24h: "24시간 운영, 다국어 상담"
+    regions:
+      seoul: "서울"
+      gyeonggi: "경기"
+      other: "기타 지역"
+    centers:
+      guro:
+        name: "구로구 다문화가족지원센터"
+        address: "서울시 구로구 구로동로 27길 60"
+      yeongdeungpo:
+        name: "영등포구 다문화가족지원센터"
+        address: "서울시 영등포구 영등포로 229"
+      geumcheon:
+        name: "금천구 다문화가족지원센터"
+        address: "서울시 금천구 시흥대로 73길 70"
+      ansan:
+        name: "안산시 다문화가족지원센터"
+        address: "경기도 안산시 단원구 원선1로 80"
+      suwon:
+        name: "수원시 다문화가족지원센터"
+        address: "경기도 수원시 팔달구 권광로 181"
+      busan:
+        name: "부산시 다문화가족지원센터"
+        address: "부산시 동구 중앙대로 359"
+      daegu:
+        name: "대구시 다문화가족지원센터"
+        address: "대구시 중구 달구벌대로 2095"
+    services:
+      korean_class: "한국어 교육"
+      bilingual_education: "이중언어 교육"
+      counseling: "생활 상담"
+      job_support: "취업 지원"
+      legal_support: "법률 지원"
+    info:
+      title: "참고"
+      description: "센터별로 제공하는 프로그램이 다를 수 있습니다. 방문 전 전화로 확인해주세요."
+    national_portal: "다문화가족지원포털 (liveinkorea.kr)"

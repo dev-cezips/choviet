@@ -236,6 +236,7 @@ vi:
       description: "Cộng đồng người Việt tại Hàn Quốc"
     links:
       title: "Thông tin"
+      multicultural_centers: "Trung tâm Đa văn hóa"
       privacy: "Chính sách bảo mật"
       terms: "Điều khoản sử dụng"
     contact:
@@ -326,3 +327,47 @@ vi:
       email: "Email"
       kakao: "KakaoTalk"
       phone: "Số điện thoại"
+
+  # Multicultural Centers
+  multicultural_centers:
+    title: "Trung tâm Hỗ trợ Gia đình Đa văn hóa"
+    description: "Thông tin các trung tâm hỗ trợ gia đình đa văn hóa tại Hàn Quốc."
+    emergency:
+      title: "Đường dây nóng khẩn cấp"
+      available_24h: "24/7, tư vấn đa ngôn ngữ"
+    regions:
+      seoul: "Seoul"
+      gyeonggi: "Gyeonggi"
+      other: "Khu vực khác"
+    centers:
+      guro:
+        name: "Trung tâm Đa văn hóa Guro"
+        address: "60, Gurodong-ro 27-gil, Guro-gu, Seoul"
+      yeongdeungpo:
+        name: "Trung tâm Đa văn hóa Yeongdeungpo"
+        address: "229, Yeongdeungpo-ro, Yeongdeungpo-gu, Seoul"
+      geumcheon:
+        name: "Trung tâm Đa văn hóa Geumcheon"
+        address: "70, Siheung-daero 73-gil, Geumcheon-gu, Seoul"
+      ansan:
+        name: "Trung tâm Đa văn hóa Ansan"
+        address: "80, Wonseon 1-ro, Danwon-gu, Ansan, Gyeonggi"
+      suwon:
+        name: "Trung tâm Đa văn hóa Suwon"
+        address: "181, Gwongwang-ro, Paldal-gu, Suwon, Gyeonggi"
+      busan:
+        name: "Trung tâm Đa văn hóa Busan"
+        address: "359, Jungang-daero, Dong-gu, Busan"
+      daegu:
+        name: "Trung tâm Đa văn hóa Daegu"
+        address: "2095, Dalgubeol-daero, Jung-gu, Daegu"
+    services:
+      korean_class: "Lớp tiếng Hàn"
+      bilingual_education: "Giáo dục song ngữ"
+      counseling: "Tư vấn đời sống"
+      job_support: "Hỗ trợ việc làm"
+      legal_support: "Tư vấn pháp lý"
+    info:
+      title: "Lưu ý"
+      description: "Chương trình có thể khác nhau tùy trung tâm. Vui lòng gọi điện xác nhận trước khi đến."
+    national_portal: "Cổng thông tin Gia đình Đa văn hóa (liveinkorea.kr)"

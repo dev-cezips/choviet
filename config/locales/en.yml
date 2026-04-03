@@ -102,6 +102,7 @@ en:
       description: "Vietnamese Community in Korea"
     links:
       title: "Information"
+      multicultural_centers: "Multicultural Centers"
       privacy: "Privacy Policy"
       terms: "Terms of Service"
     contact:
@@ -191,3 +192,47 @@ en:
   inquiries:
     dashboard:
       response_hint: "Quick responses build trust and lead to more successful connections"
+
+  # Multicultural Centers
+  multicultural_centers:
+    title: "Multicultural Family Support Centers"
+    description: "Information about Multicultural Family Support Centers in Korea."
+    emergency:
+      title: "Emergency Hotline"
+      available_24h: "24/7, multilingual support"
+    regions:
+      seoul: "Seoul"
+      gyeonggi: "Gyeonggi"
+      other: "Other Regions"
+    centers:
+      guro:
+        name: "Guro Multicultural Family Support Center"
+        address: "60, Gurodong-ro 27-gil, Guro-gu, Seoul"
+      yeongdeungpo:
+        name: "Yeongdeungpo Multicultural Family Support Center"
+        address: "229, Yeongdeungpo-ro, Yeongdeungpo-gu, Seoul"
+      geumcheon:
+        name: "Geumcheon Multicultural Family Support Center"
+        address: "70, Siheung-daero 73-gil, Geumcheon-gu, Seoul"
+      ansan:
+        name: "Ansan Multicultural Family Support Center"
+        address: "80, Wonseon 1-ro, Danwon-gu, Ansan, Gyeonggi"
+      suwon:
+        name: "Suwon Multicultural Family Support Center"
+        address: "181, Gwongwang-ro, Paldal-gu, Suwon, Gyeonggi"
+      busan:
+        name: "Busan Multicultural Family Support Center"
+        address: "359, Jungang-daero, Dong-gu, Busan"
+      daegu:
+        name: "Daegu Multicultural Family Support Center"
+        address: "2095, Dalgubeol-daero, Jung-gu, Daegu"
+    services:
+      korean_class: "Korean Classes"
+      bilingual_education: "Bilingual Education"
+      counseling: "Life Counseling"
+      job_support: "Job Support"
+      legal_support: "Legal Support"
+    info:
+      title: "Note"
+      description: "Programs may vary by center. Please call to confirm before visiting."
+    national_portal: "Multicultural Family Portal (liveinkorea.kr)"
