@@ -178,8 +178,8 @@
       <% end %>
     </div>
 
-    <!-- Action Buttons (Mobile) -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 md:hidden shadow-lg safe-area-bottom">
+    <!-- Action Buttons (Mobile) - Above bottom nav -->
+    <div class="fixed left-0 right-0 bg-white border-t p-4 md:hidden shadow-lg" style="bottom: 56px;">
       <% if @post.user == current_user %>
         <div class="flex gap-3">
           <div id="post_likes_<%= @post.id %>" class="flex-shrink-0">

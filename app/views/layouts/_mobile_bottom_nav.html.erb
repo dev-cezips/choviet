@@ -1,0 +1,84 @@
+<!-- Mobile Bottom Navigation - Hidden on Desktop -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden"
+     style="z-index: 999998; padding-bottom: env(safe-area-inset-bottom, 0px);">
+  <div class="flex items-center justify-around h-14 max-w-screen-lg mx-auto">
+    <!-- Home -->
+    <%= link_to posts_path,
+        class: "flex flex-col items-center justify-center flex-1 py-2 #{current_page?(posts_path) && !params[:type].present? ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'}" do %>
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+      </svg>
+      <span class="text-xs mt-0.5"><%= t('nav.home') %></span>
+    <% end %>
+
+    <!-- Marketplace -->
+    <%= link_to posts_path(type: 'marketplace'),
+        class: "flex flex-col items-center justify-center flex-1 py-2 #{params[:type] == 'marketplace' ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'}" do %>
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+      </svg>
+      <span class="text-xs mt-0.5"><%= t('nav.marketplace') %></span>
+    <% end %>
+
+    <!-- New Post (Center Button) -->
+    <% if user_signed_in? %>
+      <%= link_to new_post_path,
+          class: "flex items-center justify-center w-12 h-12 -mt-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors" do %>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+      <% end %>
+    <% else %>
+      <%= link_to new_user_session_path,
+          class: "flex items-center justify-center w-12 h-12 -mt-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors" do %>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+      <% end %>
+    <% end %>
+
+    <!-- Notifications / Messages -->
+    <% if user_signed_in? %>
+      <%= link_to notifications_path,
+          class: "relative flex flex-col items-center justify-center flex-1 py-2 #{current_page?(notifications_path) ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'}" do %>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+        </svg>
+        <% notification_count = current_user.notifications_received.unread.count %>
+        <% if notification_count > 0 %>
+          <span class="absolute top-1 right-1/4 flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold text-white bg-red-500 rounded-full">
+            <%= notification_count > 99 ? '99+' : notification_count %>
+          </span>
+        <% end %>
+        <span class="text-xs mt-0.5"><%= t('notifications.title', default: '알림') %></span>
+      <% end %>
+    <% else %>
+      <%= link_to new_user_session_path,
+          class: "flex flex-col items-center justify-center flex-1 py-2 text-gray-500 hover:text-gray-700" do %>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+        </svg>
+        <span class="text-xs mt-0.5"><%= t('notifications.title', default: '알림') %></span>
+      <% end %>
+    <% end %>
+
+    <!-- Profile -->
+    <% if user_signed_in? %>
+      <%= link_to dashboard_path,
+          class: "flex flex-col items-center justify-center flex-1 py-2 #{current_page?(dashboard_path) || current_page?(me_path) ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'}" do %>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        </svg>
+        <span class="text-xs mt-0.5"><%= t('nav.profile') %></span>
+      <% end %>
+    <% else %>
+      <%= link_to new_user_session_path,
+          class: "flex flex-col items-center justify-center flex-1 py-2 text-gray-500 hover:text-gray-700" do %>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        </svg>
+        <span class="text-xs mt-0.5"><%= t('nav.sign_in') %></span>
+      <% end %>
+    <% end %>
+  </div>
+</nav>

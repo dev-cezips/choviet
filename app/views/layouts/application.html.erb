@@ -129,7 +129,7 @@
     </div>
     
     <!-- Footer -->
-    <footer class="bg-gray-100 border-t border-gray-200 mt-20">
+    <footer class="bg-gray-100 border-t border-gray-200 mt-20 pb-16 lg:pb-0">
       <div class="max-w-7xl mx-auto px-4 py-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- About -->
@@ -182,63 +182,25 @@
     <!-- Modal frames (modal = new standard, report_modal = legacy compat) -->
     <%= turbo_frame_tag "modal" %>
     <%= turbo_frame_tag "report_modal" %>
-    
+
     <%= render "shared/rate_limit_notice" if defined?(request) %>
-    
-    <!-- Floating Write Button - Section-specific -->
-    <% if user_signed_in? && !controller_name.in?(['reports']) %>
-      <%
-        current_type = params[:type]
-        fab_config = case current_type
-                     when "question"
-                       { path: new_post_path(type: "question"), icon: "❓", label: t('fab.ask_question', default: 'Đặt câu hỏi'), bg: "bg-blue-600 hover:bg-blue-700" }
-                     when "free_talk"
-                       { path: new_post_path(type: "free_talk"), icon: "💬", label: t('fab.write_post', default: 'Viết bài'), bg: "bg-purple-600 hover:bg-purple-700" }
-                     when "marketplace"
-                       { path: new_post_path(type: "marketplace"), icon: "🛍️", label: t('fab.sell_item', default: 'Đăng bán'), bg: "bg-rose-500 hover:bg-rose-600" }
-                     else
-                       { path: new_post_path, icon: "✏️", label: t('fab.new_post'), bg: "bg-blue-600 hover:bg-blue-700" }
-                     end
-      %>
-      <div class="fixed bottom-6 right-6 z-40" style="<%= 'padding-bottom: env(safe-area-inset-bottom, 0px);' if turbo_native_app? %>">
-        <%= link_to fab_config[:path], class: "group flex items-center justify-center gap-2 px-4 h-12 #{fab_config[:bg]} text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200" do %>
-          <span class="text-lg"><%= fab_config[:icon] %></span>
-          <span class="font-medium text-sm"><%= fab_config[:label] %></span>
-        <% end %>
-      </div>
-    <% elsif !user_signed_in? && !devise_controller? %>
-      <% if turbo_native_app? %>
-        <!-- Turbo Native: Clear login bar at bottom -->
-        <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-40" style="padding-bottom: env(safe-area-inset-bottom, 12px);">
-          <div class="flex items-center justify-between max-w-screen-lg mx-auto">
-            <span class="text-sm text-gray-600"><%= t('auth.login_prompt', default: 'Đăng nhập để đăng bài') %></span>
-            <div class="flex gap-2">
-              <%= link_to t('nav.sign_in'), new_user_session_path, class: "px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700" %>
-              <%= link_to t('nav.sign_up'), new_user_registration_path, class: "px-4 py-2 text-sm font-medium text-white rounded-lg", style: "background-color: #0068FF;" %>
-            </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <% unless turbo_native_app? || devise_controller? %>
+      <%= render "layouts/mobile_bottom_nav" %>
+    <% end %>
+
+    <% if turbo_native_app? && !user_signed_in? && !devise_controller? %>
+      <!-- Turbo Native: Clear login bar at bottom -->
+      <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-40" style="padding-bottom: env(safe-area-inset-bottom, 12px);">
+        <div class="flex items-center justify-between max-w-screen-lg mx-auto">
+          <span class="text-sm text-gray-600"><%= t('auth.login_prompt', default: 'Đăng nhập để đăng bài') %></span>
+          <div class="flex gap-2">
+            <%= link_to t('nav.sign_in'), new_user_session_path, class: "px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700" %>
+            <%= link_to t('nav.sign_up'), new_user_registration_path, class: "px-4 py-2 text-sm font-medium text-white rounded-lg", style: "background-color: #0068FF;" %>
           </div>
         </div>
-      <% else %>
-        <%
-          current_type = params[:type]
-          fab_config = case current_type
-                       when "question"
-                         { icon: "❓", label: t('fab.login_to_ask', default: 'Đăng nhập để hỏi'), bg: "bg-blue-600 hover:bg-blue-700" }
-                       when "free_talk"
-                         { icon: "💬", label: t('fab.login_to_write', default: 'Đăng nhập để viết'), bg: "bg-purple-600 hover:bg-purple-700" }
-                       when "marketplace"
-                         { icon: "🛍️", label: t('fab.login_to_sell', default: 'Đăng nhập để bán'), bg: "bg-rose-500 hover:bg-rose-600" }
-                       else
-                         { icon: "✏️", label: t('fab.login_to_post'), bg: "bg-blue-600 hover:bg-blue-700" }
-                       end
-        %>
-        <div class="fixed bottom-6 right-6 z-40">
-          <%= link_to new_user_session_path, class: "group flex items-center justify-center gap-2 px-4 h-12 #{fab_config[:bg]} text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200" do %>
-            <span class="text-lg"><%= fab_config[:icon] %></span>
-            <span class="font-medium text-sm"><%= fab_config[:label] %></span>
-          <% end %>
-        </div>
-      <% end %>
+      </div>
     <% end %>
   </body>
 </html>
