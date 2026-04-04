@@ -45,8 +45,9 @@
     <% if turbo_native_app? %>
       <!-- Turbo Native: Minimal header with profile access -->
       <div class="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-        <%= link_to posts_path, class: "text-lg font-bold text-gray-900" do %>
-          Cho Viet
+        <%= link_to posts_path, class: "text-lg font-bold text-gray-900 flex items-center gap-2" do %>
+          <%= image_tag "icon.png", alt: "Chợ Việt", class: "h-7 w-7", style: "object-fit: contain;" %>
+          Chợ Việt
         <% end %>
         <% if user_signed_in? %>
           <%= link_to me_path, class: "p-2 text-gray-600 hover:text-gray-900" do %>
@@ -78,7 +79,10 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- About -->
           <div>
-            <h3 class="text-lg font-semibold mb-4"><%= t('footer.about.title') %></h3>
+            <div class="flex items-center gap-2 mb-4">
+              <%= image_tag "icon.png", alt: "Chợ Việt", class: "h-10 w-10", style: "object-fit: contain;" %>
+              <h3 class="text-lg font-semibold"><%= t('footer.about.title') %></h3>
+            </div>
             <p class="text-sm text-gray-600">
               <%= t('footer.about.description') %>
             </p>

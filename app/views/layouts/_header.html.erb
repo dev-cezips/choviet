@@ -8,8 +8,8 @@
         <div class="flex justify-between items-center h-14" data-search-expand-target="defaultHeader">
           <!-- Logo -->
           <div class="flex items-center">
-            <%= link_to root_path, class: "text-xl font-bold flex items-center", style: "color: #0068FF;" do %>
-              <span class="text-2xl mr-2">🏪</span>
+            <%= link_to root_path, class: "text-xl font-bold flex items-center gap-2", style: "color: #0068FF;" do %>
+              <%= image_tag "icon.png", alt: "Chợ Việt", class: "h-8 w-8", style: "object-fit: contain;" %>
               <%= t('app_name') %>
             <% end %>
           </div>
