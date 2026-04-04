@@ -1,0 +1,68 @@
+<%
+  # Determine link based on notification type
+  notification_link = case notification.kind
+  when "dm_message"
+    notification.notifiable.present? ? conversation_path(notification.notifiable) : conversations_path
+  when "chat_message"
+    if notification.notifiable.present? && notification.notifiable.respond_to?(:post)
+      post_chat_room_path(notification.notifiable.post, notification.notifiable)
+    else
+      chat_rooms_path
+    end
+  when "post_liked", "post_commented"
+    notification.notifiable.present? ? post_path(notification.notifiable) : posts_path
+  when "review_received"
+    notification.notifiable.present? ? user_path(notification.notifiable.reviewer) : me_path
+  else
+    notifications_path
+  end
+
+  # Icon based on type
+  notification_icon = case notification.kind
+  when "dm_message", "chat_message"
+    "💬"
+  when "post_liked"
+    "❤️"
+  when "post_commented"
+    "💭"
+  when "review_received"
+    "⭐"
+  when "system_alert"
+    "📢"
+  else
+    "🔔"
+  end
+
+  is_unread = notification.read_at.nil?
+%>
+
+<%= link_to notification_link, class: "block p-4 hover:bg-gray-50 transition-colors #{is_unread ? 'bg-blue-50' : ''}" do %>
+  <div class="flex items-start gap-3">
+    <!-- Icon -->
+    <div class="flex-shrink-0 text-2xl">
+      <%= notification_icon %>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 min-w-0">
+      <p class="text-sm text-gray-900 <%= 'font-semibold' if is_unread %>">
+        <%= notification.localized_title %>
+      </p>
+      <% if notification.body.present? %>
+        <p class="text-sm text-gray-500 truncate mt-1">
+          <%= notification.localized_body %>
+        </p>
+      <% end %>
+      <p class="text-xs text-gray-400 mt-1">
+        <%= time_ago_in_words(notification.created_at) %> <%= t('time.ago', default: 'trước') %>
+      </p>
+    </div>
+
+    <!-- Unread indicator -->
+    <% if is_unread %>
+      <div class="flex-shrink-0">
+        <span class="w-2 h-2 bg-blue-600 rounded-full inline-block"></span>
+      </div>
+    <% end %>
+  </div>
+<% end %>

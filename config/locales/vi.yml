@@ -246,6 +246,13 @@ vi:
     submitting: "Đang gửi..."
     cancel: "Hủy"
   
+  # Notifications
+  notifications:
+    title: "Thông báo"
+    empty: "Chưa có thông báo nào"
+    mark_all_read: "Đánh dấu tất cả đã đọc"
+    all_marked_read: "Đã đánh dấu tất cả là đã đọc"
+
   # Footer
   footer:
     about:

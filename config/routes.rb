@@ -50,6 +50,16 @@ Rails.application.routes.draw do
   # Standalone chat rooms index (keeping for backward compatibility)
   resources :chat_rooms, only: [ :index ]
 
+  # Notifications
+  resources :notifications, only: [ :index ] do
+    collection do
+      post :mark_all_read
+    end
+    member do
+      patch :mark_read
+    end
+  end
+
   # New 1:1 chat system (V1)
   resources :conversations, only: [ :index, :show ] do
     resources :conversation_messages, only: [ :create ]

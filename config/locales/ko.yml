@@ -58,6 +58,13 @@ ko:
     created: "이 사용자를 차단했습니다"
     destroyed: "차단을 해제했습니다"
   
+  # Notifications
+  notifications:
+    title: "알림"
+    empty: "알림이 없습니다"
+    mark_all_read: "모두 읽음 처리"
+    all_marked_read: "모든 알림을 읽음 처리했습니다"
+
   # Footer
   footer:
     about:
