@@ -154,7 +154,24 @@ en:
       price_high: "Price: High to Low"
     filters:
       all_types: "All types"
-  
+    empty:
+      question_title: "No questions yet"
+      question_desc: "Be the first to ask a question!"
+      free_talk_title: "No posts yet"
+      free_talk_desc: "Share your thoughts with the community!"
+      marketplace_title: "No products yet"
+      marketplace_desc: "Be the first to list an item!"
+      all_title: "No posts yet"
+      all_desc: "Be the first to post!"
+    actions:
+      ask_question: "Ask a question"
+      write_post: "Write a post"
+      sell_item: "Sell an item"
+      login_to_ask: "Login to ask"
+      login_to_write: "Login to write"
+      login_to_sell: "Login to sell"
+      login_to_post: "Login to post"
+
   # Products
   products:
     condition_label: "Condition"
@@ -173,7 +190,13 @@ en:
   fab:
     new_post: "New Post"
     login_to_post: "Login to write a post"
-  
+    ask_question: "Ask a question"
+    write_post: "Write a post"
+    sell_item: "Sell an item"
+    login_to_ask: "Login to ask"
+    login_to_write: "Login to write"
+    login_to_sell: "Login to sell"
+
   # Features/Benefits
   features:
     join_benefits:

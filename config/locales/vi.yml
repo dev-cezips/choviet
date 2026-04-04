@@ -79,7 +79,24 @@ vi:
       price_high: "Giá cao đến thấp"
     filters:
       all_types: "Tất cả loại"
-  
+    empty:
+      question_title: "Chưa có câu hỏi nào"
+      question_desc: "Hãy là người đầu tiên đặt câu hỏi!"
+      free_talk_title: "Chưa có bài viết nào"
+      free_talk_desc: "Chia sẻ suy nghĩ của bạn với cộng đồng!"
+      marketplace_title: "Chưa có sản phẩm nào"
+      marketplace_desc: "Hãy là người đầu tiên đăng bán!"
+      all_title: "Chưa có bài viết nào"
+      all_desc: "Hãy là người đầu tiên đăng bài!"
+    actions:
+      ask_question: "Đặt câu hỏi"
+      write_post: "Viết bài"
+      sell_item: "Đăng bán"
+      login_to_ask: "Đăng nhập để hỏi"
+      login_to_write: "Đăng nhập để viết"
+      login_to_sell: "Đăng nhập để bán"
+      login_to_post: "Đăng nhập để đăng bài"
+
   # Products
   products:
     condition_label: "Tình trạng"
@@ -248,12 +265,12 @@ vi:
   fab:
     new_post: "Đăng bài mới"
     login_to_post: "Đăng nhập để viết bài"
-    created: "Đã gửi báo cáo thành công. Chúng tôi sẽ xem xét trong 24h."
-    notice:
-      title: "📢 Lưu ý:"
-      false_report: "Báo cáo sai có thể ảnh hưởng đến uy tín của bạn"
-      review: "Chúng tôi sẽ xem xét trong 24h"
-      auto_hide: "Nội dung có 3 báo cáo sẽ tự động ẩn"
+    ask_question: "Đặt câu hỏi"
+    write_post: "Viết bài"
+    sell_item: "Đăng bán"
+    login_to_ask: "Đăng nhập để hỏi"
+    login_to_write: "Đăng nhập để viết"
+    login_to_sell: "Đăng nhập để bán"
   
   blocks:
     created: "Đã chặn người dùng này"

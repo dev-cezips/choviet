@@ -117,7 +117,24 @@ ko:
       price_high: "가격 높은순"
     filters:
       all_types: "모든 종류"
-  
+    empty:
+      question_title: "아직 질문이 없어요"
+      question_desc: "첫 번째 질문을 올려보세요!"
+      free_talk_title: "아직 글이 없어요"
+      free_talk_desc: "커뮤니티에 생각을 공유해보세요!"
+      marketplace_title: "아직 상품이 없어요"
+      marketplace_desc: "첫 번째 판매 글을 올려보세요!"
+      all_title: "아직 글이 없어요"
+      all_desc: "첫 번째 글을 올려보세요!"
+    actions:
+      ask_question: "질문하기"
+      write_post: "글쓰기"
+      sell_item: "판매하기"
+      login_to_ask: "로그인하여 질문"
+      login_to_write: "로그인하여 글쓰기"
+      login_to_sell: "로그인하여 판매"
+      login_to_post: "로그인하여 글쓰기"
+
   # Products
   products:
     condition_label: "상태"
@@ -136,6 +153,12 @@ ko:
   fab:
     new_post: "새 글 작성"
     login_to_post: "로그인 후 작성 가능"
+    ask_question: "질문하기"
+    write_post: "글쓰기"
+    sell_item: "판매하기"
+    login_to_ask: "로그인하여 질문"
+    login_to_write: "로그인하여 글쓰기"
+    login_to_sell: "로그인하여 판매"
   
   # Features/Benefits
   features:

@@ -55,7 +55,11 @@ class PostsController < ApplicationController
   # GET /posts/new
   def new
     @post = current_user.posts.build
-    @post.post_type ||= "question" # Default to question type
+
+    # Set post_type from URL param or default to question
+    requested_type = params[:type].to_s
+    @post.post_type = Post.post_types.key?(requested_type) ? requested_type : "question"
+
     @post.location = current_user.location
     @post.latitude = current_user.latitude
     @post.longitude = current_user.longitude

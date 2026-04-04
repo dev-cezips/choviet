@@ -39,14 +39,90 @@
               class: "text-zalo-blue hover:text-blue-700 font-medium" %>
         </div>
       <% elsif @posts.empty? %>
-        <!-- Empty State -->
+        <!-- Empty State - Section-specific -->
         <div class="text-center py-12">
-          <div class="text-6xl mb-4">📭</div>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Chưa có bài viết nào</h3>
-          <p class="text-gray-500 mb-4">Hãy là người đầu tiên đăng bài trong khu vực này!</p>
-          <% if user_signed_in? %>
-            <%= link_to "Đăng bài đầu tiên", new_post_path, 
-                class: "bg-zalo-blue text-white px-4 py-2 rounded-button font-medium hover:bg-blue-700 transition-colors shadow-sm" %>
+          <% current_type = params[:type] %>
+          <% case current_type %>
+          <% when "question" %>
+            <div class="text-6xl mb-4">❓</div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2"><%= t('posts.empty.question_title', default: 'Chưa có câu hỏi nào') %></h3>
+            <p class="text-gray-500 mb-4"><%= t('posts.empty.question_desc', default: 'Hãy là người đầu tiên đặt câu hỏi!') %></p>
+            <% if user_signed_in? %>
+              <%= link_to new_post_path(type: "question"),
+                  class: "inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors shadow-lg" do %>
+                <span class="text-xl">❓</span>
+                <span><%= t('posts.actions.ask_question', default: 'Đặt câu hỏi') %></span>
+              <% end %>
+            <% else %>
+              <%= link_to new_user_session_path,
+                  class: "inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors shadow-lg" do %>
+                <span class="text-xl">❓</span>
+                <span><%= t('posts.actions.login_to_ask', default: 'Đăng nhập để hỏi') %></span>
+              <% end %>
+            <% end %>
+          <% when "free_talk" %>
+            <div class="text-6xl mb-4">💬</div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2"><%= t('posts.empty.free_talk_title', default: 'Chưa có bài viết nào') %></h3>
+            <p class="text-gray-500 mb-4"><%= t('posts.empty.free_talk_desc', default: 'Chia sẻ suy nghĩ của bạn với cộng đồng!') %></p>
+            <% if user_signed_in? %>
+              <%= link_to new_post_path(type: "free_talk"),
+                  class: "inline-flex items-center gap-2 bg-purple-600 text-white px-5 py-3 rounded-full font-medium hover:bg-purple-700 transition-colors shadow-lg" do %>
+                <span class="text-xl">💬</span>
+                <span><%= t('posts.actions.write_post', default: 'Viết bài') %></span>
+              <% end %>
+            <% else %>
+              <%= link_to new_user_session_path,
+                  class: "inline-flex items-center gap-2 bg-purple-600 text-white px-5 py-3 rounded-full font-medium hover:bg-purple-700 transition-colors shadow-lg" do %>
+                <span class="text-xl">💬</span>
+                <span><%= t('posts.actions.login_to_write', default: 'Đăng nhập để viết') %></span>
+              <% end %>
+            <% end %>
+          <% when "marketplace" %>
+            <div class="text-6xl mb-4">🛍️</div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2"><%= t('posts.empty.marketplace_title', default: 'Chưa có sản phẩm nào') %></h3>
+            <p class="text-gray-500 mb-4"><%= t('posts.empty.marketplace_desc', default: 'Hãy là người đầu tiên đăng bán!') %></p>
+            <% if user_signed_in? %>
+              <%= link_to new_post_path(type: "marketplace"),
+                  class: "inline-flex items-center gap-2 bg-rose-500 text-white px-5 py-3 rounded-full font-medium hover:bg-rose-600 transition-colors shadow-lg" do %>
+                <span class="text-xl">🛍️</span>
+                <span><%= t('posts.actions.sell_item', default: 'Đăng bán') %></span>
+              <% end %>
+            <% else %>
+              <%= link_to new_user_session_path,
+                  class: "inline-flex items-center gap-2 bg-rose-500 text-white px-5 py-3 rounded-full font-medium hover:bg-rose-600 transition-colors shadow-lg" do %>
+                <span class="text-xl">🛍️</span>
+                <span><%= t('posts.actions.login_to_sell', default: 'Đăng nhập để bán') %></span>
+              <% end %>
+            <% end %>
+          <% else %>
+            <!-- All posts / no filter -->
+            <div class="text-6xl mb-4">📭</div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2"><%= t('posts.empty.all_title', default: 'Chưa có bài viết nào') %></h3>
+            <p class="text-gray-500 mb-4"><%= t('posts.empty.all_desc', default: 'Hãy là người đầu tiên đăng bài!') %></p>
+            <% if user_signed_in? %>
+              <div class="flex flex-wrap justify-center gap-3">
+                <%= link_to new_post_path(type: "question"),
+                    class: "inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-full font-medium hover:bg-blue-700 transition-colors shadow" do %>
+                  <span>❓</span>
+                  <span><%= t('posts.actions.ask_question', default: 'Đặt câu hỏi') %></span>
+                <% end %>
+                <%= link_to new_post_path(type: "marketplace"),
+                    class: "inline-flex items-center gap-2 bg-rose-500 text-white px-4 py-2 rounded-full font-medium hover:bg-rose-600 transition-colors shadow" do %>
+                  <span>🛍️</span>
+                  <span><%= t('posts.actions.sell_item', default: 'Đăng bán') %></span>
+                <% end %>
+                <%= link_to new_post_path(type: "free_talk"),
+                    class: "inline-flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-full font-medium hover:bg-purple-700 transition-colors shadow" do %>
+                  <span>💬</span>
+                  <span><%= t('posts.actions.write_post', default: 'Viết bài') %></span>
+                <% end %>
+              </div>
+            <% else %>
+              <%= link_to new_user_session_path,
+                  class: "inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors shadow-lg" do %>
+                <span><%= t('posts.actions.login_to_post', default: 'Đăng nhập để đăng bài') %></span>
+              <% end %>
+            <% end %>
           <% end %>
         </div>
       <% else %>

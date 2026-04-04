@@ -123,16 +123,25 @@
     
     <%= render "shared/rate_limit_notice" if defined?(request) %>
     
-    <!-- Floating Write Button -->
+    <!-- Floating Write Button - Section-specific -->
     <% if user_signed_in? && !controller_name.in?(['reports']) %>
+      <%
+        current_type = params[:type]
+        fab_config = case current_type
+                     when "question"
+                       { path: new_post_path(type: "question"), icon: "❓", label: t('fab.ask_question', default: 'Đặt câu hỏi'), bg: "bg-blue-600 hover:bg-blue-700" }
+                     when "free_talk"
+                       { path: new_post_path(type: "free_talk"), icon: "💬", label: t('fab.write_post', default: 'Viết bài'), bg: "bg-purple-600 hover:bg-purple-700" }
+                     when "marketplace"
+                       { path: new_post_path(type: "marketplace"), icon: "🛍️", label: t('fab.sell_item', default: 'Đăng bán'), bg: "bg-rose-500 hover:bg-rose-600" }
+                     else
+                       { path: new_post_path, icon: "✏️", label: t('fab.new_post'), bg: "bg-blue-600 hover:bg-blue-700" }
+                     end
+      %>
       <div class="fixed bottom-6 right-6 z-40" style="<%= 'padding-bottom: env(safe-area-inset-bottom, 0px);' if turbo_native_app? %>">
-        <%= link_to new_post_path, class: "group flex items-center justify-center w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-200 hover:scale-110" do %>
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-          </svg>
-          <span class="absolute right-full mr-3 py-1 px-2 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-            <%= t('fab.new_post') %>
-          </span>
+        <%= link_to fab_config[:path], class: "group flex items-center justify-center gap-2 px-4 h-12 #{fab_config[:bg]} text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200" do %>
+          <span class="text-lg"><%= fab_config[:icon] %></span>
+          <span class="font-medium text-sm"><%= fab_config[:label] %></span>
         <% end %>
       </div>
     <% elsif !user_signed_in? && !devise_controller? %>
@@ -148,14 +157,23 @@
           </div>
         </div>
       <% else %>
+        <%
+          current_type = params[:type]
+          fab_config = case current_type
+                       when "question"
+                         { icon: "❓", label: t('fab.login_to_ask', default: 'Đăng nhập để hỏi'), bg: "bg-blue-600 hover:bg-blue-700" }
+                       when "free_talk"
+                         { icon: "💬", label: t('fab.login_to_write', default: 'Đăng nhập để viết'), bg: "bg-purple-600 hover:bg-purple-700" }
+                       when "marketplace"
+                         { icon: "🛍️", label: t('fab.login_to_sell', default: 'Đăng nhập để bán'), bg: "bg-rose-500 hover:bg-rose-600" }
+                       else
+                         { icon: "✏️", label: t('fab.login_to_post'), bg: "bg-blue-600 hover:bg-blue-700" }
+                       end
+        %>
         <div class="fixed bottom-6 right-6 z-40">
-          <%= link_to new_user_session_path, class: "group flex items-center justify-center w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-200 hover:scale-110" do %>
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            <span class="absolute right-full mr-3 py-1 px-2 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-              <%= t('fab.login_to_post') %>
-            </span>
+          <%= link_to new_user_session_path, class: "group flex items-center justify-center gap-2 px-4 h-12 #{fab_config[:bg]} text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200" do %>
+            <span class="text-lg"><%= fab_config[:icon] %></span>
+            <span class="font-medium text-sm"><%= fab_config[:label] %></span>
           <% end %>
         </div>
       <% end %>
