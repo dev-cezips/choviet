@@ -79,6 +79,8 @@ vi:
       price_high: "Giá cao đến thấp"
     filters:
       all_types: "Tất cả loại"
+      all_locations: "Tất cả khu vực"
+      all_conditions: "Tất cả tình trạng"
     empty:
       question_title: "Chưa có câu hỏi nào"
       question_desc: "Hãy là người đầu tiên đặt câu hỏi!"

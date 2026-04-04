@@ -125,6 +125,8 @@ ko:
       price_high: "가격 높은순"
     filters:
       all_types: "모든 종류"
+      all_locations: "모든 지역"
+      all_conditions: "모든 상태"
     empty:
       question_title: "아직 질문이 없어요"
       question_desc: "첫 번째 질문을 올려보세요!"
