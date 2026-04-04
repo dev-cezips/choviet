@@ -38,10 +38,65 @@
         background-color: #ffffff !important;
       }
 
+      /* Turbo Progress Bar */
+      .turbo-progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #0068FF, #00C6FF);
+        z-index: 9999999;
+        transition: width 0.3s ease-out, opacity 0.15s ease-in;
+        box-shadow: 0 0 10px rgba(0, 104, 255, 0.5);
+      }
+
+      /* Loading Overlay */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999998;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s, visibility 0.2s;
+      }
+      .loading-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Spinner */
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #e5e7eb;
+        border-top-color: #0068FF;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      /* Button loading state */
+      button[disabled], input[type="submit"][disabled] {
+        opacity: 0.7;
+        cursor: wait;
+      }
     </style>
   </head>
 
   <body class="font-vietnam" style="<%= turbo_native_app? ? 'padding-top: env(safe-area-inset-top, 0px);' : 'padding-top: 120px !important;' %> background-color: #ffffff !important;">
+    <!-- Global Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
     <% if turbo_native_app? %>
       <!-- Turbo Native: Minimal header with profile access -->
       <div class="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
