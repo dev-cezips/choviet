@@ -156,6 +156,7 @@ Rails.application.routes.draw do
   get "privacy", to: "pages#privacy"
   get "terms", to: "pages#terms"
   get "multicultural-centers", to: "pages#multicultural_centers", as: :multicultural_centers
+  get "public-services", to: "pages#public_services", as: :public_services
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -66,6 +66,7 @@ ko:
     links:
       title: "정보"
       multicultural_centers: "다문화센터 안내"
+      public_services: "공공기관 안내"
       privacy: "개인정보 처리방침"
       terms: "이용약관"
     contact:
@@ -290,3 +291,59 @@ ko:
       title: "참고"
       description: "센터별로 제공하는 프로그램이 다를 수 있습니다. 방문 전 전화로 확인해주세요."
     national_portal: "다문화가족지원포털 (liveinkorea.kr)"
+
+  # Public Services
+  public_services:
+    title: "공공기관 안내"
+    description: "외국인 근로자 및 이민자를 위한 주요 공공기관 정보입니다."
+    emergency:
+      title: "긴급 상담전화"
+      foreigner_hotline: "외국인종합안내센터"
+      immigration_hotline: "출입국 민원안내"
+      multilingual: "다국어 상담 가능"
+      visa_inquiry: "비자·체류 문의"
+    categories:
+      immigration: "출입국·체류"
+      employment: "고용·노동"
+      insurance: "보험·복지"
+    services:
+      hikorea:
+        name: "하이코리아 (Hi Korea)"
+        description: "비자 연장, 체류자격 변경, 외국인등록 등 온라인 민원 서비스"
+      immigration:
+        name: "출입국·외국인청"
+        description: "전국 출입국관리사무소 위치 및 방문 예약"
+      eps:
+        name: "고용허가제 (EPS)"
+        description: "E-9 비자 외국인 근로자를 위한 고용 정보 및 사업장 변경"
+      moel:
+        name: "고용노동부"
+        description: "근로자 권익 보호, 임금체불 신고, 노동 상담"
+      nhis:
+        name: "국민건강보험공단"
+        description: "건강보험 가입·조회, 의료비 지원 안내"
+      nps:
+        name: "국민연금공단"
+        description: "국민연금 가입·조회, 반환일시금 신청"
+      comwel:
+        name: "근로복지공단"
+        description: "산업재해 보상, 고용보험, 근로자 복지"
+    tags:
+      visa: "비자"
+      residence: "체류자격"
+      online_application: "온라인 신청"
+      office_info: "사무소 정보"
+      appointment: "방문 예약"
+      e9_visa: "E-9 비자"
+      job_change: "사업장 변경"
+      labor_rights: "근로자 권익"
+      wage_claim: "임금체불 신고"
+      health_insurance: "건강보험"
+      medical_benefits: "의료비 지원"
+      pension: "국민연금"
+      lump_sum_refund: "반환일시금"
+      industrial_accident: "산업재해"
+      compensation: "보상"
+    info:
+      title: "참고"
+      description: "각 기관의 외국어 서비스 이용이 가능합니다. 전화 상담 시 통역 서비스를 요청하세요."

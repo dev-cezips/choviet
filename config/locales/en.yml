@@ -103,6 +103,7 @@ en:
     links:
       title: "Information"
       multicultural_centers: "Multicultural Centers"
+      public_services: "Public Services"
       privacy: "Privacy Policy"
       terms: "Terms of Service"
     contact:
@@ -259,3 +260,59 @@ en:
       title: "Note"
       description: "Programs may vary by center. Please call to confirm before visiting."
     national_portal: "Multicultural Family Portal (liveinkorea.kr)"
+
+  # Public Services
+  public_services:
+    title: "Public Services Guide"
+    description: "Information on public services for foreign workers and immigrants in Korea."
+    emergency:
+      title: "Emergency Hotlines"
+      foreigner_hotline: "Foreigner Information Center"
+      immigration_hotline: "Immigration Inquiry"
+      multilingual: "Multilingual support available"
+      visa_inquiry: "Visa & residence inquiries"
+    categories:
+      immigration: "Immigration & Residence"
+      employment: "Employment & Labor"
+      insurance: "Insurance & Welfare"
+    services:
+      hikorea:
+        name: "Hi Korea"
+        description: "Online services for visa extension, status change, and alien registration"
+      immigration:
+        name: "Immigration Office"
+        description: "Immigration office locations and appointment booking"
+      eps:
+        name: "Employment Permit System (EPS)"
+        description: "Employment information and workplace change for E-9 visa workers"
+      moel:
+        name: "Ministry of Employment and Labor"
+        description: "Worker rights protection, wage claims, and labor consultation"
+      nhis:
+        name: "National Health Insurance Service"
+        description: "Health insurance enrollment, inquiry, and medical cost support"
+      nps:
+        name: "National Pension Service"
+        description: "Pension enrollment, inquiry, and lump-sum refund applications"
+      comwel:
+        name: "Korea Workers' Compensation & Welfare Service"
+        description: "Industrial accident compensation, employment insurance, and worker welfare"
+    tags:
+      visa: "Visa"
+      residence: "Residence status"
+      online_application: "Online application"
+      office_info: "Office info"
+      appointment: "Appointment"
+      e9_visa: "E-9 Visa"
+      job_change: "Job change"
+      labor_rights: "Labor rights"
+      wage_claim: "Wage claims"
+      health_insurance: "Health insurance"
+      medical_benefits: "Medical benefits"
+      pension: "Pension"
+      lump_sum_refund: "Lump-sum refund"
+      industrial_accident: "Industrial accident"
+      compensation: "Compensation"
+    info:
+      title: "Note"
+      description: "Multilingual services are available at each agency. Request interpretation when calling."

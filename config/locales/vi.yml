@@ -254,6 +254,7 @@ vi:
     links:
       title: "Thông tin"
       multicultural_centers: "Trung tâm Đa văn hóa"
+      public_services: "Cơ quan công cộng"
       privacy: "Chính sách bảo mật"
       terms: "Điều khoản sử dụng"
     contact:
@@ -388,3 +389,59 @@ vi:
       title: "Lưu ý"
       description: "Chương trình có thể khác nhau tùy trung tâm. Vui lòng gọi điện xác nhận trước khi đến."
     national_portal: "Cổng thông tin Gia đình Đa văn hóa (liveinkorea.kr)"
+
+  # Public Services
+  public_services:
+    title: "Cơ quan công cộng"
+    description: "Thông tin các cơ quan công cộng dành cho người lao động và người nhập cư nước ngoài."
+    emergency:
+      title: "Đường dây nóng khẩn cấp"
+      foreigner_hotline: "Tổng đài người nước ngoài"
+      immigration_hotline: "Tổng đài Xuất nhập cảnh"
+      multilingual: "Tư vấn đa ngôn ngữ"
+      visa_inquiry: "Hỏi đáp về visa"
+    categories:
+      immigration: "Xuất nhập cảnh"
+      employment: "Việc làm"
+      insurance: "Bảo hiểm & Phúc lợi"
+    services:
+      hikorea:
+        name: "Hi Korea"
+        description: "Gia hạn visa, thay đổi tư cách cư trú, đăng ký người nước ngoài trực tuyến"
+      immigration:
+        name: "Cơ quan Xuất nhập cảnh"
+        description: "Vị trí và đặt lịch hẹn tại các văn phòng xuất nhập cảnh"
+      eps:
+        name: "Hệ thống Giấy phép Lao động (EPS)"
+        description: "Thông tin việc làm và chuyển đổi nơi làm việc cho lao động visa E-9"
+      moel:
+        name: "Bộ Lao động"
+        description: "Bảo vệ quyền lợi người lao động, khiếu nại lương, tư vấn lao động"
+      nhis:
+        name: "Bảo hiểm Y tế Quốc gia"
+        description: "Đăng ký, tra cứu bảo hiểm y tế, hỗ trợ chi phí y tế"
+      nps:
+        name: "Quỹ Hưu trí Quốc gia"
+        description: "Đăng ký, tra cứu hưu trí, hoàn trả một lần"
+      comwel:
+        name: "Công đoàn Phúc lợi Người lao động"
+        description: "Bồi thường tai nạn lao động, bảo hiểm thất nghiệp, phúc lợi người lao động"
+    tags:
+      visa: "Visa"
+      residence: "Tư cách cư trú"
+      online_application: "Đăng ký trực tuyến"
+      office_info: "Thông tin văn phòng"
+      appointment: "Đặt lịch hẹn"
+      e9_visa: "Visa E-9"
+      job_change: "Chuyển đổi nơi làm"
+      labor_rights: "Quyền lợi lao động"
+      wage_claim: "Khiếu nại lương"
+      health_insurance: "Bảo hiểm y tế"
+      medical_benefits: "Hỗ trợ y tế"
+      pension: "Hưu trí"
+      lump_sum_refund: "Hoàn trả một lần"
+      industrial_accident: "Tai nạn lao động"
+      compensation: "Bồi thường"
+    info:
+      title: "Lưu ý"
+      description: "Các cơ quan có dịch vụ đa ngôn ngữ. Yêu cầu thông dịch khi gọi điện."

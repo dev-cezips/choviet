@@ -1,0 +1,222 @@
+<% content_for :title, t('public_services.title') %>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-2"><%= t('public_services.title') %></h1>
+    <p class="text-gray-600"><%= t('public_services.description') %></p>
+  </div>
+
+  <!-- Emergency Hotlines -->
+  <div class="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
+    <h2 class="text-lg font-semibold text-red-800 mb-4"><%= t('public_services.emergency.title') %></h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <a href="tel:1345" class="flex items-center gap-3 bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+          <span class="text-2xl">📞</span>
+        </div>
+        <div>
+          <div class="font-bold text-red-700 text-xl">1345</div>
+          <div class="text-sm text-gray-600"><%= t('public_services.emergency.foreigner_hotline') %></div>
+          <div class="text-xs text-gray-500"><%= t('public_services.emergency.multilingual') %></div>
+        </div>
+      </a>
+      <a href="tel:1350" class="flex items-center gap-3 bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+          <span class="text-2xl">🏛️</span>
+        </div>
+        <div>
+          <div class="font-bold text-blue-700 text-xl">1350</div>
+          <div class="text-sm text-gray-600"><%= t('public_services.emergency.immigration_hotline') %></div>
+          <div class="text-xs text-gray-500"><%= t('public_services.emergency.visa_inquiry') %></div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Immigration Services -->
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+      <span>🛂</span>
+      <%= t('public_services.categories.immigration') %>
+    </h2>
+    <div class="space-y-4">
+      <!-- Hi Korea -->
+      <a href="https://www.hikorea.go.kr" target="_blank" rel="noopener"
+         class="block bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">🌐</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-900"><%= t('public_services.services.hikorea.name') %></h3>
+            <p class="text-sm text-gray-600 mt-1"><%= t('public_services.services.hikorea.description') %></p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"><%= t('public_services.tags.visa') %></span>
+              <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"><%= t('public_services.tags.residence') %></span>
+              <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"><%= t('public_services.tags.online_application') %></span>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Immigration Contact Center -->
+      <a href="https://www.immigration.go.kr" target="_blank" rel="noopener"
+         class="block bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">🏢</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-900"><%= t('public_services.services.immigration.name') %></h3>
+            <p class="text-sm text-gray-600 mt-1"><%= t('public_services.services.immigration.description') %></p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full"><%= t('public_services.tags.office_info') %></span>
+              <span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full"><%= t('public_services.tags.appointment') %></span>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Employment Services -->
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+      <span>💼</span>
+      <%= t('public_services.categories.employment') %>
+    </h2>
+    <div class="space-y-4">
+      <!-- EPS -->
+      <a href="https://www.eps.go.kr" target="_blank" rel="noopener"
+         class="block bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">👷</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-900"><%= t('public_services.services.eps.name') %></h3>
+            <p class="text-sm text-gray-600 mt-1"><%= t('public_services.services.eps.description') %></p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full"><%= t('public_services.tags.e9_visa') %></span>
+              <span class="px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full"><%= t('public_services.tags.job_change') %></span>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Ministry of Employment and Labor -->
+      <a href="https://www.moel.go.kr" target="_blank" rel="noopener"
+         class="block bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">⚖️</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-900"><%= t('public_services.services.moel.name') %></h3>
+            <p class="text-sm text-gray-600 mt-1"><%= t('public_services.services.moel.description') %></p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="px-2 py-1 bg-teal-50 text-teal-700 text-xs rounded-full"><%= t('public_services.tags.labor_rights') %></span>
+              <span class="px-2 py-1 bg-teal-50 text-teal-700 text-xs rounded-full"><%= t('public_services.tags.wage_claim') %></span>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Insurance & Welfare -->
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+      <span>🏥</span>
+      <%= t('public_services.categories.insurance') %>
+    </h2>
+    <div class="space-y-4">
+      <!-- NHIS -->
+      <a href="https://www.nhis.or.kr" target="_blank" rel="noopener"
+         class="block bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-rose-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">💊</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-900"><%= t('public_services.services.nhis.name') %></h3>
+            <p class="text-sm text-gray-600 mt-1"><%= t('public_services.services.nhis.description') %></p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="px-2 py-1 bg-rose-50 text-rose-700 text-xs rounded-full"><%= t('public_services.tags.health_insurance') %></span>
+              <span class="px-2 py-1 bg-rose-50 text-rose-700 text-xs rounded-full"><%= t('public_services.tags.medical_benefits') %></span>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </div>
+      </a>
+
+      <!-- NPS -->
+      <a href="https://www.nps.or.kr" target="_blank" rel="noopener"
+         class="block bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">🏦</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-900"><%= t('public_services.services.nps.name') %></h3>
+            <p class="text-sm text-gray-600 mt-1"><%= t('public_services.services.nps.description') %></p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="px-2 py-1 bg-amber-50 text-amber-700 text-xs rounded-full"><%= t('public_services.tags.pension') %></span>
+              <span class="px-2 py-1 bg-amber-50 text-amber-700 text-xs rounded-full"><%= t('public_services.tags.lump_sum_refund') %></span>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </div>
+      </a>
+
+      <!-- COMWEL -->
+      <a href="https://www.comwel.or.kr" target="_blank" rel="noopener"
+         class="block bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">🦺</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-900"><%= t('public_services.services.comwel.name') %></h3>
+            <p class="text-sm text-gray-600 mt-1"><%= t('public_services.services.comwel.description') %></p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="px-2 py-1 bg-orange-50 text-orange-700 text-xs rounded-full"><%= t('public_services.tags.industrial_accident') %></span>
+              <span class="px-2 py-1 bg-orange-50 text-orange-700 text-xs rounded-full"><%= t('public_services.tags.compensation') %></span>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Info Notice -->
+  <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+    <div class="flex items-start gap-3">
+      <span class="text-xl">ℹ️</span>
+      <div>
+        <h3 class="font-medium text-gray-900"><%= t('public_services.info.title') %></h3>
+        <p class="text-sm text-gray-600 mt-1"><%= t('public_services.info.description') %></p>
+      </div>
+    </div>
+  </div>
+</div>
