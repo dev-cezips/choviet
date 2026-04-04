@@ -5,8 +5,8 @@
       <%= render "shared/alert_panel",
           variant: :warning,
           icon: "⚠️",
-          title: current_user&.vietnamese? ? "Cảnh báo giới hạn tốc độ" : "속도 제한 경고",
-          body: current_user&.vietnamese? ? "Bạn đang gần đạt giới hạn yêu cầu. Vui lòng giảm tốc độ." : "요청 제한에 근접하고 있습니다. 속도를 줄여주세요." %>
+          title: t('rate_limit.title', default: 'Cảnh báo giới hạn tốc độ'),
+          body: t('rate_limit.body', default: 'Bạn đang gần đạt giới hạn yêu cầu. Vui lòng giảm tốc độ.') %>
     </div>
   <% end %>
 <% end %>

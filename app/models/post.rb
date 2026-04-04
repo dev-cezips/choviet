@@ -35,7 +35,8 @@ class Post < ApplicationRecord
     free_talk: 2,     # 자유
     job: 3,
     housing: 4,
-    service: 5
+    service: 5,
+    mentoring: 6      # 멘토링
   }
 
   enum :status, {
@@ -54,6 +55,7 @@ class Post < ApplicationRecord
   scope :questions, -> { where(post_type: "question") }
   scope :marketplace_posts, -> { where(post_type: "marketplace") }
   scope :free_talk, -> { where(post_type: "free_talk") }
+  scope :mentoring, -> { where(post_type: "mentoring") }
 
   # Search scope - Vietnamese content focused
   scope :search_keyword, ->(keyword) {
@@ -154,6 +156,8 @@ class Post < ApplicationRecord
       "chat-bubble"
     when "job"
       "briefcase"
+    when "mentoring"
+      "academic-cap"
     else
       "document-text"
     end

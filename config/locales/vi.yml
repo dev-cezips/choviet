@@ -1,6 +1,11 @@
 vi:
   # Application name
   app_name: "Chợ Việt"
+
+  # Rate limiting
+  rate_limit:
+    title: "Cảnh báo giới hạn tốc độ"
+    body: "Bạn đang gần đạt giới hạn yêu cầu. Vui lòng giảm tốc độ."
   tagline: "Cộng đồng người Việt tại Hàn Quốc"
   tagline_detail: "Việc làm · Nhà ở · Mua bán · Thông tin - kết nối trong một nơi"
   all: "Tất cả"
@@ -58,6 +63,7 @@ vi:
       job: "Việc làm"
       housing: "Nhà ở"
       service: "Dịch vụ"
+      mentoring: "Tư vấn"
     statuses:
       draft: "Bản nháp"
       active: "Đang hiển thị"
@@ -88,15 +94,19 @@ vi:
       free_talk_desc: "Chia sẻ suy nghĩ của bạn với cộng đồng!"
       marketplace_title: "Chưa có sản phẩm nào"
       marketplace_desc: "Hãy là người đầu tiên đăng bán!"
+      mentoring_title: "Chưa có bài tư vấn nào"
+      mentoring_desc: "Hãy chia sẻ kinh nghiệm của bạn!"
       all_title: "Chưa có bài viết nào"
       all_desc: "Hãy là người đầu tiên đăng bài!"
     actions:
       ask_question: "Đặt câu hỏi"
       write_post: "Viết bài"
       sell_item: "Đăng bán"
+      write_mentoring: "Viết bài tư vấn"
       login_to_ask: "Đăng nhập để hỏi"
       login_to_write: "Đăng nhập để viết"
       login_to_sell: "Đăng nhập để bán"
+      login_to_mentoring: "Đăng nhập để tư vấn"
       login_to_post: "Đăng nhập để đăng bài"
 
   # Products
@@ -132,6 +142,49 @@ vi:
     saved_posts: "Bài đã lưu"
     settings: "Cài đặt"
     verification_badge: "Đã xác minh"
+    form:
+      avatar: "Ảnh đại diện"
+      avatar_hint: "JPG, PNG, GIF. Tối đa 5MB"
+      name: "Tên hiển thị"
+      name_placeholder: "Nhập tên của bạn"
+      bio: "Giới thiệu"
+      bio_placeholder: "Giới thiệu ngắn về bản thân..."
+      bio_hint: "Tối đa 300 ký tự"
+      story: "Câu chuyện của tôi"
+      story_placeholder: "Bạn đến Hàn Quốc như thế nào? Chia sẻ câu chuyện của bạn..."
+      story_hint: "💡 Câu chuyện của bạn giúp người mua hiểu bạn hơn"
+      phone: "Số điện thoại"
+      phone_hint: "Số điện thoại sẽ không hiển thị công khai"
+      language: "Ngôn ngữ"
+      location: "Khu vực"
+      detect_location: "Dùng vị trí hiện tại"
+      select_location: "Chọn khu vực"
+      location_warning: "⚠️ Vui lòng chọn khu vực để xem được tin đăng gần bạn"
+      cancel: "Hủy"
+      save: "Lưu thay đổi"
+    notifications:
+      title: "Cài đặt thông báo"
+      push: "Thông báo đẩy"
+      push_hint: "Nhận thông báo khi có tin nhắn mới"
+      dm: "Tin nhắn riêng"
+      dm_hint: "Thông báo cho tin nhắn trong cuộc trò chuyện"
+    security:
+      title: "🔐 Bảo mật tài khoản"
+      logout_all: "Đăng xuất tất cả thiết bị"
+      logout_all_hint: "Đăng xuất khỏi tất cả thiết bị khác, giữ lại thiết bị này"
+      logout_all_confirm: "Bạn có chắc muốn đăng xuất khỏi tất cả thiết bị khác?"
+      logout: "Đăng xuất"
+      change_password: "Đổi mật khẩu"
+      change_password_hint: "Cập nhật mật khẩu đăng nhập"
+      change: "Thay đổi"
+    gps:
+      detecting: "🔍 Đang xác định vị trí..."
+      not_supported: "❌ Trình duyệt không hỗ trợ định vị"
+      success: "✅ Đã lấy được tọa độ GPS. Hệ thống sẽ tự động xác định khu vực khi bạn lưu."
+      permission_denied: "❌ Bạn đã từ chối quyền truy cập vị trí"
+      unavailable: "❌ Không thể xác định vị trí"
+      timeout: "❌ Hết thời gian xác định vị trí"
+      error: "❌ Lỗi xác định vị trí"
     activity:
       title: "Hoạt động của bạn"
       inquiries_this_week: "Liên hệ tuần này"
@@ -176,6 +229,7 @@ vi:
   
   # Time
   time:
+    ago: "trước"
     just_now: "Vừa xong"
     minutes_ago: "%{count} phút trước"
     hours_ago: "%{count} giờ trước"
@@ -238,6 +292,7 @@ vi:
   # Reports
   reports:
     title: "🚨 Báo cáo vi phạm"
+    reported: "Đã báo cáo"
     reporting_post: "Bạn đang báo cáo bài viết này"
     reporting_user: "Bạn đang báo cáo người dùng này"
     by_user: "bởi"
@@ -285,6 +340,9 @@ vi:
   blocks:
     created: "Đã chặn người dùng này"
     destroyed: "Đã bỏ chặn người dùng này"
+    block: "Chặn"
+    unblock: "Bỏ chặn"
+    confirm: "Bạn có chắc muốn chặn người dùng này? Bạn sẽ không thể nhận tin nhắn từ họ."
 
   # Trade statuses (chat rooms)
   trade_statuses:

@@ -76,6 +76,31 @@
 
 ---
 
+## iOS/Android 앱
+
+- **iOS**: `/Users/cezips/project/choviet-ios` (Turbo Native)
+- **Android**: `/Users/cezips/project/choviet-android` (Turbo Native)
+- **Bundle ID**: `cezips.choviet`
+- 웹 변경 시 앱 재빌드 불필요 (웹뷰 기반)
+
+### App Store Connect API
+
+```bash
+# 심사 상태 확인
+~/.choviet/check_status.sh
+
+# 또는 수동 실행
+source ~/.choviet/appstore_api.env
+cd /Users/cezips/project/choviet-ios && fastlane status
+```
+
+**설정 파일 위치**: `~/.choviet/`
+- `appstore_api.env` - API 인증 정보
+- `AuthKey_4427M88X6Q.p8` - API 키 파일
+- `check_status.sh` - 상태 확인 스크립트
+
+---
+
 ## 블로그 글 작성 시 주의
 
 **Chợ Việt 개발 블로그 글의 독자는 베트남 교민이 아니다.**

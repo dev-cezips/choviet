@@ -41,11 +41,12 @@ class ApplicationController < ActionController::Base
   end
 
   def extract_locale
+    # Priority: explicit user choice only, default to Vietnamese
+    # Don't use browser Accept-Language - Vietnamese community app should default to Vietnamese
     candidate = params[:locale] ||
                 session[:locale] ||
                 (current_user&.locale if user_signed_in?) ||
-                extract_locale_from_accept_language_header ||
-                I18n.default_locale
+                I18n.default_locale  # Always Vietnamese unless explicitly changed
 
     locale = normalize_locale(candidate)
     supported_locale?(locale) ? locale : I18n.default_locale

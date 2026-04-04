@@ -1,4 +1,4 @@
-<% 
+<%
   # current_user might be nil in broadcasts, so use local variable if available
   viewing_user = local_assigns[:current_user] || (defined?(current_user) ? current_user : nil)
   is_mine = viewing_user ? message.mine?(viewing_user) : false
@@ -10,20 +10,14 @@
     </div>
     <div class="flex items-center gap-2 mt-1 <%= is_mine ? 'justify-end' : '' %>">
       <p class="text-xs text-gray-500">
-        <%= time_ago_in_words(message.created_at) %> ago
+        <%= time_ago_in_words(message.created_at) %> <%= t('time.ago', default: 'trước') %>
       </p>
       <% if viewing_user && !is_mine %>
         <span class="text-xs text-gray-400">•</span>
-        <%= link_to new_conversation_message_report_path(message), 
+        <%= link_to new_conversation_message_report_path(message),
             class: "text-xs text-gray-500 hover:text-red-600 transition",
             data: { turbo_frame: "modal" } do %>
-          <% if viewing_user.vietnamese? %>
-            Báo cáo
-          <% elsif viewing_user.korean? %>
-            신고
-          <% else %>
-            Report
-          <% end %>
+          <%= t('actions.report', default: 'Báo cáo') %>
         <% end %>
       <% end %>
     </div>

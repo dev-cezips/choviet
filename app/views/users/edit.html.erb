@@ -1,5 +1,5 @@
 <div class="max-w-3xl mx-auto px-4 py-8">
-  <h1 class="text-xl font-bold mb-6">Chỉnh sửa hồ sơ</h1>
+  <h1 class="text-xl font-bold mb-6"><%= t('users.edit_profile') %></h1>
 
   <%= form_with model: @user, url: profile_path, method: :patch, local: true, html: { multipart: true } do |f| %>
     <%= render "shared/form_errors", object: @user, class_name: "mb-4" %>
@@ -24,63 +24,47 @@
           </div>
         </div>
         <div>
-          <%= f.label :avatar, "Ảnh đại diện", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= f.label :avatar, t('users.form.avatar'), class: "block text-sm font-medium text-gray-700 mb-1" %>
           <%= f.file_field :avatar, class: "text-sm", accept: "image/*" %>
-          <p class="text-xs text-gray-500 mt-1">JPG, PNG, GIF. Tối đa 5MB</p>
+          <p class="text-xs text-gray-500 mt-1"><%= t('users.form.avatar_hint') %></p>
         </div>
       </div>
 
       <!-- Name Field -->
       <div>
-        <%= f.label :name, "Tên hiển thị", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.text_field :name, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent", placeholder: "Nhập tên của bạn" %>
+        <%= f.label :name, t('users.form.name'), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :name, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent", placeholder: t('users.form.name_placeholder') %>
       </div>
 
       <!-- Bio Field -->
       <div>
-        <%= f.label :bio, "Giới thiệu", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.text_area :bio, rows: 4, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent", placeholder: "Giới thiệu ngắn về bản thân..." %>
-        <p class="text-xs text-gray-500 mt-1">Tối đa 300 ký tự</p>
+        <%= f.label :bio, t('users.form.bio'), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_area :bio, rows: 4, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent", placeholder: t('users.form.bio_placeholder') %>
+        <p class="text-xs text-gray-500 mt-1"><%= t('users.form.bio_hint') %></p>
       </div>
 
       <!-- Story Field -->
       <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100">
         <div class="flex items-center gap-2 mb-2">
           <span class="text-xl">📖</span>
-          <% if current_user.vietnamese? %>
-            <%= f.label :story, "Câu chuyện của tôi", class: "block text-sm font-medium text-gray-700" %>
-          <% elsif current_user.korean? %>
-            <%= f.label :story, "나의 이야기", class: "block text-sm font-medium text-gray-700" %>
-          <% else %>
-            <%= f.label :story, "My Story", class: "block text-sm font-medium text-gray-700" %>
-          <% end %>
+          <%= f.label :story, t('users.form.story'), class: "block text-sm font-medium text-gray-700" %>
         </div>
         <%= f.text_area :story, rows: 5, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white",
-            placeholder: current_user.vietnamese? ?
-              "Bạn đến Hàn Quốc như thế nào? Chia sẻ câu chuyện của bạn..." :
-              (current_user.korean? ? "어떻게 한국에 오게 됐나요? 당신의 이야기를 들려주세요..." : "How did you come to Korea? Share your story...") %>
-        <p class="text-xs text-gray-500 mt-2">
-          <% if current_user.vietnamese? %>
-            💡 Câu chuyện của bạn giúp người mua hiểu bạn hơn
-          <% elsif current_user.korean? %>
-            💡 당신의 이야기는 구매자가 당신을 더 잘 이해하는 데 도움이 됩니다
-          <% else %>
-            💡 Your story helps buyers understand you better
-          <% end %>
-        </p>
+            placeholder: t('users.form.story_placeholder') %>
+        <p class="text-xs text-gray-500 mt-2"><%= t('users.form.story_hint') %></p>
       </div>
 
       <!-- Phone Field -->
       <div>
-        <%= f.label :phone, "Số điện thoại", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :phone, t('users.form.phone'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.text_field :phone, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent", placeholder: "010-1234-5678" %>
-        <p class="text-xs text-gray-500 mt-1">Số điện thoại sẽ không hiển thị công khai</p>
+        <p class="text-xs text-gray-500 mt-1"><%= t('users.form.phone_hint') %></p>
       </div>
 
       <!-- Language/Locale Field -->
       <div>
-        <%= f.label :locale, "Ngôn ngữ", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.select :locale, 
+        <%= f.label :locale, t('users.form.language'), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :locale,
             options_for_select([
               ["Tiếng Việt", "vi"],
               ["한국어", "ko"],
@@ -93,38 +77,38 @@
       <!-- Location Selection -->
       <div class="space-y-3">
         <div class="flex items-center justify-between">
-          <%= f.label :location_code, "Khu vực", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.label :location_code, t('users.form.location'), class: "block text-sm font-medium text-gray-700" %>
           <button type="button" id="detect-location-btn" class="text-sm text-primary hover:text-primary-hover flex items-center gap-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
             </svg>
-            Dùng vị trí hiện tại
+            <%= t('users.form.detect_location') %>
           </button>
         </div>
-        
+
         <% if @user.location_code.blank? %>
           <div class="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg">
-            <p>⚠️ Vui lòng chọn khu vực để xem được tin đăng gần bạn</p>
+            <p><%= t('users.form.location_warning') %></p>
           </div>
         <% end %>
-        
+
         <div id="location-status" class="hidden text-sm"></div>
-        
+
         <% if !Location.exists? %>
           <div class="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
-            <p>⚠️ Không có khu vực nào trong hệ thống. Vui lòng chạy <code>bin/rails db:seed</code> để tạo dữ liệu.</p>
+            <p>⚠️ No locations in system. Please run <code>bin/rails db:seed</code></p>
           </div>
         <% else %>
-          <%= f.select :location_code, 
+          <%= f.select :location_code,
               options_for_select(
-                [["Chọn khu vực", ""]] + Location.order(:name_ko).map { |loc| [loc.name_vi || loc.name_ko, loc.code] },
+                [[t('users.form.select_location'), ""]] + Location.order(:name_ko).map { |loc| [loc.name_vi || loc.name_ko, loc.code] },
                 @user.location_code
               ),
               {},
               class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" %>
         <% end %>
-        
+
         <!-- Hidden fields for GPS coordinates -->
         <%= f.hidden_field :latitude %>
         <%= f.hidden_field :longitude %>
@@ -132,48 +116,22 @@
 
       <!-- Notification Settings -->
       <div class="space-y-3 border-t pt-6">
-        <h3 class="text-sm font-medium text-gray-700 mb-3">
-          <% if current_user.vietnamese? %>
-            Cài đặt thông báo
-          <% elsif current_user.korean? %>
-            알림 설정
-          <% else %>
-            Notification Settings
-          <% end %>
-        </h3>
-        
+        <h3 class="text-sm font-medium text-gray-700 mb-3"><%= t('users.notifications.title') %></h3>
+
         <div class="space-y-2">
           <label class="flex items-start">
             <%= f.check_box :notification_push_enabled, class: "mt-1 rounded text-primary focus:ring-primary" %>
             <div class="ml-3">
-              <span class="text-sm font-medium text-gray-700">
-                <% if current_user.vietnamese? %>
-                  Thông báo đẩy
-                <% elsif current_user.korean? %>
-                  푸시 알림
-                <% else %>
-                  Push Notifications
-                <% end %>
-              </span>
-              <p class="text-xs text-gray-500">
-                <%= current_user.vietnamese? ? 
-                    "Nhận thông báo khi có tin nhắn mới" : 
-                    "새 메시지가 있을 때 알림 받기" %>
-              </p>
+              <span class="text-sm font-medium text-gray-700"><%= t('users.notifications.push') %></span>
+              <p class="text-xs text-gray-500"><%= t('users.notifications.push_hint') %></p>
             </div>
           </label>
-          
+
           <label class="flex items-start">
             <%= f.check_box :notification_dm_enabled, class: "mt-1 rounded text-primary focus:ring-primary" %>
             <div class="ml-3">
-              <span class="text-sm font-medium text-gray-700">
-                <%= current_user.vietnamese? ? "Tin nhắn riêng" : "다이렉트 메시지" %>
-              </span>
-              <p class="text-xs text-gray-500">
-                <%= current_user.vietnamese? ? 
-                    "Thông báo cho tin nhắn trong cuộc trò chuyện" : 
-                    "대화 메시지 알림 받기" %>
-              </p>
+              <span class="text-sm font-medium text-gray-700"><%= t('users.notifications.dm') %></span>
+              <p class="text-xs text-gray-500"><%= t('users.notifications.dm_hint') %></p>
             </div>
           </label>
         </div>
@@ -181,94 +139,40 @@
 
       <!-- Action Buttons -->
       <div class="flex justify-end gap-3 pt-4 border-t">
-        <%= link_to current_user.vietnamese? ? "Hủy" : (current_user.korean? ? "취소" : "Cancel"), me_path, class: "px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors" %>
-        <%= f.submit current_user.vietnamese? ? "Lưu thay đổi" : (current_user.korean? ? "저장" : "Save"), class: "px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors cursor-pointer" %>
+        <%= link_to t('users.form.cancel'), me_path, class: "px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors" %>
+        <%= f.submit t('users.form.save'), class: "px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors cursor-pointer" %>
       </div>
     </div>
   <% end %>
 
   <!-- Security Section (outside the form) -->
   <div class="bg-white rounded-xl shadow-sm p-6 mt-6">
-    <h3 class="text-sm font-medium text-gray-700 mb-4">
-      <% if current_user.vietnamese? %>
-        🔐 Bảo mật tài khoản
-      <% elsif current_user.korean? %>
-        🔐 계정 보안
-      <% else %>
-        🔐 Account Security
-      <% end %>
-    </h3>
+    <h3 class="text-sm font-medium text-gray-700 mb-4"><%= t('users.security.title') %></h3>
 
     <div class="space-y-4">
       <!-- Logout from all devices -->
       <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
         <div>
-          <p class="text-sm font-medium text-gray-900">
-            <% if current_user.vietnamese? %>
-              Đăng xuất tất cả thiết bị
-            <% elsif current_user.korean? %>
-              모든 기기에서 로그아웃
-            <% else %>
-              Logout from all devices
-            <% end %>
-          </p>
-          <p class="text-xs text-gray-500 mt-1">
-            <% if current_user.vietnamese? %>
-              Đăng xuất khỏi tất cả thiết bị khác, giữ lại thiết bị này
-            <% elsif current_user.korean? %>
-              현재 기기를 제외한 모든 기기에서 로그아웃
-            <% else %>
-              Sign out from all other devices except this one
-            <% end %>
-          </p>
+          <p class="text-sm font-medium text-gray-900"><%= t('users.security.logout_all') %></p>
+          <p class="text-xs text-gray-500 mt-1"><%= t('users.security.logout_all_hint') %></p>
         </div>
         <%= button_to logout_all_devices_path,
             method: :delete,
-            data: { turbo_confirm: current_user.vietnamese? ?
-                    "Bạn có chắc muốn đăng xuất khỏi tất cả thiết bị khác?" :
-                    (current_user.korean? ? "다른 모든 기기에서 로그아웃 하시겠습니까?" : "Are you sure?") },
+            data: { turbo_confirm: t('users.security.logout_all_confirm') },
             class: "px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors" do %>
-          <% if current_user.vietnamese? %>
-            Đăng xuất
-          <% elsif current_user.korean? %>
-            로그아웃
-          <% else %>
-            Logout
-          <% end %>
+          <%= t('users.security.logout') %>
         <% end %>
       </div>
 
       <!-- Change Password Link -->
       <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
         <div>
-          <p class="text-sm font-medium text-gray-900">
-            <% if current_user.vietnamese? %>
-              Đổi mật khẩu
-            <% elsif current_user.korean? %>
-              비밀번호 변경
-            <% else %>
-              Change password
-            <% end %>
-          </p>
-          <p class="text-xs text-gray-500 mt-1">
-            <% if current_user.vietnamese? %>
-              Cập nhật mật khẩu đăng nhập
-            <% elsif current_user.korean? %>
-              로그인 비밀번호를 변경합니다
-            <% else %>
-              Update your login password
-            <% end %>
-          </p>
+          <p class="text-sm font-medium text-gray-900"><%= t('users.security.change_password') %></p>
+          <p class="text-xs text-gray-500 mt-1"><%= t('users.security.change_password_hint') %></p>
         </div>
         <%= link_to edit_user_registration_path,
             class: "px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors" do %>
-          <% if current_user.vietnamese? %>
-            Thay đổi
-          <% elsif current_user.korean? %>
-            변경
-          <% else %>
-            Change
-          <% end %>
+          <%= t('users.security.change') %>
         <% end %>
       </div>
     </div>
@@ -300,18 +204,27 @@
   // GPS Location Detection
   document.getElementById('detect-location-btn').addEventListener('click', function() {
     const statusDiv = document.getElementById('location-status');
-    const locationSelect = document.getElementById('user_location_code');
     const latitudeField = document.getElementById('user_latitude');
     const longitudeField = document.getElementById('user_longitude');
-    
+
+    const messages = {
+      detecting: "<%= j t('users.gps.detecting') %>",
+      not_supported: "<%= j t('users.gps.not_supported') %>",
+      success: "<%= j t('users.gps.success') %>",
+      permission_denied: "<%= j t('users.gps.permission_denied') %>",
+      unavailable: "<%= j t('users.gps.unavailable') %>",
+      timeout: "<%= j t('users.gps.timeout') %>",
+      error: "<%= j t('users.gps.error') %>"
+    };
+
     statusDiv.classList.remove('hidden', 'text-green-600', 'text-red-600');
     statusDiv.classList.add('text-blue-600');
-    statusDiv.innerHTML = '🔍 Đang xác định vị trí...';
+    statusDiv.innerHTML = messages.detecting;
 
     if (!navigator.geolocation) {
       statusDiv.classList.remove('text-blue-600');
       statusDiv.classList.add('text-red-600');
-      statusDiv.innerHTML = '❌ Trình duyệt không hỗ trợ định vị';
+      statusDiv.innerHTML = messages.not_supported;
       return;
     }
 
@@ -319,15 +232,14 @@
       function(position) {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-        
+
         latitudeField.value = lat;
         longitudeField.value = lng;
-        
-        // Show success message - server will detect location on submit
+
         statusDiv.classList.remove('text-blue-600');
         statusDiv.classList.add('text-green-600');
-        statusDiv.innerHTML = '✅ Đã lấy được tọa độ GPS. Hệ thống sẽ tự động xác định khu vực khi bạn lưu.';
-        
+        statusDiv.innerHTML = messages.success;
+
         setTimeout(() => {
           statusDiv.classList.add('hidden');
         }, 3000);
@@ -335,19 +247,19 @@
       function(error) {
         statusDiv.classList.remove('text-blue-600');
         statusDiv.classList.add('text-red-600');
-        
+
         switch(error.code) {
           case error.PERMISSION_DENIED:
-            statusDiv.innerHTML = '❌ Bạn đã từ chối quyền truy cập vị trí';
+            statusDiv.innerHTML = messages.permission_denied;
             break;
           case error.POSITION_UNAVAILABLE:
-            statusDiv.innerHTML = '❌ Không thể xác định vị trí';
+            statusDiv.innerHTML = messages.unavailable;
             break;
           case error.TIMEOUT:
-            statusDiv.innerHTML = '❌ Hết thời gian xác định vị trí';
+            statusDiv.innerHTML = messages.timeout;
             break;
           default:
-            statusDiv.innerHTML = '❌ Lỗi xác định vị trí';
+            statusDiv.innerHTML = messages.error;
             break;
         }
       }

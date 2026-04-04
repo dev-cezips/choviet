@@ -1,6 +1,11 @@
 ko:
   # Application name
   app_name: "쪼 비엣"
+
+  # Rate limiting
+  rate_limit:
+    title: "속도 제한 경고"
+    body: "요청 제한에 근접하고 있습니다. 속도를 줄여주세요."
   tagline: "한국의 베트남 커뮤니티"
   tagline_detail: "일자리 · 집 · 중고거래 · 정보를 한 곳에서"
   all: "전체"
@@ -38,6 +43,7 @@ ko:
   # Reports
   reports:
     title: "🚨 위반 신고"
+    reported: "신고됨"
     reporting_post: "이 게시물을 신고합니다"
     reporting_user: "이 사용자를 신고합니다"
     by_user: "작성자"
@@ -57,6 +63,9 @@ ko:
   blocks:
     created: "이 사용자를 차단했습니다"
     destroyed: "차단을 해제했습니다"
+    block: "차단"
+    unblock: "차단 해제"
+    confirm: "이 사용자를 차단하시겠습니까? 상대방의 메시지를 받을 수 없게 됩니다."
   
   # Notifications
   notifications:
@@ -104,6 +113,7 @@ ko:
       job: "구인구직"
       housing: "부동산"
       service: "서비스"
+      mentoring: "멘토링"
     statuses:
       draft: "초안"
       active: "게시중"
@@ -134,15 +144,19 @@ ko:
       free_talk_desc: "커뮤니티에 생각을 공유해보세요!"
       marketplace_title: "아직 상품이 없어요"
       marketplace_desc: "첫 번째 판매 글을 올려보세요!"
+      mentoring_title: "아직 멘토링 글이 없어요"
+      mentoring_desc: "경험을 나눠주세요!"
       all_title: "아직 글이 없어요"
       all_desc: "첫 번째 글을 올려보세요!"
     actions:
       ask_question: "질문하기"
       write_post: "글쓰기"
       sell_item: "판매하기"
+      write_mentoring: "멘토링 글쓰기"
       login_to_ask: "로그인하여 질문"
       login_to_write: "로그인하여 글쓰기"
       login_to_sell: "로그인하여 판매"
+      login_to_mentoring: "로그인하여 멘토링"
       login_to_post: "로그인하여 글쓰기"
 
   # Products
@@ -170,6 +184,16 @@ ko:
     login_to_write: "로그인하여 글쓰기"
     login_to_sell: "로그인하여 판매"
   
+  # Time
+  time:
+    ago: "전"
+    just_now: "방금"
+    minutes_ago: "%{count}분 전"
+    hours_ago: "%{count}시간 전"
+    days_ago: "%{count}일 전"
+    months_ago: "%{count}개월 전"
+    years_ago: "%{count}년 전"
+
   # Features/Benefits
   features:
     join_benefits:
@@ -184,8 +208,57 @@ ko:
     completed: "거래 완료"
     cancelled: "취소됨"
 
-  # User activity
+  # User
   users:
+    profile: "프로필"
+    edit_profile: "프로필 수정"
+    my_posts: "내 게시글"
+    saved_posts: "저장된 글"
+    settings: "설정"
+    verification_badge: "인증됨"
+    form:
+      avatar: "프로필 사진"
+      avatar_hint: "JPG, PNG, GIF. 최대 5MB"
+      name: "이름"
+      name_placeholder: "이름을 입력하세요"
+      bio: "자기소개"
+      bio_placeholder: "자기소개를 입력하세요..."
+      bio_hint: "최대 300자"
+      story: "나의 이야기"
+      story_placeholder: "어떻게 한국에 오게 됐나요? 당신의 이야기를 들려주세요..."
+      story_hint: "💡 당신의 이야기는 구매자가 당신을 더 잘 이해하는 데 도움이 됩니다"
+      phone: "전화번호"
+      phone_hint: "전화번호는 공개되지 않습니다"
+      language: "언어"
+      location: "지역"
+      detect_location: "현재 위치 사용"
+      select_location: "지역 선택"
+      location_warning: "⚠️ 가까운 게시글을 보려면 지역을 선택해주세요"
+      cancel: "취소"
+      save: "저장"
+    notifications:
+      title: "알림 설정"
+      push: "푸시 알림"
+      push_hint: "새 메시지가 있을 때 알림 받기"
+      dm: "다이렉트 메시지"
+      dm_hint: "대화 메시지 알림 받기"
+    security:
+      title: "🔐 계정 보안"
+      logout_all: "모든 기기에서 로그아웃"
+      logout_all_hint: "현재 기기를 제외한 모든 기기에서 로그아웃"
+      logout_all_confirm: "다른 모든 기기에서 로그아웃 하시겠습니까?"
+      logout: "로그아웃"
+      change_password: "비밀번호 변경"
+      change_password_hint: "로그인 비밀번호를 변경합니다"
+      change: "변경"
+    gps:
+      detecting: "🔍 위치 확인 중..."
+      not_supported: "❌ 브라우저가 위치 서비스를 지원하지 않습니다"
+      success: "✅ GPS 좌표를 가져왔습니다. 저장 시 자동으로 지역이 설정됩니다."
+      permission_denied: "❌ 위치 접근 권한이 거부되었습니다"
+      unavailable: "❌ 위치를 확인할 수 없습니다"
+      timeout: "❌ 위치 확인 시간이 초과되었습니다"
+      error: "❌ 위치 확인 오류"
     activity:
       title: "나의 활동"
       inquiries_this_week: "이번 주 받은 문의"

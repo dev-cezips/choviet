@@ -57,7 +57,7 @@ module ApplicationHelper
 
   # Post type display order
   def post_type_order
-    %w[question marketplace free_talk]
+    %w[question marketplace free_talk mentoring]
   end
 
   # Post type icon helper - accepts either post object or type string
@@ -74,7 +74,8 @@ module ApplicationHelper
       "free_talk" => "💬",
       "job" => "💼",
       "housing" => "🏠",
-      "service" => "🔧"
+      "service" => "🔧",
+      "mentoring" => "🎓"
     }
     icons[type] || "📝"
   end
